@@ -10,10 +10,14 @@
     "prepare": "husky install",
     "common": "pnpm --filter common",
     "app": "pnpm --filter web-app",
-    "http": "pnpm --filter http-gateway",
     "configs": "pnpm --filter config",
     "db": "pnpm --filter database",
-    "log": "pnpm --filter log"
+    "log": "pnpm --filter log",
+    "proto": "pnpm --filter proto",
+    "http": "pnpm --filter http-gateway",
+    "grpc:auth": "pnpm --filter grpc-auth",
+    "grpc:user": "pnpm --filter grpc-user",
+    "grpc:cleint": "pnpm --filter grpc-client"
   },
   "lint-staged": {
     "**/*.{js,ts,tsx}": [
@@ -39,5 +43,8 @@
     "husky": "^9.0.11",
     "lint-staged": "^15.2.2",
     "prettier": "^3.2.5"
+  },
+  "dependencies": {
+    "@nestjs/microservices": "^10.3.3"
   }
 }

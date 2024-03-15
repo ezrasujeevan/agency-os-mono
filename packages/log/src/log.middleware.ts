@@ -1,5 +1,5 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import * as moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 import { Log } from './log';
@@ -15,7 +15,7 @@ export class LoggerMiddleware implements NestMiddleware<Request, Response> {
   public constructor(private logger: Log) {}
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public use(req: RequestLog, res: Response, next: () => void): any {
+  public use(req: RequestLog, res: Response, next: NextFunction): any {
     const before = Date.now();
     const id = req.headers['x-request-id']
       ? req.headers['x-request-id']
