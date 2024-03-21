@@ -1,5 +1,4 @@
 import { Injectable, LoggerService } from '@nestjs/common';
-import { ConfigService } from '@agency-os/config';
 import * as moment from 'moment';
 import * as winston from 'winston';
 

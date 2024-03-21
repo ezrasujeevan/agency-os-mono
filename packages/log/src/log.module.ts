@@ -1,5 +1,4 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { ConfigModule } from '@agency-os/config';
 
 import { Log } from './log';
 import { LoggerMiddleware } from './log.middleware';
