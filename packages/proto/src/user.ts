@@ -4,6 +4,32 @@ import { Observable } from "rxjs";
 
 export const protobufPackage = "user";
 
+export interface RegisterResponse {
+  status: number;
+  error: string[];
+}
+
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  status: number;
+  error: string[];
+  token: string;
+}
+
+export interface ValidateRequest {
+  token: string;
+}
+
+export interface ValidateResponse {
+  status: number;
+  error: string[];
+  userId: string;
+}
+
 export interface UpdateUserDto {
   id: string;
 }
@@ -31,13 +57,26 @@ export interface User {
   id: string;
   email: string;
   password: string;
-  firstName?: string | undefined;
+  firstName?:
+    | string
+    | undefined;
+  /**
+   * google.protobuf.Timestamp createdAt = 6;
+   * google.protobuf.Timestamp updatedAt = 7;
+   * int32 version = 8;
+   */
   lastName?: string | undefined;
 }
 
 export const USER_PACKAGE_NAME = "user";
 
 export interface UserServiceClient {
+  register(request: CreateUserDto): Observable<RegisterResponse>;
+
+  login(request: LoginRequest): Observable<LoginResponse>;
+
+  validate(request: ValidateRequest): Observable<ValidateResponse>;
+
   createUser(request: CreateUserDto): Observable<User>;
 
   findAllUser(request: Empty): Observable<Users>;
@@ -52,6 +91,12 @@ export interface UserServiceClient {
 }
 
 export interface UserServiceController {
+  register(request: CreateUserDto): Promise<RegisterResponse> | Observable<RegisterResponse> | RegisterResponse;
+
+  login(request: LoginRequest): Promise<LoginResponse> | Observable<LoginResponse> | LoginResponse;
+
+  validate(request: ValidateRequest): Promise<ValidateResponse> | Observable<ValidateResponse> | ValidateResponse;
+
   createUser(request: CreateUserDto): Promise<User> | Observable<User> | User;
 
   findAllUser(request: Empty): Observable<Users>;
@@ -68,6 +113,9 @@ export interface UserServiceController {
 export function UserServiceControllerMethods() {
   return function (constructor: Function) {
     const grpcMethods: string[] = [
+      "register",
+      "login",
+      "validate",
       "createUser",
       "findAllUser",
       "findOneUserbyId",

@@ -72,7 +72,7 @@ export class UpdateUserDto
   Point?: CreateUserDto;
 }
 
-export class UserClass extends CommonEntity implements UserProto.User {
+export class User extends CommonEntity implements UserProto.User {
   @ApiProperty({
     description: 'this is the email of user ',
     example: 'john.doe@gmail.com',
@@ -99,9 +99,4 @@ export class UserClass extends CommonEntity implements UserProto.User {
     name: 'lastName',
   })
   lastName?: string;
-}
-
-export class Users implements UserProto.Users {
-  @ApiProperty({})
-  users: UserClass[];
 }

@@ -14,7 +14,7 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { CreateUserDto, User, UpdateUserDto, Users } from '@agency-os/common';
+import { CreateUserDto, User, UpdateUserDto } from '@agency-os/common';
 
 @ApiTags('user')
 @Controller('users')
@@ -30,7 +30,7 @@ export class UsersController {
   }
 
   @ApiOperation({ summary: 'Find All Users' })
-  @ApiOkResponse({ description: 'Got All Users', type: Users })
+  @ApiOkResponse({ description: 'Got All Users',  })
   @Get()
   findAll() {
     return this.usersService.findAll();

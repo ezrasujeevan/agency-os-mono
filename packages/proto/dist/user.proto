@@ -1,8 +1,15 @@
 syntax = "proto3";
 
+import "google/protobuf/timestamp.proto";
+
 package user;
 
 service UserService {
+
+    rpc Register (CreateUserDto) returns (RegisterResponse) {}
+    rpc Login (LoginRequest) returns (LoginResponse) {}
+    rpc Validate (ValidateRequest) returns (ValidateResponse) {}
+    
     rpc CreateUser(CreateUserDto) returns (User) {}
     rpc FindAllUser(Empty) returns (stream Users) {}
     rpc FindOneUserbyId(FindOneUserDto) returns (User) {}
@@ -11,6 +18,31 @@ service UserService {
     rpc RemoveUser(FindOneUserDto) returns (User) {}
 
 }
+message RegisterResponse {
+    int32 status = 1;
+    repeated string error = 2;
+  }
+
+message LoginRequest {
+    string email = 1;
+    string password = 2;
+  }
+  
+  message LoginResponse {
+    int32 status = 1;
+    repeated string error = 2;
+    string token = 3;
+  }
+  
+  message ValidateRequest {
+    string token = 1;
+  }
+  
+  message ValidateResponse {
+    int32 status = 1;
+    repeated string error = 2;
+    string userId = 3;
+  }
 
 message UpdateUserDto {
     string id = 1;
@@ -39,4 +71,7 @@ message User {
     string password = 3;
     optional string firstName = 4;
     optional string lastName = 5;
+    // google.protobuf.Timestamp createdAt = 6;
+    // google.protobuf.Timestamp updatedAt = 7;
+    // int32 version = 8;
 }
