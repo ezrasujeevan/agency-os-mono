@@ -1,10 +1,10 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-
+import{ConfigModule} from '@nestjs/config'
 import { Log } from './log';
 import { LoggerMiddleware } from './log.middleware';
 
 @Module({
-  imports: [ConfigModule],
+  imports: [ConfigModule.forRoot()],
   controllers: [],
   providers: [Log],
   exports: [Log],

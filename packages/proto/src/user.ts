@@ -4,39 +4,42 @@ import { Observable } from "rxjs";
 
 export const protobufPackage = "user";
 
-export interface RegisterResponse {
+export interface RegisterUserResponse {
   status: number;
   error: string[];
 }
 
-export interface LoginRequest {
+export interface LoginUserRequest {
   email: string;
   password: string;
 }
 
-export interface LoginResponse {
+export interface LoginUserResponse {
   status: number;
   error: string[];
   token: string;
 }
 
-export interface ValidateRequest {
+export interface ValidateUserRequest {
   token: string;
 }
 
-export interface ValidateResponse {
+export interface ValidateUserResponse {
   status: number;
   error: string[];
   userId: string;
 }
 
-export interface UpdateUserDto {
+export interface UpdateUserRequest {
   id: string;
 }
 
-export interface FindOneUserDto {
-  id?: string | undefined;
-  email?: string | undefined;
+export interface FindOneUserByIdRequest {
+  id: string;
+}
+
+export interface FindOneUserByEmailRequest {
+  email: string;
 }
 
 export interface Users {
@@ -46,7 +49,7 @@ export interface Users {
 export interface Empty {
 }
 
-export interface CreateUserDto {
+export interface CreateUserRequest {
   email: string;
   password: string;
   firstName?: string | undefined;
@@ -57,65 +60,62 @@ export interface User {
   id: string;
   email: string;
   password: string;
-  firstName?:
-    | string
-    | undefined;
-  /**
-   * google.protobuf.Timestamp createdAt = 6;
-   * google.protobuf.Timestamp updatedAt = 7;
-   * int32 version = 8;
-   */
+  firstName?: string | undefined;
   lastName?: string | undefined;
 }
 
 export const USER_PACKAGE_NAME = "user";
 
 export interface UserServiceClient {
-  register(request: CreateUserDto): Observable<RegisterResponse>;
+  registerUser(request: CreateUserRequest): Observable<RegisterUserResponse>;
 
-  login(request: LoginRequest): Observable<LoginResponse>;
+  loginUser(request: LoginUserRequest): Observable<LoginUserResponse>;
 
-  validate(request: ValidateRequest): Observable<ValidateResponse>;
+  validateUser(request: ValidateUserRequest): Observable<ValidateUserResponse>;
 
-  createUser(request: CreateUserDto): Observable<User>;
+  createUser(request: CreateUserRequest): Observable<User>;
 
-  findAllUser(request: Empty): Observable<Users>;
+  findAllUser(request: Empty): Observable<FindOneUserByEmailRequest>;
 
-  findOneUserbyId(request: FindOneUserDto): Observable<User>;
+  findOneUserbyId(request: FindOneUserByIdRequest): Observable<User>;
 
-  findOneUserByEmail(request: FindOneUserDto): Observable<User>;
+  findOneUserByEmail(request: FindOneUserByEmailRequest): Observable<User>;
 
-  updateUser(request: UpdateUserDto): Observable<User>;
+  updateUser(request: UpdateUserRequest): Observable<User>;
 
-  removeUser(request: FindOneUserDto): Observable<User>;
+  removeUser(request: FindOneUserByIdRequest): Observable<User>;
 }
 
 export interface UserServiceController {
-  register(request: CreateUserDto): Promise<RegisterResponse> | Observable<RegisterResponse> | RegisterResponse;
+  registerUser(
+    request: CreateUserRequest,
+  ): Promise<RegisterUserResponse> | Observable<RegisterUserResponse> | RegisterUserResponse;
 
-  login(request: LoginRequest): Promise<LoginResponse> | Observable<LoginResponse> | LoginResponse;
+  loginUser(request: LoginUserRequest): Promise<LoginUserResponse> | Observable<LoginUserResponse> | LoginUserResponse;
 
-  validate(request: ValidateRequest): Promise<ValidateResponse> | Observable<ValidateResponse> | ValidateResponse;
+  validateUser(
+    request: ValidateUserRequest,
+  ): Promise<ValidateUserResponse> | Observable<ValidateUserResponse> | ValidateUserResponse;
 
-  createUser(request: CreateUserDto): Promise<User> | Observable<User> | User;
+  createUser(request: CreateUserRequest): Promise<User> | Observable<User> | User;
 
-  findAllUser(request: Empty): Observable<Users>;
+  findAllUser(request: Empty): Observable<FindOneUserByEmailRequest>;
 
-  findOneUserbyId(request: FindOneUserDto): Promise<User> | Observable<User> | User;
+  findOneUserbyId(request: FindOneUserByIdRequest): Promise<User> | Observable<User> | User;
 
-  findOneUserByEmail(request: FindOneUserDto): Promise<User> | Observable<User> | User;
+  findOneUserByEmail(request: FindOneUserByEmailRequest): Promise<User> | Observable<User> | User;
 
-  updateUser(request: UpdateUserDto): Promise<User> | Observable<User> | User;
+  updateUser(request: UpdateUserRequest): Promise<User> | Observable<User> | User;
 
-  removeUser(request: FindOneUserDto): Promise<User> | Observable<User> | User;
+  removeUser(request: FindOneUserByIdRequest): Promise<User> | Observable<User> | User;
 }
 
 export function UserServiceControllerMethods() {
   return function (constructor: Function) {
     const grpcMethods: string[] = [
-      "register",
-      "login",
-      "validate",
+      "registerUser",
+      "loginUser",
+      "validateUser",
       "createUser",
       "findAllUser",
       "findOneUserbyId",

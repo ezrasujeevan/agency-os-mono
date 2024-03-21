@@ -1,55 +1,55 @@
 syntax = "proto3";
 
-import "google/protobuf/timestamp.proto";
-
 package user;
 
 service UserService {
 
-    rpc Register (CreateUserDto) returns (RegisterResponse) {}
-    rpc Login (LoginRequest) returns (LoginResponse) {}
-    rpc Validate (ValidateRequest) returns (ValidateResponse) {}
+    rpc RegisterUser (CreateUserRequest) returns (RegisterUserResponse) {}
+    rpc LoginUser (LoginUserRequest) returns (LoginUserResponse) {}
+    rpc ValidateUser (ValidateUserRequest) returns (ValidateUserResponse) {}
     
-    rpc CreateUser(CreateUserDto) returns (User) {}
-    rpc FindAllUser(Empty) returns (stream Users) {}
-    rpc FindOneUserbyId(FindOneUserDto) returns (User) {}
-    rpc FindOneUserByEmail(FindOneUserDto) returns  (User) {}
-    rpc UpdateUser(UpdateUserDto) returns (User) {}
-    rpc RemoveUser(FindOneUserDto) returns (User) {}
+    rpc CreateUser(CreateUserRequest) returns (User) {}
+    rpc FindAllUser(Empty) returns (stream FindOneUserByEmailRequest) {}
+    rpc FindOneUserbyId(FindOneUserByIdRequest) returns (User) {}
+    rpc FindOneUserByEmail(FindOneUserByEmailRequest) returns  (User) {}
+    rpc UpdateUser(UpdateUserRequest) returns (User) {}
+    rpc RemoveUser(FindOneUserByIdRequest) returns (User) {}
 
 }
-message RegisterResponse {
+message RegisterUserResponse {
     int32 status = 1;
     repeated string error = 2;
   }
 
-message LoginRequest {
+message LoginUserRequest {
     string email = 1;
     string password = 2;
   }
   
-  message LoginResponse {
+  message LoginUserResponse {
     int32 status = 1;
     repeated string error = 2;
     string token = 3;
   }
   
-  message ValidateRequest {
+  message ValidateUserRequest {
     string token = 1;
   }
   
-  message ValidateResponse {
+  message ValidateUserResponse {
     int32 status = 1;
     repeated string error = 2;
     string userId = 3;
   }
 
-message UpdateUserDto {
+message UpdateUserRequest {
     string id = 1;
 }
-message FindOneUserDto {
-    optional string id = 1;
-    optional string email = 2;
+message FindOneUserByIdRequest {
+     string id = 1;
+}
+message FindOneUserByEmailRequest {
+  string email = 1;
 }
 
 message Users {
@@ -58,7 +58,7 @@ message Users {
 message Empty {
 
 }
-message CreateUserDto {
+message CreateUserRequest {
     string email = 1;
     string password = 2;
     optional string firstName = 3;
@@ -71,7 +71,4 @@ message User {
     string password = 3;
     optional string firstName = 4;
     optional string lastName = 5;
-    // google.protobuf.Timestamp createdAt = 6;
-    // google.protobuf.Timestamp updatedAt = 7;
-    // int32 version = 8;
 }

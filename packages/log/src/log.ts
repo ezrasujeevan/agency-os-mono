@@ -3,6 +3,7 @@ import * as moment from 'moment';
 import * as winston from 'winston';
 
 import { isLogLevel, LogLevel } from './log.levels';
+import { ConfigService } from '@nestjs/config';
 
 const formatter = winston.format((info) => {
   if (info.level === LogLevel.HTTP) {
@@ -26,7 +27,7 @@ export class Log implements LoggerService {
 
   constructor(private configService: ConfigService) {
     this.logger = winston.createLogger({
-      level: this.configService.get().logLevel,
+      level: this.configService.get('LOG_LEVEL'),
       format: formatter(),
     });
     this.logger.add(
