@@ -1,4 +1,4 @@
-import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
-export interface DbConfig {
-    entities: PostgresConnectionOptions['entities'];
+import { DataSourceOptions } from 'typeorm';
+export interface DatabaseConfig {
+    entities: DataSourceOptions['entities'];
 }

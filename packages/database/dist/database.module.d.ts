@@ -1,12 +1,6 @@
-import { DbConfig } from './database.interface';
+import { DynamicModule } from '@nestjs/common';
+import { DatabaseType } from 'typeorm';
 export declare class DatabaseModule {
-    private static getConnectionOptions;
-    private static getConnectionOptionsPostgres;
-    static forRoot(dbConfig: DbConfig): {
-        module: typeof DatabaseModule;
-        imports: import("@nestjs/common").DynamicModule[];
-        controllers: never[];
-        providers: never[];
-        exports: never[];
-    };
+    static forRootAsync(driver: DatabaseType): DynamicModule;
+    static forFeature(entities: any): DynamicModule;
 }

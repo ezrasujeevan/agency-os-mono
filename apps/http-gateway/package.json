@@ -20,6 +20,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@agency-os/common": "workspace:^",
     "@agency-os/config": "workspace:^",
     "@agency-os/proto": "workspace:^",
     "@grpc/grpc-js": "^1.10.2",
@@ -29,6 +30,7 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/microservices": "^10.3.3",
     "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/swagger": "^7.3.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1"
   },

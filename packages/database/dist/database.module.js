@@ -9,52 +9,46 @@ var DatabaseModule_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DatabaseModule = void 0;
 const common_1 = require("@nestjs/common");
-const config_1 = require("@agency-os/config");
 const typeorm_1 = require("@nestjs/typeorm");
+const config_1 = require("@agency-os/config");
 let DatabaseModule = DatabaseModule_1 = class DatabaseModule {
-    static getConnectionOptions(config, dbConfig) {
-        const dbData = config.get().db;
-        if (!dbData) {
-            throw Error('');
-        }
-        const connectionOptions = this.getConnectionOptionsPostgres(dbData);
-        return {
-            ...connectionOptions,
-            entities: dbConfig.entities,
-            synchronize: true,
-            logging: true,
-        };
-    }
-    static getConnectionOptionsPostgres(dbData) {
-        return {
-            type: 'postgres',
-            url: dbData.url,
-            keepConnectionAlive: true,
-            ssl: process.env.NODE_ENV !== 'local' && process.env.NODE_ENV !== 'test'
-                ? { rejectUnauthorized: false }
-                : false,
-        };
-    }
-    static forRoot(dbConfig) {
+    static forRootAsync(driver) {
         return {
             module: DatabaseModule_1,
             imports: [
                 typeorm_1.TypeOrmModule.forRootAsync({
                     imports: [config_1.ConfigModule],
-                    useFactory: (configService) => {
-                        return DatabaseModule_1.getConnectionOptions(configService, dbConfig);
+                    useFactory: async (configService) => {
+                        const optionn = {
+                            type: driver,
+                            url: configService.getDB('url'),
+                            host: configService.getDB('host'),
+                            port: +configService.getDB('port'),
+                            username: configService.getDB('username'),
+                            password: configService.getDB('password'),
+                            database: configService.getDB('name'),
+                            entities: [],
+                            synchronize: true,
+                        };
+                        const asd = { ...optionn };
+                        return asd;
                     },
                     inject: [config_1.ConfigService],
                 }),
             ],
-            controllers: [],
-            providers: [],
-            exports: [],
+        };
+    }
+    static forFeature(entities) {
+        return {
+            module: DatabaseModule_1,
+            imports: [typeorm_1.TypeOrmModule.forFeature(entities)],
         };
     }
 };
 exports.DatabaseModule = DatabaseModule;
 exports.DatabaseModule = DatabaseModule = DatabaseModule_1 = __decorate([
-    (0, common_1.Module)({})
+    (0, common_1.Module)({
+        providers: [config_1.ConfigService],
+    })
 ], DatabaseModule);
 //# sourceMappingURL=database.module.js.map

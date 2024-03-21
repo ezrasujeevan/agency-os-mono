@@ -1,4 +1,28 @@
 {
-    "editor.formatOnSave": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "name": "postgres",
+      "database": "postgres",
+      "username": "postgres",
+      "password": "password",
+      "group": "agencyOs-psql"
+    },
+    {
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "name": "grpc_user",
+      "group": "agencyOs-psql",
+      "database": "grpc_user",
+      "username": "postgres",
+      "password": "password"
+    }
+  ]
+}

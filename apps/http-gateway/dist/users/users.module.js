@@ -26,6 +26,7 @@ exports.UsersModule = UsersModule = __decorate([
                     options: {
                         package: proto_1.User.USER_PACKAGE_NAME,
                         protoPath: (0, path_1.join)(require.resolve('@agency-os/proto'), '../', proto_1.userProto),
+                        url: 'localhost:50051',
                     },
                 },
             ]),

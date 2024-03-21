@@ -12,8 +12,8 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
-  findAllUser() {
-    return this.userService.findAll();
+  async findAllUser() {
+    return await this.userService.findAll();
   }
 
   findOneUserbyId(findOneUserDto: FindOneUserDto) {

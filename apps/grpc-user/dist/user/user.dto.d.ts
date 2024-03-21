@@ -2,6 +2,8 @@ import { User } from '@agency-os/proto';
 export declare class CreateUserDto implements User.CreateUserDto {
     email: string;
     password: string;
+    firstName?: string | undefined;
+    lastName?: string | undefined;
 }
 export declare class FindOneUserDto implements User.FindOneUserDto {
     id?: string;

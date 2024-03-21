@@ -25,11 +25,14 @@ let UsersService = class UsersService {
     async create(createUserDto) {
         return this.userService.createUser(createUserDto);
     }
-    findAll() {
-        return this.userService.findAllUser({});
+    async findAll() {
+        return await this.userService.findAllUser({});
     }
-    findOne(id) {
+    findOnebyUserId(id) {
         return this.userService.findOneUserbyId({ id });
+    }
+    findOnebyUserEmail(email) {
+        return this.userService.findOneUserByEmail({ email });
     }
     update(id, updateUserDto) {
         return this.userService.updateUser({ ...updateUserDto, id });

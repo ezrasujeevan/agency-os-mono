@@ -11,23 +11,29 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var _a, _b;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersController = void 0;
 const common_1 = require("@nestjs/common");
 const users_service_1 = require("./users.service");
-const proto_1 = require("@agency-os/proto");
+const swagger_1 = require("@nestjs/swagger");
+const common_2 = require("@agency-os/common");
 let UsersController = class UsersController {
     constructor(usersService) {
         this.usersService = usersService;
     }
     create(createUserDto) {
+        console.log('asdasd');
         return this.usersService.create(createUserDto);
     }
     findAll() {
         return this.usersService.findAll();
     }
-    findOne(id) {
-        return this.usersService.findOne(id);
+    findOneById(id) {
+        return this.usersService.findOnebyUserId(id);
+    }
+    findOneByEmail(email) {
+        return this.usersService.findOnebyUserEmail(email);
     }
     update(id, updateUserDto) {
         return this.usersService.update(id, updateUserDto);
@@ -38,13 +44,17 @@ let UsersController = class UsersController {
 };
 exports.UsersController = UsersController;
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Create User' }),
+    (0, swagger_1.ApiCreatedResponse)({ description: 'User Created', type: common_2.User }),
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [typeof (_a = typeof common_2.CreateUserDto !== "undefined" && common_2.CreateUserDto) === "function" ? _a : Object]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "create", null);
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: 'Find All Users' }),
+    (0, swagger_1.ApiOkResponse)({ description: 'Got All Users', type: common_2.Users }),
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
@@ -52,17 +62,26 @@ __decorate([
 ], UsersController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)(':id'),
+    (0, swagger_1.ApiOperation)({}),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
-], UsersController.prototype, "findOne", null);
+], UsersController.prototype, "findOneById", null);
+__decorate([
+    (0, common_1.Get)(':email'),
+    (0, swagger_1.ApiOperation)({}),
+    __param(0, (0, common_1.Param)('email')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], UsersController.prototype, "findOneByEmail", null);
 __decorate([
     (0, common_1.Patch)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:paramtypes", [String, typeof (_b = typeof common_2.UpdateUserDto !== "undefined" && common_2.UpdateUserDto) === "function" ? _b : Object]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "update", null);
 __decorate([
@@ -73,6 +92,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "remove", null);
 exports.UsersController = UsersController = __decorate([
+    (0, swagger_1.ApiTags)('user'),
     (0, common_1.Controller)('users'),
     __metadata("design:paramtypes", [users_service_1.UsersService])
 ], UsersController);

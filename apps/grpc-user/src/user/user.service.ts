@@ -1,57 +1,68 @@
-import { Injectable, NotFoundException, OnModuleInit } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+  OnModuleInit,
+} from '@nestjs/common';
 import { CreateUserDto, FindOneUserDto, UpdateUserDto } from './user.dto';
 import { randomUUID } from 'crypto';
 import { User } from '@agency-os/proto';
+import { UserEntity } from './user.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { log } from 'console';
 
 @Injectable()
-export class UserService implements OnModuleInit {
-  private readonly users: User.User[] = [];
+export class UserService {
+  constructor(
+    @InjectRepository(UserEntity)
+    private readonly userRepo: Repository<UserEntity>,
+  ) {}
 
-  onModuleInit() {
-    for (let index = 0; index < 100; index++) {
-      this.create({ email: randomUUID(), password: randomUUID() });
+  async create(createUserDto: CreateUserDto): Promise<User.User> {
+    const user = this.userRepo.create(createUserDto);
+    return await this.userRepo.save(user);
+  }
+
+  async findAll(): Promise<User.Users> {
+    const users = await this.userRepo.find();
+
+    return { users };
+  }
+
+  async findOne(findOneUserDto: FindOneUserDto): Promise<User.User> {
+    const { email, id } = findOneUserDto;
+    let user;
+    if (id) {
+      user = await this.userRepo.findOne({ where: { id } });
+    } else if (email) {
+      user = await this.userRepo.findOne({ where: { email } });
+    } else {
+      throw new BadRequestException(`Have to send either id or email`);
     }
-  }
-
-  create(createUserDto: CreateUserDto): User.User {
-    const user: User.User = {
-      ...createUserDto,
-      id: randomUUID(),
-    };
-    this.users.push(user);
-    return user;
-  }
-
-  findAll(): User.Users {
-    return { users: this.users };
-  }
-
-  findOne(findOneUserDto: FindOneUserDto): User.User {
-    const user = this.users.find((user) => user.id === findOneUserDto.id);
-    if (user !== undefined) {
+    if (user !== undefined && user) {
       return user;
     }
     throw new NotFoundException(`user not found by id ${findOneUserDto.id}`);
   }
 
-  update(id: string, updateUserDto: UpdateUserDto): User.User {
-    const userIndex = this.users.findIndex((user) => user.id === id);
-    if (userIndex !== -1) {
-      this.users[userIndex] = {
-        ...this.users[userIndex],
-        ...updateUserDto,
-      };
-      return this.users[userIndex];
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<User.User> {
+    const user = await this.userRepo.findOne({ where: { id } });
+    if (user && user !== undefined) {
+      return await this.userRepo.save(user, {
+        data: updateUserDto,
+      });
     }
     throw new NotFoundException(`user not found by id ${id}`);
   }
 
-  remove(findOneUserDto: FindOneUserDto): User.User {
-    const userIndex = this.users.findIndex(
-      (user) => user.id === findOneUserDto.id,
-    );
-    if (userIndex !== -1) {
-      return this.users.splice(userIndex)[0];
+  async remove(findOneUserDto: FindOneUserDto): Promise<User.User> {
+    const user = await this.userRepo.findOne({
+      where: { id: findOneUserDto.id },
+    });
+    if (user && user !== undefined) {
+      return await this.userRepo.remove(user);
     }
     throw new NotFoundException(`user not found by id ${findOneUserDto.id}`);
   }

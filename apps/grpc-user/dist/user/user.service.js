@@ -5,58 +5,70 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserService = void 0;
 const common_1 = require("@nestjs/common");
-const crypto_1 = require("crypto");
+const user_entity_1 = require("./user.entity");
+const typeorm_1 = require("@nestjs/typeorm");
+const typeorm_2 = require("typeorm");
 let UserService = class UserService {
-    constructor() {
-        this.users = [];
+    constructor(userRepo) {
+        this.userRepo = userRepo;
     }
-    onModuleInit() {
-        for (let index = 0; index < 100; index++) {
-            this.create({ email: (0, crypto_1.randomUUID)(), password: (0, crypto_1.randomUUID)() });
+    async create(createUserDto) {
+        const user = this.userRepo.create(createUserDto);
+        return await this.userRepo.save(user);
+    }
+    async findAll() {
+        const users = await this.userRepo.find();
+        return { users };
+    }
+    async findOne(findOneUserDto) {
+        const { email, id } = findOneUserDto;
+        let user;
+        if (id) {
+            user = await this.userRepo.findOne({ where: { id } });
         }
-    }
-    create(createUserDto) {
-        const user = {
-            ...createUserDto,
-            id: (0, crypto_1.randomUUID)(),
-        };
-        this.users.push(user);
-        return user;
-    }
-    findAll() {
-        return { users: this.users };
-    }
-    findOne(findOneUserDto) {
-        const user = this.users.find((user) => user.id === findOneUserDto.id);
-        if (user !== undefined) {
+        else if (email) {
+            user = await this.userRepo.findOne({ where: { email } });
+        }
+        else {
+            throw new common_1.BadRequestException(`Have to send either id or email`);
+        }
+        if (user !== undefined && user) {
             return user;
         }
         throw new common_1.NotFoundException(`user not found by id ${findOneUserDto.id}`);
     }
-    update(id, updateUserDto) {
-        const userIndex = this.users.findIndex((user) => user.id === id);
-        if (userIndex !== -1) {
-            this.users[userIndex] = {
-                ...this.users[userIndex],
-                ...updateUserDto,
-            };
-            return this.users[userIndex];
+    async update(id, updateUserDto) {
+        const user = await this.userRepo.findOne({ where: { id } });
+        if (user && user !== undefined) {
+            return await this.userRepo.save(user, {
+                data: updateUserDto,
+            });
         }
         throw new common_1.NotFoundException(`user not found by id ${id}`);
     }
-    remove(findOneUserDto) {
-        const userIndex = this.users.findIndex((user) => user.id === findOneUserDto.id);
-        if (userIndex !== -1) {
-            return this.users.splice(userIndex)[0];
+    async remove(findOneUserDto) {
+        const user = await this.userRepo.findOne({
+            where: { id: findOneUserDto.id },
+        });
+        if (user && user !== undefined) {
+            return await this.userRepo.remove(user);
         }
         throw new common_1.NotFoundException(`user not found by id ${findOneUserDto.id}`);
     }
 };
 exports.UserService = UserService;
 exports.UserService = UserService = __decorate([
-    (0, common_1.Injectable)()
+    (0, common_1.Injectable)(),
+    __param(0, (0, typeorm_1.InjectRepository)(user_entity_1.UserEntity)),
+    __metadata("design:paramtypes", [typeorm_2.Repository])
 ], UserService);
 //# sourceMappingURL=user.service.js.map

@@ -1,7 +1,7 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { User } from '@agency-os/proto';
 import { ClientGrpc } from '@nestjs/microservices';
-
+import { CreateUserDto, UpdateUserDto } from '@agency-os/common';
 @Injectable()
 export class UsersService implements OnModuleInit {
   private userService: User.UserServiceClient;
@@ -13,19 +13,23 @@ export class UsersService implements OnModuleInit {
     );
   }
 
-  async create(createUserDto: User.CreateUserDto) {
+  async create(createUserDto: CreateUserDto) {
     return this.userService.createUser(createUserDto);
   }
 
-  findAll() {
-    return this.userService.findAllUser({});
+  async findAll() {
+    return await this.userService.findAllUser({});
   }
 
-  findOne(id: string) {
+  findOnebyUserId(id: string) {
     return this.userService.findOneUserbyId({ id });
   }
 
-  update(id: string, updateUserDto: User.UpdateUserDto) {
+  findOnebyUserEmail(email: string) {
+    return this.userService.findOneUserByEmail({ email });
+  }
+
+  update(id: string, updateUserDto: UpdateUserDto) {
     return this.userService.updateUser({ ...updateUserDto, id });
   }
 

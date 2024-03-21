@@ -18,6 +18,7 @@ import { join } from 'path';
             '../',
             userProto,
           ),
+          url: 'localhost:50051',
         },
       },
     ]),

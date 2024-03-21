@@ -1,8 +1,9 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { join } from 'path';
 import { User, userProto } from '@agency-os/proto';
+import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
@@ -12,9 +13,12 @@ async function bootstrap() {
       options: {
         protoPath: join(require.resolve('@agency-os/proto'), '../', userProto),
         package: User.USER_PACKAGE_NAME,
+        url: 'localhost:50051',
       },
     },
   );
+  app.useGlobalPipes(new ValidationPipe({}));
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   await app.listen();
 }
 bootstrap();

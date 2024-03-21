@@ -1,10 +1,12 @@
 syntax = "proto3";
 
+import "google/protobuf/timestamp.proto";
+
 package user;
 
 service UserService {
     rpc CreateUser(CreateUserDto) returns (User) {}
-    rpc FindAllUser(Empty) returns (Users) {}
+    rpc FindAllUser(Empty) returns (stream Users) {}
     rpc FindOneUserbyId(FindOneUserDto) returns (User) {}
     rpc FindOneUserByEmail(FindOneUserDto) returns  (User) {}
     rpc UpdateUser(UpdateUserDto) returns (User) {}
@@ -29,6 +31,8 @@ message Empty {
 message CreateUserDto {
     string email = 1;
     string password = 2;
+    optional string firstName = 3;
+    optional string lastName = 4;
 }
 
 message User {
@@ -37,4 +41,7 @@ message User {
     string password = 3;
     optional string firstName = 4;
     optional string lastName = 5;
+    // google.protobuf.Timestamp createdAt = 6;
+    // google.protobuf.Timestamp updatedAt = 7;
+    // int32 version = 8;
 }

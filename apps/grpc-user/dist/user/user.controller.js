@@ -20,8 +20,8 @@ let UserController = class UserController {
     createUser(createUserDto) {
         return this.userService.create(createUserDto);
     }
-    findAllUser() {
-        return this.userService.findAll();
+    async findAllUser() {
+        return await this.userService.findAll();
     }
     findOneUserbyId(findOneUserDto) {
         return this.userService.findOne(findOneUserDto);

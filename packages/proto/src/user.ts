@@ -23,6 +23,8 @@ export interface Empty {
 export interface CreateUserDto {
   email: string;
   password: string;
+  firstName?: string | undefined;
+  lastName?: string | undefined;
 }
 
 export interface User {
@@ -52,7 +54,7 @@ export interface UserServiceClient {
 export interface UserServiceController {
   createUser(request: CreateUserDto): Promise<User> | Observable<User> | User;
 
-  findAllUser(request: Empty): Promise<Users> | Observable<Users> | Users;
+  findAllUser(request: Empty): Observable<Users>;
 
   findOneUserbyId(request: FindOneUserDto): Promise<User> | Observable<User> | User;
 

@@ -4,7 +4,7 @@ package user;
 
 service UserService {
     rpc CreateUser(CreateUserDto) returns (User) {}
-    rpc FindAllUser(Empty) returns (Users) {}
+    rpc FindAllUser(Empty) returns (stream Users) {}
     rpc FindOneUserbyId(FindOneUserDto) returns (User) {}
     rpc FindOneUserByEmail(FindOneUserDto) returns  (User) {}
     rpc UpdateUser(UpdateUserDto) returns (User) {}
@@ -29,6 +29,8 @@ message Empty {
 message CreateUserDto {
     string email = 1;
     string password = 2;
+    optional string firstName = 3;
+    optional string lastName = 4;
 }
 
 message User {

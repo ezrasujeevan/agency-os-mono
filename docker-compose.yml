@@ -1,0 +1,30 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - rmq_lib:/var/lib/rabbitmq
+      - rmq_log:/var/log/rabbitmq
+
+  postegres:
+    image: postgres:13.14-alpine
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=postgres
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    restart: always
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+volumes:
+  pg_data:
+  rmq_lib:
+  rmq_log:
