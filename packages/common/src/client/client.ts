@@ -92,7 +92,7 @@ export class CreateClientRequestDto implements ClientProto.CreateClientRequest {
   lastName: string;
 }
 
-export class UpdateClientRequest
+export class UpdateClientRequestDto
   extends PartialType(CreateClientRequestDto)
   implements ClientProto.UpdateClientRequest
 {

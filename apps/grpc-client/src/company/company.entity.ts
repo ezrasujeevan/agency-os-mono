@@ -1,4 +1,5 @@
-import { User } from '@agency-os/common';
+import { Company } from '@agency-os/common';
+
 import {
   BaseEntity,
   Column,
@@ -11,7 +12,7 @@ import {
 } from 'typeorm';
 
 @Entity('user')
-export class UserEntity extends BaseEntity implements User.User {
+export class CompanyEntity extends BaseEntity implements Company.Company {
   @PrimaryGeneratedColumn('uuid', { name: '_id' })
   id: string;
 
@@ -28,14 +29,8 @@ export class UserEntity extends BaseEntity implements User.User {
   version: number;
 
   @Column({ unique: true, nullable: false })
-  email: string;
+  name: string;
 
-  @Column({ nullable: false })
-  password: string;
-
-  @Column({})
-  firstName?: string;
-
-  @Column()
-  lastName?: string;
+  @Column({ unique: true, nullable: false })
+  code: string;
 }

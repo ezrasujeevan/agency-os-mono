@@ -59,7 +59,7 @@ export class UserService {
     id: string,
     updateUserDto: UpdateUserRequestDto,
   ): Promise<User.User> {
-    const user = await this.userRepo.findOne({ where: { id } });
+    const user = await this.findOneById({ id });
     if (user && user !== undefined) {
       return await this.userRepo.save(user, {
         data: updateUserDto,
