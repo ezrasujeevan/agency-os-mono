@@ -10,7 +10,7 @@ import {
   VersionColumn,
 } from 'typeorm';
 
-@Entity('user')
+@Entity('client')
 export class ClientEntity extends BaseEntity implements Client.Client {
   @PrimaryGeneratedColumn('uuid', { name: '_id' })
   id: string;
@@ -33,10 +33,10 @@ export class ClientEntity extends BaseEntity implements Client.Client {
   @Column({ nullable: false })
   password: string;
 
-  @Column({})
+  @Column({ nullable: true })
   firstName?: string;
 
-  @Column()
+  @Column({ nullable: true })
   lastName?: string;
 
   @Column({ nullable: false })

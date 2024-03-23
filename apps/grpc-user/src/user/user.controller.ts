@@ -37,4 +37,8 @@ export class UserController {
   async removeUser(findOneUserByIdRequestDto: User.FindOneUserByIdRequestDto) {
     return await this.userService.remove(findOneUserByIdRequestDto);
   }
+
+  async registerUser(createUserRequestDto: User.CreateUserRequestDto) {}
+  async loginUser(createUserRequestDto: User.CreateUserRequestDto) {}
+  async validateUser(createUserRequestDto: User.CreateUserRequestDto) {}
 }

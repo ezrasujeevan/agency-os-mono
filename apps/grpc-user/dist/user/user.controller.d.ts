@@ -10,4 +10,7 @@ export declare class UserController {
     findOneUserByEmail(findOneUserByEmailRequestDto: User.FindOneUserByEmailRequestDto): Promise<UserProto.User>;
     updateUser(updateUserRequestDto: User.UpdateUserRequestDto): Promise<User.User>;
     removeUser(findOneUserByIdRequestDto: User.FindOneUserByIdRequestDto): Promise<User.User>;
+    registerUser(createUserRequestDto: User.CreateUserRequestDto): Promise<void>;
+    loginUser(createUserRequestDto: User.CreateUserRequestDto): Promise<void>;
+    validateUser(createUserRequestDto: User.CreateUserRequestDto): Promise<void>;
 }

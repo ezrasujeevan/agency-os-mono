@@ -35,6 +35,9 @@ let UserController = class UserController {
     async removeUser(findOneUserByIdRequestDto) {
         return await this.userService.remove(findOneUserByIdRequestDto);
     }
+    async registerUser(createUserRequestDto) { }
+    async loginUser(createUserRequestDto) { }
+    async validateUser(createUserRequestDto) { }
 };
 exports.UserController = UserController;
 exports.UserController = UserController = __decorate([

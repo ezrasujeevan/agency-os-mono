@@ -10,10 +10,15 @@ import { UserModule } from './user/user.module';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { validateEnv } from '@agency-os/common';
+import { MS_GRPC_ENV } from './app.validation';
+import appConfig from './app.validation'
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ validate: validateEnv, isGlobal: true }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    ConfigModule.forFeature(appConfig),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (
@@ -21,8 +26,12 @@ import { validateEnv } from '@agency-os/common';
       ): Promise<TypeOrmModuleOptions> => {
         const options: TypeOrmModuleOptions = {
           type: 'postgres',
-          url: configService.get<string>('DATABASE_URL'),
-          username: configService.get<string>('DATABASE_USERNAME'),
+          url: configService.get<string>('DB_URL'),
+          host: configService.get<string>('DB_HOST'),
+          port: configService.get<number>('DB_PORT'),
+          username: configService.get<string>('DB_USERNAME'),
+          password: configService.get<string>('DB_PASSWORD'),
+          database: configService.get<string>('DB_NAME'),
           synchronize: true,
           logging: true,
           autoLoadEntities: true,

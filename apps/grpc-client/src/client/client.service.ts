@@ -67,4 +67,8 @@ export class ClientService {
       `user not found by id ${findOneClientByIdRequestDto.id}`,
     );
   }
+
+  async registerClient() {}
+  async loginClient() {}
+  async validateClient() {}
 }

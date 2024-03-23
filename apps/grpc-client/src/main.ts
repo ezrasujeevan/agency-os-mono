@@ -11,6 +11,8 @@ import {
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
+  const host = process.env.HOST;
+  const port = process.env.PORT;
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     AppModule,
     {
@@ -24,7 +26,7 @@ async function bootstrap() {
           ClientProto.CLIENT_PACKAGE_NAME,
           CompanyProto.COMPANY_PACKAGE_NAME,
         ],
-        url: 'localhost:50052',
+        url: `${host}:${port}`,
       },
     },
   );

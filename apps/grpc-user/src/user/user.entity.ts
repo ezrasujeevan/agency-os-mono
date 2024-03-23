@@ -33,9 +33,9 @@ export class UserEntity extends BaseEntity implements User.User {
   @Column({ nullable: false })
   password: string;
 
-  @Column({})
+  @Column({ nullable: true })
   firstName?: string;
 
-  @Column()
+  @Column({ nullable: true })
   lastName?: string;
 }

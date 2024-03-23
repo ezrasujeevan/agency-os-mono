@@ -40,4 +40,8 @@ export class ClientController {
   ) {
     return this.clientService.remove(findOneClientByIdRequestDto);
   }
+
+  async registerClient(createClientRequestDto: Client.CreateClientRequestDto) {}
+  async loginClient(createClientRequestDto: Client.CreateClientRequestDto) {}
+  async validateClient(createClientRequestDto: Client.CreateClientRequestDto) {}
 }

@@ -46,7 +46,7 @@ let UserService = class UserService {
         throw new common_1.NotFoundException(`user not found by email ${findOneUserDto.email}`);
     }
     async update(id, updateUserDto) {
-        const user = await this.userRepo.findOne({ where: { id } });
+        const user = await this.findOneById({ id });
         if (user && user !== undefined) {
             return await this.userRepo.save(user, {
                 data: updateUserDto,

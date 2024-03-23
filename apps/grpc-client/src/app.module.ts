@@ -4,12 +4,13 @@ import { AppService } from './app.service';
 import { ClientModule } from './client/client.module';
 import { CompanyModule } from './company/company.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { validateEnv } from '@agency-os/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import appValidation from './app.validation';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ validate: validateEnv, isGlobal: true }),
+    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forFeature(appValidation),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (
@@ -17,8 +18,12 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
       ): Promise<TypeOrmModuleOptions> => {
         const options: TypeOrmModuleOptions = {
           type: 'postgres',
-          url: configService.get<string>('DATABASE_URL'),
-          username: configService.get<string>('DATABASE_USERNAME'),
+          // url: configService.get<string>('DB_URL'),
+          host: configService.get<string>('DB_HOST'),
+          port: configService.get<number>('DB_PORT'),
+          username: configService.get<string>('DB_USERNAME'),
+          password: configService.get<string>('DB_PASSWORD'),
+          database: configService.get<string>('DB_NAME'),
           synchronize: true,
           logging: true,
           autoLoadEntities: true,
