@@ -14,7 +14,7 @@
     "http": "pnpm --filter http-gateway",
     "grpc:auth": "pnpm --filter grpc-auth",
     "grpc:user": "pnpm --filter grpc-user",
-    "grpc:cleint": "pnpm --filter grpc-client"
+    "grpc:client": "pnpm --filter grpc-client"
   },
   "lint-staged": {
     "**/*.{js,ts,tsx}": [
