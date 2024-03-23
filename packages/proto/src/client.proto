@@ -14,15 +14,6 @@ service ClientService {
     rpc FindOneClientByEmail(FindOneClientByEmailRequest) returns  (Client) {}
     rpc UpdateClient(UpdateClientRequest) returns (Client) {}
     rpc RemoveClient(FindOneClientByIdRequest) returns (Client) {}
-
-    rpc CreateCompany(CreateCompanyRequest) returns (Company) {}
-    rpc FindAllCompany(Empty) returns (stream Companys) {}
-    rpc FindOneCompany(FindOneCompanyRequest) returns (Company) {}
-    rpc UpdateCompany(UpdateCompanyRequest) returns (Company) {}
-    rpc RemoveCompany(FindOneCompanyRequest) returns (Company) {}
-
-    
-
 }
 message RegisterClientResponse {
     int32 status = 1;
@@ -81,31 +72,3 @@ message Client {
     optional string firstName = 5;
     optional string lastName = 6;
 }
-
-
-
-message UpdateCompanyRequest {
-  string id = 1;
-}
-message FindOneCompanyRequest {
-   string id = 1;
-}
-
-
-message Companys {
-  repeated Company companys = 1;
-}
-
-message CreateCompanyRequest {
-  string email = 1;
-  string password = 2;
-  optional string firstName = 3;
-  optional string lastName = 4;
-}
-
-message Company {
-  string id = 1;
-  string name = 2;
-  string code = 3;
-}
-

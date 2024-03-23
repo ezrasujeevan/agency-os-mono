@@ -1,45 +1,50 @@
 {
-	"folders": [
-		{
-			"path": "."
-		},
-		{
-			"path": "apps/grpc-user"
-		},
-		{
-			"path": "apps/http-gateway"
-		},
-		{
-			"path": "apps/grpc-client"
-		},
-		{
-			"path": "packages/common"
-		}
-	],
-	"settings": {
-		"sqltools.connections": [
-			{
-				"previewLimit": 50,
-				"server": "localhost",
-				"port": 5432,
-				"driver": "PostgreSQL",
-				"name": "postgres",
-				"database": "postgres",
-				"username": "postgres",
-				"password": "password",
-				"group": "agencyOs-psql"
-			},
-			{
-				"previewLimit": 50,
-				"server": "localhost",
-				"port": 5432,
-				"driver": "PostgreSQL",
-				"name": "grpc_user",
-				"group": "agencyOs-psql",
-				"database": "grpc_user",
-				"username": "postgres",
-				"password": "password"
-			}
-		]
-	}
+  "folders": [
+    {
+      "name": "agency-os-mono",
+      "path": ".",
+    },
+    {
+      "name": "http-gateway",
+      "path": "apps/http-gateway",
+    },
+    {
+      "name": "grpc-user",
+      "path": "apps/grpc-user",
+    },
+    {
+      "name": "grpc-client",
+      "path": "apps/grpc-client",
+    },
+    {
+      "name": "common",
+      "path": "packages/common",
+    },
+  ],
+  "settings": {
+    "sqltools.connections": [
+      {
+        "previewLimit": 50,
+        "server": "localhost",
+        "port": 5432,
+        "driver": "PostgreSQL",
+        "name": "postgres",
+        "database": "postgres",
+        "username": "postgres",
+        "password": "password",
+        "group": "agencyOs-psql",
+      },
+      {
+        "previewLimit": 50,
+        "server": "localhost",
+        "port": 5432,
+        "driver": "PostgreSQL",
+        "name": "grpc_user",
+        "group": "agencyOs-psql",
+        "database": "grpc_user",
+        "username": "postgres",
+        "password": "password",
+      },
+    ],
+  },
 }

@@ -65,31 +65,6 @@ export interface Client {
   lastName?: string | undefined;
 }
 
-export interface UpdateCompanyRequest {
-  id: string;
-}
-
-export interface FindOneCompanyRequest {
-  id: string;
-}
-
-export interface Companys {
-  companys: Company[];
-}
-
-export interface CreateCompanyRequest {
-  email: string;
-  password: string;
-  firstName?: string | undefined;
-  lastName?: string | undefined;
-}
-
-export interface Company {
-  id: string;
-  name: string;
-  code: string;
-}
-
 export const CLIENT_PACKAGE_NAME = "client";
 
 export interface ClientServiceClient {
@@ -110,16 +85,6 @@ export interface ClientServiceClient {
   updateClient(request: UpdateClientRequest): Observable<Client>;
 
   removeClient(request: FindOneClientByIdRequest): Observable<Client>;
-
-  createCompany(request: CreateCompanyRequest): Observable<Company>;
-
-  findAllCompany(request: Empty): Observable<Companys>;
-
-  findOneCompany(request: FindOneCompanyRequest): Observable<Company>;
-
-  updateCompany(request: UpdateCompanyRequest): Observable<Company>;
-
-  removeCompany(request: FindOneCompanyRequest): Observable<Company>;
 }
 
 export interface ClientServiceController {
@@ -146,16 +111,6 @@ export interface ClientServiceController {
   updateClient(request: UpdateClientRequest): Promise<Client> | Observable<Client> | Client;
 
   removeClient(request: FindOneClientByIdRequest): Promise<Client> | Observable<Client> | Client;
-
-  createCompany(request: CreateCompanyRequest): Promise<Company> | Observable<Company> | Company;
-
-  findAllCompany(request: Empty): Observable<Companys>;
-
-  findOneCompany(request: FindOneCompanyRequest): Promise<Company> | Observable<Company> | Company;
-
-  updateCompany(request: UpdateCompanyRequest): Promise<Company> | Observable<Company> | Company;
-
-  removeCompany(request: FindOneCompanyRequest): Promise<Company> | Observable<Company> | Company;
 }
 
 export function ClientServiceControllerMethods() {
@@ -170,11 +125,6 @@ export function ClientServiceControllerMethods() {
       "findOneClientByEmail",
       "updateClient",
       "removeClient",
-      "createCompany",
-      "findAllCompany",
-      "findOneCompany",
-      "updateCompany",
-      "removeCompany",
     ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
