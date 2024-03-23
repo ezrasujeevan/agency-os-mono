@@ -1,7 +1,14 @@
-import { ClientProto, UserProto } from '@agency-os/proto';
-import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { ClientProto } from '@agency-os/proto';
+import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Type } from 'class-transformer';
-import { IsEmail, IsString, MinLength, IsOptional } from 'class-validator';
+import {
+  IsEmail,
+  IsString,
+  MinLength,
+  IsOptional,
+  IsNumber,
+} from 'class-validator';
+import { PartialType } from '@nestjs/mapped-types';
 import { CommonEntity } from 'src/database/common.entity';
 
 export abstract class Client
@@ -9,7 +16,7 @@ export abstract class Client
   implements ClientProto.Client
 {
   @ApiProperty({
-    description: 'this is the email of user ',
+    description: 'this is the email of Client ',
     example: 'john.doe@gmail.com',
     title: 'e-mail',
   })
@@ -19,7 +26,7 @@ export abstract class Client
   password: string;
 
   @ApiProperty({
-    description: 'this is the First Name of user ',
+    description: 'this is the First Name of Client ',
     example: 'John',
     title: 'First Name',
     required: false,
@@ -27,7 +34,7 @@ export abstract class Client
   firstName?: string;
 
   @ApiProperty({
-    description: 'this is the Last Name of user ',
+    description: 'this is the Last Name of Client ',
     example: 'Doe',
     title: 'Last Name',
     required: false,
@@ -36,16 +43,17 @@ export abstract class Client
   lastName?: string;
 
   @ApiProperty({
-    description: 'this is the Comany ID of client ',
-    example: '',
-    title: 'Compnay',
+    description: "this is the ID of Client's Company ",
+    example: 'Doe',
+    title: 'Last Name',
+    name: 'lastName',
   })
   company: string;
 }
 
-export class CreateUserRequestDto implements UserProto.CreateUserRequest {
+export class CreateClientRequestDto implements ClientProto.CreateClientRequest {
   @ApiProperty({
-    description: 'this is the email of user ',
+    description: 'this is the email of Client ',
     example: 'john.doe@gmail.com',
     title: 'e-mail',
     required: true,
@@ -54,7 +62,7 @@ export class CreateUserRequestDto implements UserProto.CreateUserRequest {
   email: string;
 
   @ApiProperty({
-    description: 'this is the password of user ',
+    description: 'this is the password of Client ',
     example: 'P@ssw0rd',
     title: 'Password',
     required: true,
@@ -64,7 +72,7 @@ export class CreateUserRequestDto implements UserProto.CreateUserRequest {
   password: string;
 
   @ApiProperty({
-    description: 'this is the First Name of user ',
+    description: 'this is the First Name of Client ',
     example: 'John',
     title: 'First Name',
     required: false,
@@ -74,7 +82,7 @@ export class CreateUserRequestDto implements UserProto.CreateUserRequest {
   firstName: string;
 
   @ApiProperty({
-    description: 'this is the Last Name of user ',
+    description: 'this is the Last Name of Client ',
     example: 'Doe',
     title: 'Last Name',
     required: false,
@@ -84,24 +92,9 @@ export class CreateUserRequestDto implements UserProto.CreateUserRequest {
   lastName: string;
 }
 
-export class FindOneUserByIdRequestDto
-  implements UserProto.FindOneUserByIdRequest
-{
-  @ApiProperty({})
-  @IsString()
-  id: string;
-}
-export class FindOneUserByEmailRequestDto
-  implements UserProto.FindOneUserByEmailRequest
-{
-  @ApiProperty({})
-  @IsString()
-  email: string;
-}
-
-export class UpdateUserRequestDto
-  extends PartialType(CreateUserRequestDto)
-  implements UserProto.UpdateUserRequest
+export class UpdateClientRequest
+  extends PartialType(CreateClientRequestDto)
+  implements ClientProto.UpdateClientRequest
 {
   @ApiProperty({
     description: 'this is the id',
@@ -112,6 +105,154 @@ export class UpdateUserRequestDto
   id: string;
 
   @ApiProperty()
-  @Type(() => CreateUserRequestDto)
-  Point?: CreateUserRequestDto;
+  @IsOptional()
+  @Type(() => CreateClientRequestDto)
+  Point?: CreateClientRequestDto;
+}
+
+export class FindOneClientByIdRequestDto
+  implements ClientProto.FindOneClientByIdRequest
+{
+  @ApiProperty({})
+  @IsString()
+  id: string;
+}
+export class FindOneClientByEmailRequestDto
+  implements ClientProto.FindOneClientByEmailRequest
+{
+  @ApiProperty({})
+  @IsString()
+  email: string;
+}
+
+export class LoginClientRequestDto implements ClientProto.LoginClientRequest {
+  @ApiProperty({
+    description: 'this is the email of Client ',
+    example: 'john.doe@gmail.com',
+    title: 'e-mail',
+    required: true,
+  })
+  @IsEmail()
+  email: string;
+
+  @ApiProperty({
+    description: 'this is the password of Client ',
+    example: 'P@ssw0rd',
+    title: 'Password',
+    required: true,
+  })
+  @IsString()
+  @MinLength(8)
+  password: string;
+}
+
+export class LoginClientResponceDto implements ClientProto.LoginClientResponse {
+  @ApiProperty({
+    description: 'HTTP Status ',
+    example: '200',
+    title: 'Status',
+  })
+  @IsNumber()
+  status: number;
+
+  @ApiProperty({
+    description: 'Errors ',
+    example: '',
+    title: 'Error',
+    isArray: true,
+  })
+  @IsString()
+  @IsOptional()
+  error: string[];
+
+  @ApiProperty({
+    description: 'JWT Token ',
+    example: '',
+    title: 'Token',
+  })
+  @IsString()
+  @IsOptional()
+  token: string;
+}
+export class ValidateClientRequestDto
+  implements ClientProto.ValidateClientRequest
+{
+  @ApiProperty({
+    description: 'JWT Token ',
+    example: '',
+    title: 'Token',
+  })
+  @IsString()
+  token: string;
+}
+
+export class ValidateClientResponseDto
+  implements ClientProto.ValidateClientResponse
+{
+  clientId: string;
+  @ApiProperty({
+    description: 'Client ID of token ',
+    example: '',
+    title: 'Client ID',
+  })
+  @IsString()
+  ClientId: string;
+
+  @ApiProperty({
+    description: 'HTTP Status ',
+    example: '200',
+    title: 'Status',
+  })
+  @IsNumber()
+  status: number;
+
+  @ApiProperty({
+    description: 'Errors ',
+    example: '',
+    title: 'Error',
+    isArray: true,
+  })
+  @IsString()
+  @IsOptional()
+  error: string[];
+  @ApiProperty({
+    description: 'JWT Token ',
+    example: '',
+    title: 'Token',
+  })
+  @IsString()
+  token: string;
+}
+
+export class RegisterClientResponseDto
+  implements ClientProto.RegisterClientResponse
+{
+  @ApiProperty({
+    description: 'HTTP Status ',
+    example: '200',
+    title: 'Status',
+  })
+  @IsNumber()
+  status: number;
+
+  @ApiProperty({
+    description: 'Errors ',
+    example: '',
+    title: 'Error',
+    isArray: true,
+  })
+  @IsString()
+  @IsOptional()
+  error: string[];
+}
+export class Clients implements ClientProto.Clients {
+  @ApiProperty({
+    description: 'List Of Clients ',
+    example: '',
+    title: 'Clients',
+    isArray: true,
+  })
+  @IsString()
+  @IsOptional()
+  clients: Client[];
 }
