@@ -11,8 +11,10 @@ import {
 } from '@nestjs/common';
 import { ClientService } from './client.service';
 import { Client } from '@agency-os/common';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 
 @Controller('client')
+@ApiTags('client')
 export class ClientController {
   constructor(private readonly clientService: ClientService) {}
 
@@ -26,6 +28,18 @@ export class ClientController {
     return this.clientService.findAll();
   }
 
+  @ApiQuery({
+    name: 'id',
+    type: String,
+    description: 'Find User By Id',
+    required: false,
+  })
+  @ApiQuery({
+    name: 'email',
+    type: String,
+    description: 'Find User By Id',
+    required: false,
+  })
   @Get('find')
   findOne(@Query('id') id?: string, @Query('email') email?: string) {
     if (email && email !== undefined) {
