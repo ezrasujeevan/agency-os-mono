@@ -20,7 +20,7 @@ let UsersService = class UsersService {
         this.client = client;
     }
     onModuleInit() {
-        this.userService = this.client.getService(proto_1.User.USER_SERVICE_NAME);
+        this.userService = this.client.getService(proto_1.UserProto.USER_SERVICE_NAME);
     }
     async create(createUserDto) {
         return this.userService.createUser(createUserDto);
@@ -44,7 +44,7 @@ let UsersService = class UsersService {
 exports.UsersService = UsersService;
 exports.UsersService = UsersService = __decorate([
     (0, common_1.Injectable)(),
-    __param(0, (0, common_1.Inject)(proto_1.User.protobufPackage)),
+    __param(0, (0, common_1.Inject)(proto_1.UserProto.protobufPackage)),
     __metadata("design:paramtypes", [Object])
 ], UsersService);
 //# sourceMappingURL=users.service.js.map

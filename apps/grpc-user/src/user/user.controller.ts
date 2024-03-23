@@ -1,34 +1,43 @@
 import { Controller } from '@nestjs/common';
 import { UserService } from './user.service';
-import { User } from '@agency-os/proto';
-import { CreateUserDto, FindOneUserDto, UpdateUserDto } from './user.dto';
-
+import { UserServiceControllerMethods } from '@agency-os/proto';
+import {
+  CreateUserRequestDto,
+  FindOneUserByEmailRequestDto,
+  FindOneUserByIdRequestDto,
+  UpdateUserRequestDto,
+} from '@agency-os/common';
 @Controller()
-@User.UserServiceControllerMethods()
+@UserServiceControllerMethods()
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  createUser(createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  async createUser(createUserRequestDto: CreateUserRequestDto) {
+    return await this.userService.create(createUserRequestDto);
   }
 
-  async findAllUser() {
+  async findAllUser({}) {
     return await this.userService.findAll();
   }
 
-  findOneUserbyId(findOneUserDto: FindOneUserDto) {
-    return this.userService.findOne(findOneUserDto);
+  async findOneUserbyId(findOneUserByIdRequestDto: FindOneUserByIdRequestDto) {
+    return await this.userService.findOne(findOneUserByIdRequestDto);
   }
 
-  findOneUserByEmail(findOneUserDto: FindOneUserDto) {
-    return this.userService.findOne(findOneUserDto);
+  async findOneUserByEmail(
+    findOneUserByEmailRequestDto: FindOneUserByEmailRequestDto,
+  ) {
+    return await this.userService.findOne(findOneUserByEmailRequestDto);
   }
 
-  updateUser(updateUserDto: UpdateUserDto) {
-    return this.userService.update(updateUserDto.id, updateUserDto);
+  async updateUser(updateUserRequestDto: UpdateUserRequestDto) {
+    return await this.userService.update(
+      updateUserRequestDto.id,
+      updateUserRequestDto,
+    );
   }
 
-  removeUser(findOneUserDto: FindOneUserDto) {
-    return this.userService.remove(findOneUserDto);
+  async removeUser(findOneUserByIdRequestDto: FindOneUserByIdRequestDto) {
+    return await this.userService.remove(findOneUserByIdRequestDto);
   }
 }

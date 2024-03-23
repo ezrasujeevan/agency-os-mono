@@ -21,11 +21,11 @@ exports.UsersModule = UsersModule = __decorate([
         imports: [
             microservices_1.ClientsModule.register([
                 {
-                    name: proto_1.User.protobufPackage,
+                    name: proto_1.UserProto.protobufPackage,
                     transport: microservices_1.Transport.GRPC,
                     options: {
-                        package: proto_1.User.USER_PACKAGE_NAME,
-                        protoPath: (0, path_1.join)(require.resolve('@agency-os/proto'), '../', proto_1.userProto),
+                        package: proto_1.UserProto.USER_PACKAGE_NAME,
+                        protoPath: (0, path_1.join)(require.resolve('@agency-os/proto'), '../', proto_1.userProtoFile),
                         url: 'localhost:50051',
                     },
                 },

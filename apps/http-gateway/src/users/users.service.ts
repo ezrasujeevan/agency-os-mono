@@ -1,19 +1,19 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
-import { User } from '@agency-os/proto';
+import { UserProto } from '@agency-os/proto';
 import { ClientGrpc } from '@nestjs/microservices';
-import { CreateUserDto, UpdateUserDto } from '@agency-os/common';
+import { User } from '@agency-os/common';
 @Injectable()
 export class UsersService implements OnModuleInit {
-  private userService: User.UserServiceClient;
-  constructor(@Inject(User.protobufPackage) private client: ClientGrpc) {}
+  private userService: UserProto.UserServiceClient;
+  constructor(@Inject(UserProto.protobufPackage) private client: ClientGrpc) {}
 
   onModuleInit() {
-    this.userService = this.client.getService<User.UserServiceClient>(
-      User.USER_SERVICE_NAME,
+    this.userService = this.client.getService<UserProto.UserServiceClient>(
+      UserProto.USER_SERVICE_NAME,
     );
   }
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: User.CreateUserRequestDto) {
     return this.userService.createUser(createUserDto);
   }
 
@@ -29,7 +29,7 @@ export class UsersService implements OnModuleInit {
     return this.userService.findOneUserByEmail({ email });
   }
 
-  update(id: string, updateUserDto: UpdateUserDto) {
+  update(id: string, updateUserDto: User.UpdateUserRequestDto) {
     return this.userService.updateUser({ ...updateUserDto, id });
   }
 

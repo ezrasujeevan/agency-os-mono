@@ -1,0 +1,111 @@
+syntax = "proto3";
+
+package client;
+
+service ClientService {
+
+    rpc RegisterClient (CreateClientRequest) returns (RegisterClientResponse) {}
+    rpc LoginClient (LoginClientRequest) returns (LoginClientResponse) {}
+    rpc ValidateClient (ValidateClientRequest) returns (ValidateClientResponse) {}
+    
+    rpc CreateClient(CreateClientRequest) returns (Client) {}
+    rpc FindAllClient(Empty) returns (stream FindOneClientByEmailRequest) {}
+    rpc FindOneClientbyId(FindOneClientByIdRequest) returns (Client) {}
+    rpc FindOneClientByEmail(FindOneClientByEmailRequest) returns  (Client) {}
+    rpc UpdateClient(UpdateClientRequest) returns (Client) {}
+    rpc RemoveClient(FindOneClientByIdRequest) returns (Client) {}
+
+    rpc CreateCompany(CreateCompanyRequest) returns (Company) {}
+    rpc FindAllCompany(Empty) returns (stream Companys) {}
+    rpc FindOneCompany(FindOneCompanyRequest) returns (Company) {}
+    rpc UpdateCompany(UpdateCompanyRequest) returns (Company) {}
+    rpc RemoveCompany(FindOneCompanyRequest) returns (Company) {}
+
+    
+
+}
+message RegisterClientResponse {
+    int32 status = 1;
+    repeated string error = 2;
+  }
+
+message LoginClientRequest {
+    string email = 1;
+    string password = 2;
+  }
+  
+  message LoginClientResponse {
+    int32 status = 1;
+    repeated string error = 2;
+    string token = 3;
+  }
+  
+  message ValidateClientRequest {
+    string token = 1;
+  }
+  
+  message ValidateClientResponse {
+    int32 status = 1;
+    repeated string error = 2;
+    string clientId = 3;
+  }
+
+message UpdateClientRequest {
+    string id = 1;
+}
+message FindOneClientByIdRequest {
+     string id = 1;
+}
+message FindOneClientByEmailRequest {
+  string email = 1;
+}
+
+message Clients {
+    repeated Client clients = 1;
+}
+message Empty {
+
+}
+message CreateClientRequest {
+    string email = 1;
+    string password = 2;
+    optional string firstName = 3;
+    optional string lastName = 4;
+}
+
+message Client {
+    string id = 1;
+    string email = 2;
+    string password = 3;
+    string company = 4;
+    optional string firstName = 5;
+    optional string lastName = 6;
+}
+
+
+
+message UpdateCompanyRequest {
+  string id = 1;
+}
+message FindOneCompanyRequest {
+   string id = 1;
+}
+
+
+message Companys {
+  repeated Company companys = 1;
+}
+
+message CreateCompanyRequest {
+  string email = 1;
+  string password = 2;
+  optional string firstName = 3;
+  optional string lastName = 4;
+}
+
+message Company {
+  string id = 1;
+  string name = 2;
+  string code = 3;
+}
+

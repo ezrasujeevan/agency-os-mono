@@ -1,4 +1,4 @@
-import * as UserProto from '@agency-os/proto';
+import { UserProto } from '@agency-os/proto';
 import { PartialType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Type } from 'class-transformer';
@@ -8,7 +8,6 @@ import {
   IsOptional,
   IsString,
   MinLength,
-  minLength,
 } from 'class-validator';
 import { CommonEntity } from 'src/database/common.entity';
 
@@ -97,7 +96,7 @@ export class FindOneUserByEmailRequestDto
   email: string;
 }
 
-export class UpdateUserDto
+export class UpdateUserRequestDto
   extends PartialType(CreateUserRequestDto)
   implements UserProto.UpdateUserRequest
 {

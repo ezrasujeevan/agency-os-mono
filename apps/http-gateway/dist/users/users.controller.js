@@ -11,7 +11,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var _a, _b;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersController = void 0;
 const common_1 = require("@nestjs/common");
@@ -45,16 +44,16 @@ let UsersController = class UsersController {
 exports.UsersController = UsersController;
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: 'Create User' }),
-    (0, swagger_1.ApiCreatedResponse)({ description: 'User Created', type: common_2.User }),
+    (0, swagger_1.ApiCreatedResponse)({ description: 'User Created', type: common_2.User.User }),
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [typeof (_a = typeof common_2.CreateUserDto !== "undefined" && common_2.CreateUserDto) === "function" ? _a : Object]),
+    __metadata("design:paramtypes", [common_2.User.CreateUserRequestDto]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "create", null);
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: 'Find All Users' }),
-    (0, swagger_1.ApiOkResponse)({ description: 'Got All Users', }),
+    (0, swagger_1.ApiOkResponse)({ description: 'Got All Users' }),
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
@@ -81,7 +80,7 @@ __decorate([
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, typeof (_b = typeof common_2.UpdateUserDto !== "undefined" && common_2.UpdateUserDto) === "function" ? _b : Object]),
+    __metadata("design:paramtypes", [String, common_2.User.UpdateUserRequestDto]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "update", null);
 __decorate([

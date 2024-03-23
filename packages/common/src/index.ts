@@ -1,4 +1,4 @@
-export * from './user/user';
+export * as User from './user/user';
 
 export * from './config/config.sheme';
 export * from './config/config.validate';

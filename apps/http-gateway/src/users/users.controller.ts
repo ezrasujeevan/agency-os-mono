@@ -14,7 +14,7 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { CreateUserDto, User, UpdateUserDto } from '@agency-os/common';
+import { User } from '@agency-os/common';
 
 @ApiTags('user')
 @Controller('users')
@@ -22,15 +22,15 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @ApiOperation({ summary: 'Create User' })
-  @ApiCreatedResponse({ description: 'User Created', type: User })
+  @ApiCreatedResponse({ description: 'User Created', type: User.User })
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
+  create(@Body() createUserDto: User.CreateUserRequestDto) {
     console.log('asdasd');
     return this.usersService.create(createUserDto);
   }
 
   @ApiOperation({ summary: 'Find All Users' })
-  @ApiOkResponse({ description: 'Got All Users',  })
+  @ApiOkResponse({ description: 'Got All Users' })
   @Get()
   findAll() {
     return this.usersService.findAll();
@@ -48,7 +48,10 @@ export class UsersController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateUserDto: User.UpdateUserRequestDto,
+  ) {
     return this.usersService.update(id, updateUserDto);
   }
 
