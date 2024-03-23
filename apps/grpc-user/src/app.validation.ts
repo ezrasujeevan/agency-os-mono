@@ -5,11 +5,12 @@ import {
 } from '@agency-os/common';
 import { registerAs } from '@nestjs/config';
 import { IsNumber, IsOptional, IsString, Max, Min } from 'class-validator';
+import { env } from 'process';
 
-interface Igrpc_user extends IEnvironmentVariables {
-  db_url: string;
+export interface Igrpc_user extends IEnvironmentVariables {
+  db_url?: string;
   db_host: string;
-  db_port: string;
+  db_port: number;
   db_username: string;
   db_password: string;
   db_name: string;
@@ -45,14 +46,15 @@ class MS_GRPC_ENV extends EnvironmentVariables {
 
 export default registerAs('agency-os-config-grpc-user', (): Igrpc_user => {
   validateUtil(process.env, MS_GRPC_ENV);
-
   return {
-    db_url: process.env.DB_URL,
-    db_host: process.env.DB_HOST,
-    db_port: parseInt(process.env.DB_PORT),
-    db_username: process.env.DB_USERNAME,
-    db_password: process.env.DB_PASSWORD,
-    db_name: process.env.DB_NAME,
-    db_schema: process.env.DB_SCHEMA,
+    Node_env: env.NODE_ENV || 'DEV',
+    host: env.HOST || 'localhost',
+    port: parseInt(env.PORT || '5000'),
+    db_host: env.DB_HOST || 'localhost',
+    db_port: parseInt(env.DB_PORT || '5432'),
+    db_username: env.DB_USERNAME || 'postgres',
+    db_password: env.DB_PASSWORD || '',
+    db_name: env.DB_NAME || 'postgres',
+    db_schema: env.DB_SCHEMA || 'public',
   };
 });

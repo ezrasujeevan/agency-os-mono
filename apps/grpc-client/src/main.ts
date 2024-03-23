@@ -26,7 +26,7 @@ async function bootstrap() {
           ClientProto.CLIENT_PACKAGE_NAME,
           CompanyProto.COMPANY_PACKAGE_NAME,
         ],
-        url: `${host}:${port}`,
+        url: `localhost:50052`,
       },
     },
   );

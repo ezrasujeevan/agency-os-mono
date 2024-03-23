@@ -9,29 +9,29 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { validateEnv } from '@agency-os/common';
-import { MS_GRPC_ENV } from './app.validation';
-import appConfig from './app.validation'
+import AppValidation, { Igrpc_user } from './app.validation';
+import { log } from 'console';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    ConfigModule.forFeature(appConfig),
+    ConfigModule.forFeature(AppValidation),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (
         configService: ConfigService,
       ): Promise<TypeOrmModuleOptions> => {
+        const db = configService.get<Igrpc_user>('agency-os-config-grpc-user');
         const options: TypeOrmModuleOptions = {
           type: 'postgres',
-          url: configService.get<string>('DB_URL'),
-          host: configService.get<string>('DB_HOST'),
-          port: configService.get<number>('DB_PORT'),
-          username: configService.get<string>('DB_USERNAME'),
-          password: configService.get<string>('DB_PASSWORD'),
-          database: configService.get<string>('DB_NAME'),
+          host: db?.db_host,
+          port: db?.db_port,
+          username: db?.db_username,
+          password: db?.db_password,
+          database: db?.db_name,
+          schema: db?.db_schema,
           synchronize: true,
           logging: true,
           autoLoadEntities: true,

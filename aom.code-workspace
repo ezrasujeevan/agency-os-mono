@@ -45,6 +45,17 @@
         "username": "postgres",
         "password": "password",
       },
+      {
+        "previewLimit": 50,
+        "server": "localhost",
+        "port": 5432,
+        "driver": "PostgreSQL",
+        "group": "agencyOs-psql",
+        "name": "grpc_client",
+        "database": "grpc_client",
+        "username": "postgres",
+        "password": "password",
+      },
     ],
   },
 }
