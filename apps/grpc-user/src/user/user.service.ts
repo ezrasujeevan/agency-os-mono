@@ -5,13 +5,14 @@ import {
   NotFoundException,
   OnModuleInit,
 } from '@nestjs/common';
-import { CreateUserDto, FindOneUserDto, UpdateUserDto } from './user.dto';
 import { randomUUID } from 'crypto';
-import { User } from '@agency-os/proto';
+import { User } from '@agency-os/common';
 import { UserEntity } from './user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { log } from 'console';
+import { UserProto } from '@agency-os/proto';
+import { UpdateUserRequestDto } from '@agency-os/common/dist/user/user';
 
 @Injectable()
 export class UserService {
@@ -20,34 +21,44 @@ export class UserService {
     private readonly userRepo: Repository<UserEntity>,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User.User> {
+  async create(createUserDto: User.CreateUserRequestDto): Promise<User.User> {
     const user = this.userRepo.create(createUserDto);
     return await this.userRepo.save(user);
   }
 
   async findAll(): Promise<User.Users> {
     const users = await this.userRepo.find();
-
     return { users };
   }
 
-  async findOne(findOneUserDto: FindOneUserDto): Promise<User.User> {
-    const { email, id } = findOneUserDto;
-    let user;
-    if (id) {
-      user = await this.userRepo.findOne({ where: { id } });
-    } else if (email) {
-      user = await this.userRepo.findOne({ where: { email } });
-    } else {
-      throw new BadRequestException(`Have to send either id or email`);
-    }
+  async findOneById(
+    findOneUserDto: User.FindOneUserByIdRequestDto,
+  ): Promise<User.User> {
+    const { id } = findOneUserDto;
+    const user = await this.userRepo.findOne({ where: { id } });
     if (user !== undefined && user) {
       return user;
     }
     throw new NotFoundException(`user not found by id ${findOneUserDto.id}`);
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto): Promise<User.User> {
+  async findOneByEmail(
+    findOneUserDto: User.FindOneUserByEmailRequestDto,
+  ): Promise<UserProto.User> {
+    const { email } = findOneUserDto;
+    const user = await this.userRepo.findOne({ where: { email } });
+    if (user !== undefined && user) {
+      return user;
+    }
+    throw new NotFoundException(
+      `user not found by email ${findOneUserDto.email}`,
+    );
+  }
+
+  async update(
+    id: string,
+    updateUserDto: UpdateUserRequestDto,
+  ): Promise<User.User> {
     const user = await this.userRepo.findOne({ where: { id } });
     if (user && user !== undefined) {
       return await this.userRepo.save(user, {
@@ -57,7 +68,9 @@ export class UserService {
     throw new NotFoundException(`user not found by id ${id}`);
   }
 
-  async remove(findOneUserDto: FindOneUserDto): Promise<User.User> {
+  async remove(
+    findOneUserDto: User.FindOneUserByIdRequestDto,
+  ): Promise<User.User> {
     const user = await this.userRepo.findOne({
       where: { id: findOneUserDto.id },
     });

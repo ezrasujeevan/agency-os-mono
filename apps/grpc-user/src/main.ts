@@ -2,7 +2,7 @@ import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { join } from 'path';
-import { User, userProto } from '@agency-os/proto';
+import { UserProto, userProtoFile } from '@agency-os/proto';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
@@ -11,8 +11,12 @@ async function bootstrap() {
     {
       transport: Transport.GRPC,
       options: {
-        protoPath: join(require.resolve('@agency-os/proto'), '../', userProto),
-        package: User.USER_PACKAGE_NAME,
+        protoPath: join(
+          require.resolve('@agency-os/proto'),
+          '../',
+          userProtoFile,
+        ),
+        package: UserProto.USER_PACKAGE_NAME,
         url: 'localhost:50051',
       },
     },

@@ -18,26 +18,26 @@ export abstract class CommonEntity extends BaseEntity {
     title: 'ID',
   })
   @IsString()
-  @PrimaryGeneratedColumn('uuid', { name: '_id' })
+  // @PrimaryGeneratedColumn('uuid', { name: '_id' })
   id: string;
 
   @Exclude()
   @IsDateString()
-  @CreateDateColumn({ name: 'created_at' })
+  // @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
   @Exclude()
   @IsDateString()
-  @UpdateDateColumn({ name: 'updated_at' })
+  // @UpdateDateColumn({ name: 'updated_at' })
   UpdatedAt: Date;
 
   @Exclude()
   @IsDateString()
-  @DeleteDateColumn({ name: 'deleted_at' })
+  // @DeleteDateColumn({ name: 'deleted_at' })
   DeletedAt: Date;
 
   @Exclude()
   @IsNumber()
-  @VersionColumn({ name: '_v' })
+  // @VersionColumn({ name: '_v' })
   version: number;
 }

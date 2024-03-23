@@ -29,22 +29,21 @@ let UserService = class UserService {
         const users = await this.userRepo.find();
         return { users };
     }
-    async findOne(findOneUserDto) {
-        const { email, id } = findOneUserDto;
-        let user;
-        if (id) {
-            user = await this.userRepo.findOne({ where: { id } });
-        }
-        else if (email) {
-            user = await this.userRepo.findOne({ where: { email } });
-        }
-        else {
-            throw new common_1.BadRequestException(`Have to send either id or email`);
-        }
+    async findOneById(findOneUserDto) {
+        const { id } = findOneUserDto;
+        const user = await this.userRepo.findOne({ where: { id } });
         if (user !== undefined && user) {
             return user;
         }
         throw new common_1.NotFoundException(`user not found by id ${findOneUserDto.id}`);
+    }
+    async findOneByEmail(findOneUserDto) {
+        const { email } = findOneUserDto;
+        const user = await this.userRepo.findOne({ where: { email } });
+        if (user !== undefined && user) {
+            return user;
+        }
+        throw new common_1.NotFoundException(`user not found by email ${findOneUserDto.email}`);
     }
     async update(id, updateUserDto) {
         const user = await this.userRepo.findOne({ where: { id } });

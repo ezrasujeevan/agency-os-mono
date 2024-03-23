@@ -1,18 +1,13 @@
 import { Controller } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UserServiceControllerMethods } from '@agency-os/proto';
-import {
-  CreateUserRequestDto,
-  FindOneUserByEmailRequestDto,
-  FindOneUserByIdRequestDto,
-  UpdateUserRequestDto,
-} from '@agency-os/common';
+import { UserProto } from '@agency-os/proto';
+import { User } from '@agency-os/common';
 @Controller()
-@UserServiceControllerMethods()
+@UserProto.UserServiceControllerMethods()
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  async createUser(createUserRequestDto: CreateUserRequestDto) {
+  async createUser(createUserRequestDto: User.CreateUserRequestDto) {
     return await this.userService.create(createUserRequestDto);
   }
 
@@ -20,24 +15,26 @@ export class UserController {
     return await this.userService.findAll();
   }
 
-  async findOneUserbyId(findOneUserByIdRequestDto: FindOneUserByIdRequestDto) {
-    return await this.userService.findOne(findOneUserByIdRequestDto);
+  async findOneUserbyId(
+    findOneUserByIdRequestDto: User.FindOneUserByIdRequestDto,
+  ) {
+    return await this.userService.findOneById(findOneUserByIdRequestDto);
   }
 
   async findOneUserByEmail(
-    findOneUserByEmailRequestDto: FindOneUserByEmailRequestDto,
+    findOneUserByEmailRequestDto: User.FindOneUserByEmailRequestDto,
   ) {
-    return await this.userService.findOne(findOneUserByEmailRequestDto);
+    return await this.userService.findOneByEmail(findOneUserByEmailRequestDto);
   }
 
-  async updateUser(updateUserRequestDto: UpdateUserRequestDto) {
+  async updateUser(updateUserRequestDto: User.UpdateUserRequestDto) {
     return await this.userService.update(
       updateUserRequestDto.id,
       updateUserRequestDto,
     );
   }
 
-  async removeUser(findOneUserByIdRequestDto: FindOneUserByIdRequestDto) {
+  async removeUser(findOneUserByIdRequestDto: User.FindOneUserByIdRequestDto) {
     return await this.userService.remove(findOneUserByIdRequestDto);
   }
 }

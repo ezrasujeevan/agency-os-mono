@@ -1,12 +1,13 @@
 import { UserService } from './user.service';
-import { CreateUserDto, FindOneUserDto, UpdateUserDto } from './user.dto';
+import { UserProto } from '@agency-os/proto';
+import { User } from '@agency-os/common';
 export declare class UserController {
     private readonly userService;
     constructor(userService: UserService);
-    createUser(createUserDto: CreateUserDto): Promise<User.User>;
-    findAllUser(): Promise<User.Users>;
-    findOneUserbyId(findOneUserDto: FindOneUserDto): Promise<User.User>;
-    findOneUserByEmail(findOneUserDto: FindOneUserDto): Promise<User.User>;
-    updateUser(updateUserDto: UpdateUserDto): Promise<User.User>;
-    removeUser(findOneUserDto: FindOneUserDto): Promise<User.User>;
+    createUser(createUserRequestDto: User.CreateUserRequestDto): Promise<User.User>;
+    findAllUser({}: {}): Promise<User.Users>;
+    findOneUserbyId(findOneUserByIdRequestDto: User.FindOneUserByIdRequestDto): Promise<User.User>;
+    findOneUserByEmail(findOneUserByEmailRequestDto: User.FindOneUserByEmailRequestDto): Promise<UserProto.User>;
+    updateUser(updateUserRequestDto: User.UpdateUserRequestDto): Promise<User.User>;
+    removeUser(findOneUserByIdRequestDto: User.FindOneUserByIdRequestDto): Promise<User.User>;
 }

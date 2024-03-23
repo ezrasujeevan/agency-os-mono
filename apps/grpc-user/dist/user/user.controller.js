@@ -17,29 +17,29 @@ let UserController = class UserController {
     constructor(userService) {
         this.userService = userService;
     }
-    createUser(createUserDto) {
-        return this.userService.create(createUserDto);
+    async createUser(createUserRequestDto) {
+        return await this.userService.create(createUserRequestDto);
     }
-    async findAllUser() {
+    async findAllUser({}) {
         return await this.userService.findAll();
     }
-    findOneUserbyId(findOneUserDto) {
-        return this.userService.findOne(findOneUserDto);
+    async findOneUserbyId(findOneUserByIdRequestDto) {
+        return await this.userService.findOneById(findOneUserByIdRequestDto);
     }
-    findOneUserByEmail(findOneUserDto) {
-        return this.userService.findOne(findOneUserDto);
+    async findOneUserByEmail(findOneUserByEmailRequestDto) {
+        return await this.userService.findOneByEmail(findOneUserByEmailRequestDto);
     }
-    updateUser(updateUserDto) {
-        return this.userService.update(updateUserDto.id, updateUserDto);
+    async updateUser(updateUserRequestDto) {
+        return await this.userService.update(updateUserRequestDto.id, updateUserRequestDto);
     }
-    removeUser(findOneUserDto) {
-        return this.userService.remove(findOneUserDto);
+    async removeUser(findOneUserByIdRequestDto) {
+        return await this.userService.remove(findOneUserByIdRequestDto);
     }
 };
 exports.UserController = UserController;
 exports.UserController = UserController = __decorate([
     (0, common_1.Controller)(),
-    proto_1.User.UserServiceControllerMethods(),
+    proto_1.UserProto.UserServiceControllerMethods(),
     __metadata("design:paramtypes", [user_service_1.UserService])
 ], UserController);
 //# sourceMappingURL=user.controller.js.map

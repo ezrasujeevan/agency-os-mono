@@ -1,7 +1,39 @@
-import { UserClass } from '@agency-os/common';
-import { Column, Entity } from 'typeorm';
-import { Exclude, Expose } from 'class-transformer';
+import { User } from '@agency-os/common';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+  VersionColumn,
+} from 'typeorm';
 
 @Entity('user')
-export class UserEntity implements UserClass {}
-ya
+export class UserEntity implements User.User {
+  @PrimaryGeneratedColumn('uuid', { name: '_id' })
+  id: string;
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  UpdatedAt: Date;
+
+  @DeleteDateColumn({ name: 'deleted_at' })
+  DeletedAt: Date;
+
+  @VersionColumn({ name: '_v' })
+  version: number;
+
+  @Column({ unique: true, nullable: false })
+  email: string;
+
+  @Column({ nullable: false })
+  password: string;
+
+  @Column({})
+  firstName?: string;
+
+  @Column()
+  lastName?: string;
+}
