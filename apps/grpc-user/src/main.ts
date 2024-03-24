@@ -22,6 +22,7 @@ async function bootstrap() {
         ),
         package: UserProto.USER_PACKAGE_NAME,
         url: `localhost:50051`,
+        
       },
     },
   );

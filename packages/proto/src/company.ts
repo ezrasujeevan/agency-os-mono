@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { Metadata } from "@grpc/grpc-js";
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
 
@@ -33,27 +34,27 @@ export interface Company {
 export const COMPANY_PACKAGE_NAME = "company";
 
 export interface ClientServiceClient {
-  createCompany(request: CreateCompanyRequest): Observable<Company>;
+  createCompany(request: CreateCompanyRequest, metadata?: Metadata): Observable<Company>;
 
-  findAllCompany(request: Empty): Observable<Companys>;
+  findAllCompany(request: Empty, metadata?: Metadata): Observable<Companys>;
 
-  findOneCompany(request: FindOneCompanyRequest): Observable<Company>;
+  findOneCompany(request: FindOneCompanyRequest, metadata?: Metadata): Observable<Company>;
 
-  updateCompany(request: UpdateCompanyRequest): Observable<Company>;
+  updateCompany(request: UpdateCompanyRequest, metadata?: Metadata): Observable<Company>;
 
-  removeCompany(request: FindOneCompanyRequest): Observable<Company>;
+  removeCompany(request: FindOneCompanyRequest, metadata?: Metadata): Observable<Company>;
 }
 
 export interface ClientServiceController {
-  createCompany(request: CreateCompanyRequest): Promise<Company> | Observable<Company> | Company;
+  createCompany(request: CreateCompanyRequest, metadata?: Metadata): Promise<Company> | Observable<Company> | Company;
 
-  findAllCompany(request: Empty): Observable<Companys>;
+  findAllCompany(request: Empty, metadata?: Metadata): Observable<Companys>;
 
-  findOneCompany(request: FindOneCompanyRequest): Promise<Company> | Observable<Company> | Company;
+  findOneCompany(request: FindOneCompanyRequest, metadata?: Metadata): Promise<Company> | Observable<Company> | Company;
 
-  updateCompany(request: UpdateCompanyRequest): Promise<Company> | Observable<Company> | Company;
+  updateCompany(request: UpdateCompanyRequest, metadata?: Metadata): Promise<Company> | Observable<Company> | Company;
 
-  removeCompany(request: FindOneCompanyRequest): Promise<Company> | Observable<Company> | Company;
+  removeCompany(request: FindOneCompanyRequest, metadata?: Metadata): Promise<Company> | Observable<Company> | Company;
 }
 
 export function ClientServiceControllerMethods() {

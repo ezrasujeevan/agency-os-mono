@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { Metadata } from '@grpc/grpc-js';
 import { Controller } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserProto } from '@agency-os/proto';
 import { User } from '@agency-os/common';
+import { log } from 'console';
 @Controller()
 @UserProto.UserServiceControllerMethods()
 export class UserController {
@@ -11,7 +14,8 @@ export class UserController {
     return await this.userService.create(createUserRequestDto);
   }
 
-  async findAllUser({}) {
+  async findAllUser({}, metadata: Metadata) {
+    log(metadata);
     return await this.userService.findAll();
   }
 

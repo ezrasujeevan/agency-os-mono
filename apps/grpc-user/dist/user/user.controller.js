@@ -13,6 +13,7 @@ exports.UserController = void 0;
 const common_1 = require("@nestjs/common");
 const user_service_1 = require("./user.service");
 const proto_1 = require("@agency-os/proto");
+const console_1 = require("console");
 let UserController = class UserController {
     constructor(userService) {
         this.userService = userService;
@@ -20,7 +21,8 @@ let UserController = class UserController {
     async createUser(createUserRequestDto) {
         return await this.userService.create(createUserRequestDto);
     }
-    async findAllUser({}) {
+    async findAllUser({}, metadata) {
+        (0, console_1.log)(metadata);
         return await this.userService.findAll();
     }
     async findOneUserbyId(findOneUserByIdRequestDto) {

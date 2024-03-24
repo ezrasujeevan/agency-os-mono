@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { Metadata } from "@grpc/grpc-js";
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
 
@@ -67,47 +68,52 @@ export interface User {
 export const USER_PACKAGE_NAME = "user";
 
 export interface UserServiceClient {
-  registerUser(request: CreateUserRequest): Observable<RegisterUserResponse>;
+  registerUser(request: CreateUserRequest, metadata?: Metadata): Observable<RegisterUserResponse>;
 
-  loginUser(request: LoginUserRequest): Observable<LoginUserResponse>;
+  loginUser(request: LoginUserRequest, metadata?: Metadata): Observable<LoginUserResponse>;
 
-  validateUser(request: ValidateUserRequest): Observable<ValidateUserResponse>;
+  validateUser(request: ValidateUserRequest, metadata?: Metadata): Observable<ValidateUserResponse>;
 
-  createUser(request: CreateUserRequest): Observable<User>;
+  createUser(request: CreateUserRequest, metadata?: Metadata): Observable<User>;
 
-  findAllUser(request: Empty): Observable<FindOneUserByEmailRequest>;
+  findAllUser(request: Empty, metadata?: Metadata): Observable<FindOneUserByEmailRequest>;
 
-  findOneUserbyId(request: FindOneUserByIdRequest): Observable<User>;
+  findOneUserbyId(request: FindOneUserByIdRequest, metadata?: Metadata): Observable<User>;
 
-  findOneUserByEmail(request: FindOneUserByEmailRequest): Observable<User>;
+  findOneUserByEmail(request: FindOneUserByEmailRequest, metadata?: Metadata): Observable<User>;
 
-  updateUser(request: UpdateUserRequest): Observable<User>;
+  updateUser(request: UpdateUserRequest, metadata?: Metadata): Observable<User>;
 
-  removeUser(request: FindOneUserByIdRequest): Observable<User>;
+  removeUser(request: FindOneUserByIdRequest, metadata?: Metadata): Observable<User>;
 }
 
 export interface UserServiceController {
   registerUser(
     request: CreateUserRequest,
+    metadata?: Metadata,
   ): Promise<RegisterUserResponse> | Observable<RegisterUserResponse> | RegisterUserResponse;
 
-  loginUser(request: LoginUserRequest): Promise<LoginUserResponse> | Observable<LoginUserResponse> | LoginUserResponse;
+  loginUser(
+    request: LoginUserRequest,
+    metadata?: Metadata,
+  ): Promise<LoginUserResponse> | Observable<LoginUserResponse> | LoginUserResponse;
 
   validateUser(
     request: ValidateUserRequest,
+    metadata?: Metadata,
   ): Promise<ValidateUserResponse> | Observable<ValidateUserResponse> | ValidateUserResponse;
 
-  createUser(request: CreateUserRequest): Promise<User> | Observable<User> | User;
+  createUser(request: CreateUserRequest, metadata?: Metadata): Promise<User> | Observable<User> | User;
 
-  findAllUser(request: Empty): Observable<FindOneUserByEmailRequest>;
+  findAllUser(request: Empty, metadata?: Metadata): Observable<FindOneUserByEmailRequest>;
 
-  findOneUserbyId(request: FindOneUserByIdRequest): Promise<User> | Observable<User> | User;
+  findOneUserbyId(request: FindOneUserByIdRequest, metadata?: Metadata): Promise<User> | Observable<User> | User;
 
-  findOneUserByEmail(request: FindOneUserByEmailRequest): Promise<User> | Observable<User> | User;
+  findOneUserByEmail(request: FindOneUserByEmailRequest, metadata?: Metadata): Promise<User> | Observable<User> | User;
 
-  updateUser(request: UpdateUserRequest): Promise<User> | Observable<User> | User;
+  updateUser(request: UpdateUserRequest, metadata?: Metadata): Promise<User> | Observable<User> | User;
 
-  removeUser(request: FindOneUserByIdRequest): Promise<User> | Observable<User> | User;
+  removeUser(request: FindOneUserByIdRequest, metadata?: Metadata): Promise<User> | Observable<User> | User;
 }
 
 export function UserServiceControllerMethods() {

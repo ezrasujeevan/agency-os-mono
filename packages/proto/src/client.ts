@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { Metadata } from "@grpc/grpc-js";
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
 
@@ -68,49 +69,58 @@ export interface Client {
 export const CLIENT_PACKAGE_NAME = "client";
 
 export interface ClientServiceClient {
-  registerClient(request: CreateClientRequest): Observable<RegisterClientResponse>;
+  registerClient(request: CreateClientRequest, metadata?: Metadata): Observable<RegisterClientResponse>;
 
-  loginClient(request: LoginClientRequest): Observable<LoginClientResponse>;
+  loginClient(request: LoginClientRequest, metadata?: Metadata): Observable<LoginClientResponse>;
 
-  validateClient(request: ValidateClientRequest): Observable<ValidateClientResponse>;
+  validateClient(request: ValidateClientRequest, metadata?: Metadata): Observable<ValidateClientResponse>;
 
-  createClient(request: CreateClientRequest): Observable<Client>;
+  createClient(request: CreateClientRequest, metadata?: Metadata): Observable<Client>;
 
-  findAllClient(request: Empty): Observable<FindOneClientByEmailRequest>;
+  findAllClient(request: Empty, metadata?: Metadata): Observable<FindOneClientByEmailRequest>;
 
-  findOneClientbyId(request: FindOneClientByIdRequest): Observable<Client>;
+  findOneClientbyId(request: FindOneClientByIdRequest, metadata?: Metadata): Observable<Client>;
 
-  findOneClientByEmail(request: FindOneClientByEmailRequest): Observable<Client>;
+  findOneClientByEmail(request: FindOneClientByEmailRequest, metadata?: Metadata): Observable<Client>;
 
-  updateClient(request: UpdateClientRequest): Observable<Client>;
+  updateClient(request: UpdateClientRequest, metadata?: Metadata): Observable<Client>;
 
-  removeClient(request: FindOneClientByIdRequest): Observable<Client>;
+  removeClient(request: FindOneClientByIdRequest, metadata?: Metadata): Observable<Client>;
 }
 
 export interface ClientServiceController {
   registerClient(
     request: CreateClientRequest,
+    metadata?: Metadata,
   ): Promise<RegisterClientResponse> | Observable<RegisterClientResponse> | RegisterClientResponse;
 
   loginClient(
     request: LoginClientRequest,
+    metadata?: Metadata,
   ): Promise<LoginClientResponse> | Observable<LoginClientResponse> | LoginClientResponse;
 
   validateClient(
     request: ValidateClientRequest,
+    metadata?: Metadata,
   ): Promise<ValidateClientResponse> | Observable<ValidateClientResponse> | ValidateClientResponse;
 
-  createClient(request: CreateClientRequest): Promise<Client> | Observable<Client> | Client;
+  createClient(request: CreateClientRequest, metadata?: Metadata): Promise<Client> | Observable<Client> | Client;
 
-  findAllClient(request: Empty): Observable<FindOneClientByEmailRequest>;
+  findAllClient(request: Empty, metadata?: Metadata): Observable<FindOneClientByEmailRequest>;
 
-  findOneClientbyId(request: FindOneClientByIdRequest): Promise<Client> | Observable<Client> | Client;
+  findOneClientbyId(
+    request: FindOneClientByIdRequest,
+    metadata?: Metadata,
+  ): Promise<Client> | Observable<Client> | Client;
 
-  findOneClientByEmail(request: FindOneClientByEmailRequest): Promise<Client> | Observable<Client> | Client;
+  findOneClientByEmail(
+    request: FindOneClientByEmailRequest,
+    metadata?: Metadata,
+  ): Promise<Client> | Observable<Client> | Client;
 
-  updateClient(request: UpdateClientRequest): Promise<Client> | Observable<Client> | Client;
+  updateClient(request: UpdateClientRequest, metadata?: Metadata): Promise<Client> | Observable<Client> | Client;
 
-  removeClient(request: FindOneClientByIdRequest): Promise<Client> | Observable<Client> | Client;
+  removeClient(request: FindOneClientByIdRequest, metadata?: Metadata): Promise<Client> | Observable<Client> | Client;
 }
 
 export function ClientServiceControllerMethods() {
