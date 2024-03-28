@@ -26,9 +26,10 @@ export class UserService {
     return await this.userRepo.save(user);
   }
 
-  async findAll(): Promise<User.Users> {
-    const users = await this.userRepo.find();
-    return { users };
+  async findAll({}): Promise<User.User[]> {
+    const users = await this.userRepo.find({});
+    log(users);
+    return users;
   }
 
   async findOneById(

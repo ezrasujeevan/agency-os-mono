@@ -23,7 +23,7 @@ let UserController = class UserController {
     }
     async findAllUser({}, metadata) {
         (0, console_1.log)(metadata);
-        return await this.userService.findAll();
+        return { users: await this.userService.findAll({}) };
     }
     async findOneUserbyId(findOneUserByIdRequestDto) {
         return await this.userService.findOneById(findOneUserByIdRequestDto);

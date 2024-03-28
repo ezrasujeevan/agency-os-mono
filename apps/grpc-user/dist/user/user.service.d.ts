@@ -7,7 +7,7 @@ export declare class UserService {
     private readonly userRepo;
     constructor(userRepo: Repository<UserEntity>);
     create(createUserDto: User.CreateUserRequestDto): Promise<User.User>;
-    findAll(): Promise<User.Users>;
+    findAll({}: {}): Promise<User.User[]>;
     findOneById(findOneUserDto: User.FindOneUserByIdRequestDto): Promise<User.User>;
     findOneByEmail(findOneUserDto: User.FindOneUserByEmailRequestDto): Promise<UserProto.User>;
     update(id: string, updateUserDto: UpdateUserRequestDto): Promise<User.User>;

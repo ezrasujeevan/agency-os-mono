@@ -16,7 +16,8 @@ export class UserController {
 
   async findAllUser({}, metadata: Metadata) {
     log(metadata);
-    return await this.userService.findAll();
+
+    return { users: await this.userService.findAll({}) };
   }
 
   async findOneUserbyId(

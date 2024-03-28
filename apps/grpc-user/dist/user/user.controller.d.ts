@@ -6,7 +6,9 @@ export declare class UserController {
     private readonly userService;
     constructor(userService: UserService);
     createUser(createUserRequestDto: User.CreateUserRequestDto): Promise<User.User>;
-    findAllUser({}: {}, metadata: Metadata): Promise<User.Users>;
+    findAllUser({}: {}, metadata: Metadata): Promise<{
+        users: User.User[];
+    }>;
     findOneUserbyId(findOneUserByIdRequestDto: User.FindOneUserByIdRequestDto): Promise<User.User>;
     findOneUserByEmail(findOneUserByEmailRequestDto: User.FindOneUserByEmailRequestDto): Promise<UserProto.User>;
     updateUser(updateUserRequestDto: User.UpdateUserRequestDto): Promise<User.User>;

@@ -2,24 +2,27 @@
   "folders": [
     {
       "name": "agency-os-mono",
-      "path": ".",
+      "path": "."
     },
     {
       "name": "http-gateway",
-      "path": "apps/http-gateway",
+      "path": "apps/http-gateway"
     },
     {
       "name": "grpc-user",
-      "path": "apps/grpc-user",
+      "path": "apps/grpc-user"
     },
     {
       "name": "grpc-client",
-      "path": "apps/grpc-client",
+      "path": "apps/grpc-client"
     },
     {
       "name": "common",
-      "path": "packages/common",
+      "path": "packages/common"
     },
+    {
+      "path": "packages/auth"
+    }
   ],
   "settings": {
     "sqltools.connections": [

@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const user_entity_1 = require("./user.entity");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
+const console_1 = require("console");
 let UserService = class UserService {
     constructor(userRepo) {
         this.userRepo = userRepo;
@@ -25,9 +26,10 @@ let UserService = class UserService {
         const user = this.userRepo.create(createUserDto);
         return await this.userRepo.save(user);
     }
-    async findAll() {
-        const users = await this.userRepo.find();
-        return { users };
+    async findAll({}) {
+        const users = await this.userRepo.find({});
+        (0, console_1.log)(users);
+        return users;
     }
     async findOneById(findOneUserDto) {
         const { id } = findOneUserDto;
