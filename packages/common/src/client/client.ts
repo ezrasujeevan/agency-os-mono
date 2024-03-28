@@ -189,14 +189,13 @@ export class ValidateClientRequestDto
 export class ValidateClientResponseDto
   implements ClientProto.ValidateClientResponse
 {
-  clientId: string;
   @ApiProperty({
     description: 'Client ID of token ',
     example: '',
     title: 'Client ID',
   })
   @IsString()
-  ClientId: string;
+  clientId: string;
 
   @ApiProperty({
     description: 'HTTP Status ',
@@ -215,13 +214,6 @@ export class ValidateClientResponseDto
   @IsString()
   @IsOptional()
   error: string[];
-  @ApiProperty({
-    description: 'JWT Token ',
-    example: '',
-    title: 'Token',
-  })
-  @IsString()
-  token: string;
 }
 
 export class RegisterClientResponseDto

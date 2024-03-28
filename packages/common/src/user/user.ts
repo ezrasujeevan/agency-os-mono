@@ -198,13 +198,6 @@ export class ValidateUserResponseDto implements UserProto.ValidateUserResponse {
   @IsString()
   @IsOptional()
   error: string[];
-  @ApiProperty({
-    description: 'JWT Token ',
-    example: '',
-    title: 'Token',
-  })
-  @IsString()
-  token: string;
 }
 
 export class RegisterUserResponseDto implements UserProto.RegisterUserResponse {
