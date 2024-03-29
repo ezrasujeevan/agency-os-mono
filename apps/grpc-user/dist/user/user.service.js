@@ -14,13 +14,18 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserService = void 0;
 const common_1 = require("@nestjs/common");
+const common_2 = require("@agency-os/common");
 const user_entity_1 = require("./user.entity");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const console_1 = require("console");
+const jwt_1 = require("@nestjs/jwt");
+const config_1 = require("@nestjs/config");
 let UserService = class UserService {
-    constructor(userRepo) {
+    constructor(userRepo, jwtService, configService) {
         this.userRepo = userRepo;
+        this.jwtService = jwtService;
+        this.configService = configService;
     }
     async create(createUserDto) {
         const user = this.userRepo.create(createUserDto);
@@ -65,11 +70,46 @@ let UserService = class UserService {
         }
         throw new common_1.NotFoundException(`user not found by id ${findOneUserDto.id}`);
     }
+    async register(createUserRequestDto) {
+        return new common_2.User.RegisterUserResponseDto();
+    }
+    async login(createUserRequestDto) {
+        const { email, password } = createUserRequestDto;
+        const user = await this.userRepo.findOne({ where: { email } });
+        if (user && user !== undefined) {
+            if (user.password == password) {
+                const token = await this.jwtService.signAsync({ id: user.id, email });
+                return { token, error: [], status: common_1.HttpStatus.OK };
+            }
+        }
+        throw new common_1.UnauthorizedException();
+    }
+    async validate(validateUserRequestDto) {
+        try {
+            const { token } = validateUserRequestDto;
+            const payload = await this.jwtService.verifyAsync(token);
+            if (payload && payload !== undefined) {
+                return {
+                    error: [],
+                    status: common_1.HttpStatus.ACCEPTED,
+                    userId: payload['id'],
+                };
+            }
+        }
+        catch (error) {
+            return { error: error, status: common_1.HttpStatus.UNAUTHORIZED, userId: '' };
+        }
+        finally {
+            return { error: [], status: common_1.HttpStatus.BAD_REQUEST, userId: '' };
+        }
+    }
 };
 exports.UserService = UserService;
 exports.UserService = UserService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(user_entity_1.UserEntity)),
-    __metadata("design:paramtypes", [typeorm_2.Repository])
+    __metadata("design:paramtypes", [typeorm_2.Repository,
+        jwt_1.JwtService,
+        config_1.ConfigService])
 ], UserService);
 //# sourceMappingURL=user.service.js.map

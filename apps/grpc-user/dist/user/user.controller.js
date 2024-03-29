@@ -37,9 +37,15 @@ let UserController = class UserController {
     async removeUser(findOneUserByIdRequestDto) {
         return await this.userService.remove(findOneUserByIdRequestDto);
     }
-    async registerUser(createUserRequestDto) { }
-    async loginUser(createUserRequestDto) { }
-    async validateUser(createUserRequestDto) { }
+    async registerUser(createUserRequestDto) {
+        return await this.userService.register(createUserRequestDto);
+    }
+    async loginUser(loginUserRequestDto) {
+        return await this.userService.login(loginUserRequestDto);
+    }
+    async validateUser(validateUserRequestDto) {
+        return await this.userService.validate(validateUserRequestDto);
+    }
 };
 exports.UserController = UserController;
 exports.UserController = UserController = __decorate([

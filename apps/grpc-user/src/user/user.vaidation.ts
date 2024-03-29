@@ -1,56 +1,40 @@
-// import {
-//   EnvironmentVariables,
-//   IEnvironmentVariables,
-//   validateUtil,
-// } from '@agency-os/common';
-// import { registerAs } from '@nestjs/config';
-// import { IsNumber, IsOptional, IsString, Max, Min } from 'class-validator';
-// import { env } from 'process';
+import { EnvironmentVariables, validateUtil } from '@agency-os/common';
+import { registerAs } from '@nestjs/config';
+import { IsOptional, IsString } from 'class-validator';
 
-// export const CONFIG_DB = 'agency-os-config-db';
+export const CONFIG_JWT = 'agency-os-config-jwt';
 
-// export interface Igrpc_auth extends IEnvironmentVariables {
-//   auth: {
-//     secret: string;
-//   };
-// }
+export interface Igrpc_jwt {
+  jwt: {
+    secret: string;
+    expiresIn: string;
+    issuer: string;
+  };
+}
 
-// class MS_GRPC_DB extends EnvironmentVariables {
-//   //postgresql://[user[:password]@][netloc][:port][/dbname][?param1=value1&...]
-//   @IsString()
-//   @IsOptional()
-//   DB_URL: string;
+class MS_GRPC_AUTH extends EnvironmentVariables {
+  //postgresql://[user[:password]@][netloc][:port][/dbname][?param1=value1&...]
 
-//   @IsString()
-//   DB_USERNAME: string;
+  @IsString()
+  JWT_SECRET: string;
 
-//   @IsString()
-//   DB_PASSWORD: string;
+  @IsString()
+  @IsOptional()
+  JWT_EXPIRY: string;
 
-//   @IsNumber()
-//   @Min(0)
-//   @Max(65535)
-//   DB_PORT: number;
+  @IsString()
+  @IsOptional()
+  JWT_ISSUER: string;
+}
 
-//   @IsString()
-//   DB_HOST: string;
-
-//   @IsString()
-//   DB_NAME: string;
-
-//   @IsString()
-//   DB_SCHEMA: string;
-// }
-
-// export const validate_db = registerAs(CONFIG_DB, (): Igrpc_auth => {
-//   validateUtil(process.env, MS_GRPC_DB);
-//   const config: Igrpc_auth = {
-//     auth: {
-//       secret: env.JWT_SECRET || '',
-//     },
-//     Node_env: '',
-//     host: '',
-//     port: 0,
-//   };
-//   return config;
-// });
+export const validate_jwt = registerAs(CONFIG_JWT, (): Igrpc_jwt => {
+  const configs: MS_GRPC_AUTH = validateUtil(process.env, MS_GRPC_AUTH);
+  const config: Igrpc_jwt = {
+    jwt: {
+      secret: configs.JWT_SECRET,
+      expiresIn: configs.JWT_EXPIRY ? configs.JWT_EXPIRY : '1d',
+      issuer: configs.JWT_ISSUER ? configs.JWT_ISSUER : 'Agency-OS',
+    },
+  };
+  return config;
+});

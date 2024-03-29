@@ -1,24 +1,25 @@
 import {
-  BadRequestException,
-  Inject,
+  HttpStatus,
   Injectable,
   NotFoundException,
-  OnModuleInit,
+  UnauthorizedException,
 } from '@nestjs/common';
-import { randomUUID } from 'crypto';
 import { User } from '@agency-os/common';
 import { UserEntity } from './user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { log } from 'console';
+import { error, log } from 'console';
 import { UserProto } from '@agency-os/proto';
-import { UpdateUserRequestDto } from '@agency-os/common/dist/user/user';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepo: Repository<UserEntity>,
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
   ) {}
 
   async create(createUserDto: User.CreateUserRequestDto): Promise<User.User> {
@@ -45,7 +46,7 @@ export class UserService {
 
   async findOneByEmail(
     findOneUserDto: User.FindOneUserByEmailRequestDto,
-  ): Promise<UserProto.User> {
+  ): Promise<User.User> {
     const { email } = findOneUserDto;
     const user = await this.userRepo.findOne({ where: { email } });
     if (user !== undefined && user) {
@@ -58,7 +59,7 @@ export class UserService {
 
   async update(
     id: string,
-    updateUserDto: UpdateUserRequestDto,
+    updateUserDto: User.UpdateUserRequestDto,
   ): Promise<User.User> {
     const user = await this.findOneById({ id });
     if (user && user !== undefined) {
@@ -79,5 +80,46 @@ export class UserService {
       return await this.userRepo.remove(user);
     }
     throw new NotFoundException(`user not found by id ${findOneUserDto.id}`);
+  }
+
+  async register(
+    createUserRequestDto: User.CreateUserRequestDto,
+  ): Promise<User.RegisterUserResponseDto> {
+    return new User.RegisterUserResponseDto();
+  }
+
+  async login(
+    createUserRequestDto: User.LoginUserRequestDto,
+  ): Promise<User.LoginUserResponceDto> {
+    const { email, password } = createUserRequestDto;
+    const user = await this.userRepo.findOne({ where: { email } });
+    if (user && user !== undefined) {
+      if (user.password == password) {
+        const token = await this.jwtService.signAsync({ id: user.id, email });
+        return { token, error: [], status: HttpStatus.OK };
+      }
+    }
+    throw new UnauthorizedException();
+  }
+
+  async validate(
+    validateUserRequestDto: User.ValidateUserRequestDto,
+  ): Promise<User.ValidateUserResponseDto> {
+    try {
+      const { token } = validateUserRequestDto;
+
+      const payload = await this.jwtService.verifyAsync(token);
+      if (payload && payload !== undefined) {
+        return {
+          error: [],
+          status: HttpStatus.ACCEPTED,
+          userId: payload['id'],
+        };
+      }
+    } catch (error) {
+      return { error: error, status: HttpStatus.UNAUTHORIZED, userId: '' };
+    } finally {
+      return { error: [], status: HttpStatus.BAD_REQUEST, userId: '' };
+    }
   }
 }

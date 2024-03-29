@@ -12,6 +12,7 @@ import {
 
 @Entity('user')
 export class UserEntity extends BaseEntity implements User.User {
+
   @PrimaryGeneratedColumn('uuid', { name: '_id' })
   id: string;
 

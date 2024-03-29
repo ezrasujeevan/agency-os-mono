@@ -11,16 +11,7 @@ enum Environment {
   Provision = 'provision',
 }
 
-interface IAppEnvironmentVariables {
-  NODE_ENV: Environment;
-  PORT: number;
-  HOST: string;
-}
-
-class AppEnvironmentVariables
-  extends EnvironmentVariables
-  implements IAppEnvironmentVariables
-{
+class AppEnvironmentVariables extends EnvironmentVariables {
   @IsEnum(Environment)
   NODE_ENV: Environment;
 
@@ -42,7 +33,7 @@ export interface Igrpc_app {
 }
 
 export const validate_app = registerAs(CONFIG_APP, (): Igrpc_app => {
-  const configs: IAppEnvironmentVariables = validateUtil(
+  const configs: AppEnvironmentVariables = validateUtil(
     process.env,
     AppEnvironmentVariables,
   );

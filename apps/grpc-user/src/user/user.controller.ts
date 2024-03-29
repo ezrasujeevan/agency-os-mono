@@ -43,7 +43,21 @@ export class UserController {
     return await this.userService.remove(findOneUserByIdRequestDto);
   }
 
-  async registerUser(createUserRequestDto: User.CreateUserRequestDto) {}
-  async loginUser(createUserRequestDto: User.CreateUserRequestDto) {}
-  async validateUser(createUserRequestDto: User.CreateUserRequestDto) {}
+  async registerUser(
+    createUserRequestDto: User.CreateUserRequestDto,
+  ): Promise<User.RegisterUserResponseDto> {
+    return await this.userService.register(createUserRequestDto);
+  }
+
+  async loginUser(
+    loginUserRequestDto: User.LoginUserRequestDto,
+  ): Promise<User.LoginUserResponceDto> {
+    return await this.userService.login(loginUserRequestDto);
+  }
+
+  async validateUser(
+    validateUserRequestDto: User.ValidateUserRequestDto,
+  ): Promise<User.ValidateUserResponseDto> {
+    return await this.userService.validate(validateUserRequestDto);
+  }
 }
