@@ -1,46 +1,15 @@
 import { ClassConstructor, plainToInstance } from 'class-transformer';
-import {
-  IsEnum,
-  IsNumber,
-  IsUrl,
-  Max,
-  Min,
-  validateSync,
-} from 'class-validator';
+import { validateSync } from 'class-validator';
 
-enum Environment {
-  Development = 'development',
-  Production = 'production',
-  Test = 'test',
-  Provision = 'provision',
-}
+export abstract class EnvironmentVariables {}
 
-export interface IEnvironmentVariables {
-  Node_env: string;
-  host: string;
-  port: number;
-}
-
-export abstract class EnvironmentVariables {
-  @IsEnum(Environment)
-  NODE_ENV: Environment;
-
-  @IsUrl()
-  HOST: string;
-
-  @IsNumber()
-  @Min(0)
-  @Max(65535)
-  PORT: number;
-}
-
-export const validateUtil = (
+export const validateUtil = <T extends EnvironmentVariables>(
   config: Record<string, unknown>,
-  envVariablesClass: ClassConstructor<any>,
-) => {
+  envVariablesClass: ClassConstructor<EnvironmentVariables>,
+): T => {
   const validatedConfig = plainToInstance(envVariablesClass, config, {
     enableImplicitConversion: true,
-  });
+  }) as T;
   const errors = validateSync(validatedConfig, {
     skipMissingProperties: false,
   });
