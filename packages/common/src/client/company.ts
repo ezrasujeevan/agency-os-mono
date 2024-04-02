@@ -1,4 +1,4 @@
-import { CompanyProto } from '@agency-os/proto';
+import { ClientProto } from '@agency-os/proto';
 import { CommonEntity } from '../database/common.entity';
 import { PartialType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
@@ -7,8 +7,9 @@ import { IsString, MinLength, IsOptional } from 'class-validator';
 
 export abstract class Company
   extends CommonEntity
-  implements CompanyProto.Company
+  implements ClientProto.Company
 {
+ 
   @ApiProperty({
     description: 'This is the Name of the Company',
     example: 'Super Flat Studio',
@@ -22,10 +23,12 @@ export abstract class Company
     title: 'CODE',
   })
   code: string;
+
+  clients: ClientProto.Client[];
 }
 
 export class CreateCompanyRequestDto
-  implements CompanyProto.CreateCompanyRequest
+  implements ClientProto.CreateCompanyRequest
 {
   @ApiProperty({
     description: 'This is the Name of the Company',
@@ -47,7 +50,7 @@ export class CreateCompanyRequestDto
 }
 
 export class FindOneCompanyRequestDto
-  implements CompanyProto.FindOneCompanyRequest
+  implements ClientProto.FindOneCompanyRequest
 {
   @ApiProperty({
     description: 'this is the id',
@@ -60,7 +63,7 @@ export class FindOneCompanyRequestDto
 
 export class UpdateCompanyRequestDto
   extends PartialType(CreateCompanyRequestDto)
-  implements CompanyProto.UpdateCompanyRequest
+  implements ClientProto.UpdateCompanyRequest
 {
   @ApiProperty({
     description: 'this is the id',
@@ -76,7 +79,7 @@ export class UpdateCompanyRequestDto
   Point?: CreateCompanyRequestDto;
 }
 
-export class Companys implements CompanyProto.Companys {
+export class Companys implements ClientProto.Companys {
   @ApiProperty({
     description: 'List Of Companys ',
     example: '',
@@ -85,5 +88,5 @@ export class Companys implements CompanyProto.Companys {
   })
   @IsString()
   @IsOptional()
-  companys: CompanyProto.Company[];
+  companys: ClientProto.Company[];
 }

@@ -1,8 +1,7 @@
 syntax = "proto3";
+import "src/company.proto"; //
 
 package client;
-
-
 service ClientService {
 
     rpc RegisterClient (CreateClientRequest) returns (RegisterClientResponse) {}
@@ -15,9 +14,6 @@ service ClientService {
     rpc FindOneClientByEmail(FindOneClientByEmailRequest) returns  (Client) {}
     rpc UpdateClient(UpdateClientRequest) returns (Client) {}
     rpc RemoveClient(FindOneClientByIdRequest) returns (Client) {}
-}
-
-message Empty {
 }
 message RegisterClientResponse {
     int32 status = 1;
@@ -59,7 +55,9 @@ message FindOneClientByEmailRequest {
 message Clients {
     repeated Client clients = 1;
 }
+message Empty {
 
+}
 message CreateClientRequest {
     string email = 1;
     string password = 2;
@@ -75,38 +73,5 @@ message Client {
     optional string firstName = 4;
     optional string lastName = 5;
     Company company = 6;
-}
-
-
-service CompanyService {
-    rpc CreateCompany(CreateCompanyRequest) returns (Company) {}
-    rpc FindAllCompany(Empty) returns (stream Companys) {}
-    rpc FindOneCompany(FindOneCompanyRequest) returns (Company) {}
-    rpc UpdateCompany(UpdateCompanyRequest) returns (Company) {}
-    rpc RemoveCompany(FindOneCompanyRequest) returns (Company) {}
-}
-
-
-message UpdateCompanyRequest {
-  string id = 1;
-}
-message FindOneCompanyRequest {
-   string id = 1;
-}
-
-message Companys {
-  repeated Company companys = 1;
-}
-
-message CreateCompanyRequest {
-    string name = 1;
-    string code = 2;
-}
-
-message Company {
-  string id = 1;
-  string name = 2;
-  string code = 3;
-  repeated Client clients = 4;
 }
 

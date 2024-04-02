@@ -1,8 +1,12 @@
 syntax = "proto3";
 
+
 package company;
 
-service ClientService {
+import "src/client.proto";
+
+
+service CompanyService {
     rpc CreateCompany(CreateCompanyRequest) returns (Company) {}
     rpc FindAllCompany(Empty) returns (stream Companys) {}
     rpc FindOneCompany(FindOneCompanyRequest) returns (Company) {}
@@ -32,5 +36,5 @@ message Company {
   string id = 1;
   string name = 2;
   string code = 3;
+  repeated Client clients = 4;
 }
-

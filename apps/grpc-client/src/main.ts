@@ -2,12 +2,7 @@ import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { join } from 'path';
-import {
-  ClientProto,
-  clientProtoFile,
-  CompanyProto,
-  companyProtoFile,
-} from '@agency-os/proto';
+import { ClientProto, clientProtoFile } from '@agency-os/proto';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
@@ -20,13 +15,9 @@ async function bootstrap() {
       options: {
         protoPath: [
           join(require.resolve('@agency-os/proto'), '../', clientProtoFile),
-          join(require.resolve('@agency-os/proto'), '../', companyProtoFile),
         ],
-        package: [
-          ClientProto.CLIENT_PACKAGE_NAME,
-          CompanyProto.COMPANY_PACKAGE_NAME,
-        ],
-        url: `localhost:50052`,
+        package: [ClientProto.CLIENT_PACKAGE_NAME],
+        url: `${host}:${port}`,
       },
     },
   );

@@ -10,6 +10,7 @@ import {
 } from 'class-validator';
 import { PartialType } from '@nestjs/mapped-types';
 import { CommonEntity } from 'src/database/common.entity';
+import { Company } from './company';
 
 export abstract class Client
   extends CommonEntity
@@ -48,7 +49,7 @@ export abstract class Client
     title: 'Last Name',
     name: 'lastName',
   })
-  company: string;
+  company: ClientProto.Company;
 }
 
 export class CreateClientRequestDto implements ClientProto.CreateClientRequest {
@@ -90,6 +91,8 @@ export class CreateClientRequestDto implements ClientProto.CreateClientRequest {
   @IsString()
   @IsOptional()
   lastName: string;
+
+  company: Company;
 }
 
 export class UpdateClientRequestDto
@@ -189,6 +192,14 @@ export class ValidateClientRequestDto
 export class ValidateClientResponseDto
   implements ClientProto.ValidateClientResponse
 {
+  @ApiProperty({
+    description: 'Company ID of token ',
+    example: '',
+    title: 'Company ID',
+  })
+  @IsString()
+  compnayId: string;
+ 
   @ApiProperty({
     description: 'Client ID of token ',
     example: '',

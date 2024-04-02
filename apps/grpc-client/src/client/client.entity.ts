@@ -1,10 +1,14 @@
 import { Client } from '@agency-os/common';
+import { CompanyEntity } from 'src/company/company.entity';
 import {
   BaseEntity,
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
+  ManyToMany,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   VersionColumn,
@@ -39,6 +43,7 @@ export class ClientEntity extends BaseEntity implements Client.Client {
   @Column({ nullable: true })
   lastName?: string;
 
-  @Column({ nullable: false })
-  company: string;
+  @ManyToOne(() => CompanyEntity, (company) => company.clients, { eager: true })
+  @JoinColumn({ name: 'company_id' })
+  company: CompanyEntity;
 }

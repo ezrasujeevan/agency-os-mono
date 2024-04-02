@@ -5,6 +5,9 @@ import { Observable } from "rxjs";
 
 export const protobufPackage = "client";
 
+export interface Empty {
+}
+
 export interface RegisterClientResponse {
   status: number;
   error: string[];
@@ -29,6 +32,7 @@ export interface ValidateClientResponse {
   status: number;
   error: string[];
   clientId: string;
+  compnayId: string;
 }
 
 export interface UpdateClientRequest {
@@ -47,23 +51,45 @@ export interface Clients {
   clients: Client[];
 }
 
-export interface Empty {
-}
-
 export interface CreateClientRequest {
   email: string;
   password: string;
   firstName?: string | undefined;
   lastName?: string | undefined;
+  company?: Company | undefined;
 }
 
 export interface Client {
   id: string;
   email: string;
   password: string;
-  company: string;
   firstName?: string | undefined;
   lastName?: string | undefined;
+  company?: Company | undefined;
+}
+
+export interface UpdateCompanyRequest {
+  id: string;
+}
+
+export interface FindOneCompanyRequest {
+  id: string;
+}
+
+export interface Companys {
+  companys: Company[];
+}
+
+export interface CreateCompanyRequest {
+  name: string;
+  code: string;
+}
+
+export interface Company {
+  id: string;
+  name: string;
+  code: string;
+  clients: Client[];
 }
 
 export const CLIENT_PACKAGE_NAME = "client";
@@ -149,3 +175,50 @@ export function ClientServiceControllerMethods() {
 }
 
 export const CLIENT_SERVICE_NAME = "ClientService";
+
+export interface CompanyServiceClient {
+  createCompany(request: CreateCompanyRequest, metadata?: Metadata): Observable<Company>;
+
+  findAllCompany(request: Empty, metadata?: Metadata): Observable<Companys>;
+
+  findOneCompany(request: FindOneCompanyRequest, metadata?: Metadata): Observable<Company>;
+
+  updateCompany(request: UpdateCompanyRequest, metadata?: Metadata): Observable<Company>;
+
+  removeCompany(request: FindOneCompanyRequest, metadata?: Metadata): Observable<Company>;
+}
+
+export interface CompanyServiceController {
+  createCompany(request: CreateCompanyRequest, metadata?: Metadata): Promise<Company> | Observable<Company> | Company;
+
+  findAllCompany(request: Empty, metadata?: Metadata): Observable<Companys>;
+
+  findOneCompany(request: FindOneCompanyRequest, metadata?: Metadata): Promise<Company> | Observable<Company> | Company;
+
+  updateCompany(request: UpdateCompanyRequest, metadata?: Metadata): Promise<Company> | Observable<Company> | Company;
+
+  removeCompany(request: FindOneCompanyRequest, metadata?: Metadata): Promise<Company> | Observable<Company> | Company;
+}
+
+export function CompanyServiceControllerMethods() {
+  return function (constructor: Function) {
+    const grpcMethods: string[] = [
+      "createCompany",
+      "findAllCompany",
+      "findOneCompany",
+      "updateCompany",
+      "removeCompany",
+    ];
+    for (const method of grpcMethods) {
+      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
+      GrpcMethod("CompanyService", method)(constructor.prototype[method], method, descriptor);
+    }
+    const grpcStreamMethods: string[] = [];
+    for (const method of grpcStreamMethods) {
+      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
+      GrpcStreamMethod("CompanyService", method)(constructor.prototype[method], method, descriptor);
+    }
+  };
+}
+
+export const COMPANY_SERVICE_NAME = "CompanyService";
