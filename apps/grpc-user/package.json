@@ -20,6 +20,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@agency-os/auth": "workspace:^",
     "@agency-os/common": "workspace:^",
     "@agency-os/proto": "workspace:^",
     "@grpc/grpc-js": "^1.10.2",

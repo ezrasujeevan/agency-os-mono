@@ -3,18 +3,22 @@ import {
   Get,
   Post,
   Body,
-  Patch,
-  Param,
-  Delete,
   Query,
   BadRequestException,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
+import { Metadata } from '@grpc/grpc-js';
 import { ClientService } from './client.service';
 import { Client } from '@agency-os/common';
-import { ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ClientAuthGuard } from '@agency-os/auth';
+import { Request } from 'express';
 
-@Controller('client')
 @ApiTags('client')
+@ApiBearerAuth()
+@UseGuards(ClientAuthGuard)
+@Controller('client')
 export class ClientController {
   constructor(private readonly clientService: ClientService) {}
 
@@ -24,8 +28,8 @@ export class ClientController {
   }
 
   @Get()
-  findAll() {
-    return this.clientService.findAll();
+  findAll(@Req() request: Request) {
+    return this.clientService.findAll({});
   }
 
   @ApiQuery({
@@ -48,18 +52,5 @@ export class ClientController {
       return this.clientService.findOneById({ id });
     }
     throw new BadRequestException('need at least one query of email or id');
-  }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateClientRequestDto: Client.UpdateClientRequestDto,
-  ) {
-    return this.clientService.update(id, updateClientRequestDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.clientService.remove({ id });
   }
 }

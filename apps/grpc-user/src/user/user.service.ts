@@ -12,6 +12,7 @@ import { error, log } from 'console';
 import { UserProto } from '@agency-os/proto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -23,13 +24,14 @@ export class UserService {
   ) {}
 
   async create(createUserDto: User.CreateUserRequestDto): Promise<User.User> {
-    const user = this.userRepo.create(createUserDto);
+    const { password, ...rest } = createUserDto;
+    const encryptedPassword = await bcrypt.hash(password, 10);
+    const user = this.userRepo.create({ password: encryptedPassword, ...rest });
     return await this.userRepo.save(user);
   }
 
   async findAll({}): Promise<User.User[]> {
     const users = await this.userRepo.find({});
-    log(users);
     return users;
   }
 
@@ -85,21 +87,39 @@ export class UserService {
   async register(
     createUserRequestDto: User.CreateUserRequestDto,
   ): Promise<User.RegisterUserResponseDto> {
-    return new User.RegisterUserResponseDto();
+    const { email } = createUserRequestDto;
+    const user = await this.userRepo.findOne({ where: { email } });
+    if (user && user !== undefined) {
+      return {
+        error: ['user already exists'],
+        status: HttpStatus.BAD_REQUEST,
+      };
+    } else {
+      await this.create(createUserRequestDto);
+      return { error: [], status: HttpStatus.CREATED };
+    }
   }
 
   async login(
     createUserRequestDto: User.LoginUserRequestDto,
   ): Promise<User.LoginUserResponceDto> {
     const { email, password } = createUserRequestDto;
-    const user = await this.userRepo.findOne({ where: { email } });
+    const user = await this.userRepo.findOne({
+      where: { email },
+      select: ['password', 'id'],
+    });
     if (user && user !== undefined) {
-      if (user.password == password) {
+      const passwordMatch = await bcrypt.compare(password, user.password);
+      if (passwordMatch) {
         const token = await this.jwtService.signAsync({ id: user.id, email });
         return { token, error: [], status: HttpStatus.OK };
       }
     }
-    throw new UnauthorizedException();
+    return {
+      token: '',
+      error: ['invalid email or password'],
+      status: HttpStatus.UNAUTHORIZED,
+    };
   }
 
   async validate(
@@ -109,17 +129,21 @@ export class UserService {
       const { token } = validateUserRequestDto;
 
       const payload = await this.jwtService.verifyAsync(token);
-      if (payload && payload !== undefined) {
+      const user = await this.findOneById({ id: payload['id'] });
+      if (payload && payload !== undefined && user && user !== undefined) {
         return {
           error: [],
-          status: HttpStatus.ACCEPTED,
-          userId: payload['id'],
+          status: HttpStatus.OK,
+          userId: user.id,
         };
       }
     } catch (error) {
       return { error: error, status: HttpStatus.UNAUTHORIZED, userId: '' };
-    } finally {
-      return { error: [], status: HttpStatus.BAD_REQUEST, userId: '' };
     }
+    return {
+      error: ['invalid token'],
+      status: HttpStatus.UNAUTHORIZED,
+      userId: '',
+    };
   }
 }

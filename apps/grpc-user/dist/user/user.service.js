@@ -14,13 +14,12 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserService = void 0;
 const common_1 = require("@nestjs/common");
-const common_2 = require("@agency-os/common");
 const user_entity_1 = require("./user.entity");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
-const console_1 = require("console");
 const jwt_1 = require("@nestjs/jwt");
 const config_1 = require("@nestjs/config");
+const bcrypt = require("bcrypt");
 let UserService = class UserService {
     constructor(userRepo, jwtService, configService) {
         this.userRepo = userRepo;
@@ -28,12 +27,13 @@ let UserService = class UserService {
         this.configService = configService;
     }
     async create(createUserDto) {
-        const user = this.userRepo.create(createUserDto);
+        const { password, ...rest } = createUserDto;
+        const encryptedPassword = await bcrypt.hash(password, 10);
+        const user = this.userRepo.create({ password: encryptedPassword, ...rest });
         return await this.userRepo.save(user);
     }
     async findAll({}) {
         const users = await this.userRepo.find({});
-        (0, console_1.log)(users);
         return users;
     }
     async findOneById(findOneUserDto) {
@@ -71,37 +71,59 @@ let UserService = class UserService {
         throw new common_1.NotFoundException(`user not found by id ${findOneUserDto.id}`);
     }
     async register(createUserRequestDto) {
-        return new common_2.User.RegisterUserResponseDto();
+        const { email } = createUserRequestDto;
+        const user = await this.userRepo.findOne({ where: { email } });
+        if (user && user !== undefined) {
+            return {
+                error: ['user already exists'],
+                status: common_1.HttpStatus.BAD_REQUEST,
+            };
+        }
+        else {
+            await this.create(createUserRequestDto);
+            return { error: [], status: common_1.HttpStatus.CREATED };
+        }
     }
     async login(createUserRequestDto) {
         const { email, password } = createUserRequestDto;
-        const user = await this.userRepo.findOne({ where: { email } });
+        const user = await this.userRepo.findOne({
+            where: { email },
+            select: ['password', 'id'],
+        });
         if (user && user !== undefined) {
-            if (user.password == password) {
+            const passwordMatch = await bcrypt.compare(password, user.password);
+            if (passwordMatch) {
                 const token = await this.jwtService.signAsync({ id: user.id, email });
                 return { token, error: [], status: common_1.HttpStatus.OK };
             }
         }
-        throw new common_1.UnauthorizedException();
+        return {
+            token: '',
+            error: ['invalid email or password'],
+            status: common_1.HttpStatus.UNAUTHORIZED,
+        };
     }
     async validate(validateUserRequestDto) {
         try {
             const { token } = validateUserRequestDto;
             const payload = await this.jwtService.verifyAsync(token);
-            if (payload && payload !== undefined) {
+            const user = await this.findOneById({ id: payload['id'] });
+            if (payload && payload !== undefined && user && user !== undefined) {
                 return {
                     error: [],
-                    status: common_1.HttpStatus.ACCEPTED,
-                    userId: payload['id'],
+                    status: common_1.HttpStatus.OK,
+                    userId: user.id,
                 };
             }
         }
         catch (error) {
             return { error: error, status: common_1.HttpStatus.UNAUTHORIZED, userId: '' };
         }
-        finally {
-            return { error: [], status: common_1.HttpStatus.BAD_REQUEST, userId: '' };
-        }
+        return {
+            error: ['invalid token'],
+            status: common_1.HttpStatus.UNAUTHORIZED,
+            userId: '',
+        };
     }
 };
 exports.UserService = UserService;

@@ -13,7 +13,8 @@ exports.UserController = void 0;
 const common_1 = require("@nestjs/common");
 const user_service_1 = require("./user.service");
 const proto_1 = require("@agency-os/proto");
-const console_1 = require("console");
+const common_2 = require("@agency-os/common");
+const auth_1 = require("@agency-os/auth");
 let UserController = class UserController {
     constructor(userService) {
         this.userService = userService;
@@ -21,8 +22,7 @@ let UserController = class UserController {
     async createUser(createUserRequestDto) {
         return await this.userService.create(createUserRequestDto);
     }
-    async findAllUser({}, metadata) {
-        (0, console_1.log)(metadata);
+    async findAllUser() {
         return { users: await this.userService.findAll({}) };
     }
     async findOneUserbyId(findOneUserByIdRequestDto) {
@@ -48,6 +48,42 @@ let UserController = class UserController {
     }
 };
 exports.UserController = UserController;
+__decorate([
+    (0, common_1.UseGuards)(auth_1.UserAuthGuard),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [common_2.User.CreateUserRequestDto]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "createUser", null);
+__decorate([
+    (0, common_1.UseGuards)(auth_1.UserAuthGuard),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "findAllUser", null);
+__decorate([
+    (0, common_1.UseGuards)(auth_1.UserAuthGuard),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [common_2.User.FindOneUserByIdRequestDto]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "findOneUserbyId", null);
+__decorate([
+    (0, common_1.UseGuards)(auth_1.UserAuthGuard),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [common_2.User.FindOneUserByEmailRequestDto]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "findOneUserByEmail", null);
+__decorate([
+    (0, common_1.UseGuards)(auth_1.UserAuthGuard),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [common_2.User.UpdateUserRequestDto]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "updateUser", null);
+__decorate([
+    (0, common_1.UseGuards)(auth_1.UserAuthGuard),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [common_2.User.FindOneUserByIdRequestDto]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "removeUser", null);
 exports.UserController = UserController = __decorate([
     (0, common_1.Controller)(),
     proto_1.UserProto.UserServiceControllerMethods(),

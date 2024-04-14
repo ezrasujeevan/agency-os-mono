@@ -15,32 +15,27 @@ class AppEnvironmentVariables extends EnvironmentVariables {
   @IsEnum(Environment)
   NODE_ENV: Environment;
 
-  @IsUrl({ require_tld: false })
-  HOST: string;
-
   @IsNumber()
   @Min(0)
   @Max(65535)
   PORT: number;
 }
 
-export interface Igrpc_app {
+export interface Ihttp_app {
   env: string;
   app: {
-    host: string;
     port: number;
   };
 }
 
-export const validate_app = registerAs(CONFIG_APP, (): Igrpc_app => {
+export const validate_app = registerAs(CONFIG_APP, (): Ihttp_app => {
   const configs: AppEnvironmentVariables = validateUtil(
     process.env,
     AppEnvironmentVariables,
   );
-  const config: Igrpc_app = {
+  const config: Ihttp_app = {
     env: configs.NODE_ENV,
     app: {
-      host: configs.HOST,
       port: configs.PORT,
     },
   };

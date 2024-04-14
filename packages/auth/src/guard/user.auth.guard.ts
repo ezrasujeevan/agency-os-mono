@@ -19,7 +19,8 @@ export class UserAuthGuard implements CanActivate {
 
     if (context.getType() === 'rpc') {
       request = context.switchToRpc().getContext();
-      const metadata: Metadata = request.getArgByIndex(1);
+      const metadata: Metadata = context.getArgByIndex(1);
+      // const metadata: Metadata = request.getArgByIndex(1);
 
       if (!metadata) {
         throw new UnauthorizedException();

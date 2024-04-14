@@ -2,6 +2,8 @@ import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { UserProto } from '@agency-os/proto';
 import { ClientGrpc } from '@nestjs/microservices';
 import { User } from '@agency-os/common';
+import { firstValueFrom } from 'rxjs';
+import { Metadata } from '@grpc/grpc-js';
 @Injectable()
 export class UsersService implements OnModuleInit {
   private userService: UserProto.UserServiceClient;
@@ -17,8 +19,10 @@ export class UsersService implements OnModuleInit {
     return this.userService.createUser(createUserDto);
   }
 
-  async findAll() {
-    return await this.userService.findAllUser({});
+  async findAll({}, metadata: Metadata) {
+    return await firstValueFrom(
+      await this.userService.findAllUser({}, metadata),
+    );
   }
 
   findOnebyUserId(id: string) {

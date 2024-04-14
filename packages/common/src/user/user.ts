@@ -14,6 +14,12 @@ import { CommonEntity } from 'src/database/common.entity';
 export abstract class User extends CommonEntity implements UserProto.User {
   @ApiProperty({
     description: 'this is the email of user ',
+    example: '008dfdb2-bc10-467e-99d4-14b58232ac35',
+    title: 'ID',
+  })
+  id: string;
+  @ApiProperty({
+    description: 'this is the email of user ',
     example: 'john.doe@gmail.com',
     title: 'e-mail',
   })

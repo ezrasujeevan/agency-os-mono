@@ -76,7 +76,7 @@ export interface UserServiceClient {
 
   createUser(request: CreateUserRequest, metadata?: Metadata): Observable<User>;
 
-  findAllUser(request: Empty, metadata?: Metadata): Observable<FindOneUserByEmailRequest>;
+  findAllUser(request: Empty, metadata?: Metadata): Observable<Users>;
 
   findOneUserbyId(request: FindOneUserByIdRequest, metadata?: Metadata): Observable<User>;
 
@@ -105,7 +105,7 @@ export interface UserServiceController {
 
   createUser(request: CreateUserRequest, metadata?: Metadata): Promise<User> | Observable<User> | User;
 
-  findAllUser(request: Empty, metadata?: Metadata): Observable<FindOneUserByEmailRequest>;
+  findAllUser(request: Empty, metadata?: Metadata): Observable<Users>;
 
   findOneUserbyId(request: FindOneUserByIdRequest, metadata?: Metadata): Promise<User> | Observable<User> | User;
 

@@ -6,18 +6,25 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import {
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
 import { User } from '@agency-os/common';
+import { UserAuthGuard } from '@agency-os/auth';
+import { Request } from 'express';
+import { Metadata } from '@grpc/grpc-js';
 
 @ApiTags('user')
 @Controller('users')
+@ApiBearerAuth()
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -25,15 +32,19 @@ export class UsersController {
   @ApiCreatedResponse({ description: 'User Created', type: User.User })
   @Post()
   create(@Body() createUserDto: User.CreateUserRequestDto) {
-    console.log('asdasd');
     return this.usersService.create(createUserDto);
   }
 
+  @UseGuards(UserAuthGuard)
   @ApiOperation({ summary: 'Find All Users' })
   @ApiOkResponse({ description: 'Got All Users' })
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  async findAll(@Req() request: Request): Promise<User.User[]> {
+    const token = this.getTokenFromRequest(request)!;
+    const metadata: Metadata = new Metadata();
+    metadata.set('Authorization', token);
+    const users = await this.usersService.findAll({}, metadata);
+    return users.users;
   }
 
   @Get(':id')
@@ -58,5 +69,8 @@ export class UsersController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
+  }
+  private getTokenFromRequest(request: Request) {
+    return request.headers.authorization;
   }
 }

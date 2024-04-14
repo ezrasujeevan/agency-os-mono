@@ -6,13 +6,13 @@ import {
   NestModule,
   OnModuleInit,
 } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+
 import { UserModule } from './user/user.module';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CONFIG_DB, Igrpc_db, validate_db } from './db.validation';
 import { CONFIG_APP, Igrpc_app, validate_app } from './app.validation';
+import { AuthModule } from '@agency-os/auth';
 
 @Module({
   imports: [
@@ -52,9 +52,8 @@ import { CONFIG_APP, Igrpc_app, validate_app } from './app.validation';
       inject: [ConfigService],
     }),
     UserModule,
+    AuthModule.register({}),
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule implements OnModuleInit {
   private logger: Logger;

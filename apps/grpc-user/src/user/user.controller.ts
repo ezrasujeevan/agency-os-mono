@@ -1,37 +1,38 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { Metadata } from '@grpc/grpc-js';
-import { Controller } from '@nestjs/common';
+import { Controller, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserProto } from '@agency-os/proto';
 import { User } from '@agency-os/common';
-import { log } from 'console';
+import { UserAuthGuard } from '@agency-os/auth';
 @Controller()
 @UserProto.UserServiceControllerMethods()
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @UseGuards(UserAuthGuard)
   async createUser(createUserRequestDto: User.CreateUserRequestDto) {
     return await this.userService.create(createUserRequestDto);
   }
 
-  async findAllUser({}, metadata: Metadata) {
-    log(metadata);
-
+  @UseGuards(UserAuthGuard)
+  async findAllUser() {
     return { users: await this.userService.findAll({}) };
   }
 
+  @UseGuards(UserAuthGuard)
   async findOneUserbyId(
     findOneUserByIdRequestDto: User.FindOneUserByIdRequestDto,
   ) {
     return await this.userService.findOneById(findOneUserByIdRequestDto);
   }
 
+  @UseGuards(UserAuthGuard)
   async findOneUserByEmail(
     findOneUserByEmailRequestDto: User.FindOneUserByEmailRequestDto,
   ) {
     return await this.userService.findOneByEmail(findOneUserByEmailRequestDto);
   }
 
+  @UseGuards(UserAuthGuard)
   async updateUser(updateUserRequestDto: User.UpdateUserRequestDto) {
     return await this.userService.update(
       updateUserRequestDto.id,
@@ -39,6 +40,7 @@ export class UserController {
     );
   }
 
+  @UseGuards(UserAuthGuard)
   async removeUser(findOneUserByIdRequestDto: User.FindOneUserByIdRequestDto) {
     return await this.userService.remove(findOneUserByIdRequestDto);
   }

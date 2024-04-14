@@ -13,26 +13,36 @@ const users_controller_1 = require("./users.controller");
 const microservices_1 = require("@nestjs/microservices");
 const proto_1 = require("@agency-os/proto");
 const path_1 = require("path");
+const auth_1 = require("@agency-os/auth");
+const config_1 = require("@nestjs/config");
+const grpc_users_validations_1 = require("../grpc.users.validations");
 let UsersModule = class UsersModule {
 };
 exports.UsersModule = UsersModule;
 exports.UsersModule = UsersModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            microservices_1.ClientsModule.register([
+            microservices_1.ClientsModule.registerAsync([
                 {
                     name: proto_1.UserProto.protobufPackage,
-                    transport: microservices_1.Transport.GRPC,
-                    options: {
-                        package: proto_1.UserProto.USER_PACKAGE_NAME,
-                        protoPath: (0, path_1.join)(require.resolve('@agency-os/proto'), '../', proto_1.userProtoFile),
-                        url: 'localhost:50051',
+                    imports: [config_1.ConfigModule],
+                    inject: [config_1.ConfigService],
+                    useFactory: (configService) => {
+                        const config = configService.get(grpc_users_validations_1.CONFIG_GRPC_USER);
+                        return {
+                            transport: microservices_1.Transport.GRPC,
+                            options: {
+                                package: proto_1.UserProto.USER_PACKAGE_NAME,
+                                protoPath: (0, path_1.join)(require.resolve('@agency-os/proto'), '../', proto_1.userProtoFile),
+                                url: config.user.url,
+                            },
+                        };
                     },
                 },
             ]),
         ],
         controllers: [users_controller_1.UsersController],
-        providers: [users_service_1.UsersService],
+        providers: [users_service_1.UsersService, auth_1.UserAuthGuard],
     })
 ], UsersModule);
 //# sourceMappingURL=users.module.js.map

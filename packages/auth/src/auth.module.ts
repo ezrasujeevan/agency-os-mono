@@ -1,7 +1,7 @@
 import { DynamicModule, Global, Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthInterface } from './auth.interface';
-import { ClientsModule, Transport } from '@nestjs/microservices';
+import { Client, ClientsModule, Transport } from '@nestjs/microservices';
 import {
   ClientProto,
   UserProto,
@@ -9,11 +9,18 @@ import {
   userProtoFile,
 } from '@agency-os/proto';
 import { join } from 'path';
+import { UserAuthGuard } from './guard/user.auth.guard';
+import { ClientAuthGuard } from './guard/client.auth.guard';
+import { GrpcClientAuthGuard } from './guard/grpc.client.auth.guard';
+import { GrpcUserAuthGuard } from './guard/grpc.user.auth.guard';
+import { HttpClientAuthGuard } from './guard/http.client.auth.guard';
+import { HttpUserAuthGuard } from './guard/http.user.auth.guard';
 
 @Module({})
 export class AuthModule {
   public static register(options: AuthInterface): DynamicModule {
     return {
+      global: true,
       module: AuthModule,
       providers: [
         AuthService,
@@ -21,54 +28,61 @@ export class AuthModule {
           provide: 'AUTH_SERVICE',
           useValue: options,
         },
+        UserAuthGuard,
+        ClientAuthGuard,
+        GrpcClientAuthGuard,
+        GrpcUserAuthGuard,
+        HttpClientAuthGuard,
+        HttpUserAuthGuard,
       ],
-      exports: [AuthService],
+      exports: [
+        AuthService,
+        UserAuthGuard,
+        ClientAuthGuard,
+        GrpcClientAuthGuard,
+        GrpcUserAuthGuard,
+        HttpClientAuthGuard,
+        HttpUserAuthGuard,
+      ],
       imports: [
-        ClientsModule.register([
+        ClientsModule.registerAsync([
           {
             name: UserProto.protobufPackage,
-            transport: Transport.GRPC,
-            options: {
-              package: UserProto.USER_PACKAGE_NAME,
-              protoPath: join(
-                require.resolve('@agency-os/proto'),
-                '../',
-                userProtoFile,
-              ),
-              url: 'localhost:50051',
+
+            useFactory: () => {
+              return {
+                transport: Transport.GRPC,
+                options: {
+                  package: UserProto.USER_PACKAGE_NAME,
+                  protoPath: join(
+                    require.resolve('@agency-os/proto'),
+                    '../',
+                    userProtoFile,
+                  ),
+                  url: 'localhost:5051',
+                },
+              };
             },
           },
-        ]),
-        ClientsModule.register([
           {
             name: ClientProto.protobufPackage,
-            transport: Transport.GRPC,
-            options: {
-              package: ClientProto.CLIENT_PACKAGE_NAME,
-              protoPath: join(
-                require.resolve('@agency-os/proto'),
-                '../',
-                clientProtoFile,
-              ),
-              url: 'localhost:50051',
+            useFactory: () => {
+              return {
+                transport: Transport.GRPC,
+                options: {
+                  package: ClientProto.CLIENT_PACKAGE_NAME,
+                  protoPath: join(
+                    require.resolve('@agency-os/proto'),
+                    '../',
+                    clientProtoFile,
+                  ),
+                  url: 'localhost:5052',
+                },
+              };
             },
           },
         ]),
       ],
-    };
-  }
-
-  public static registerAsync(options: AuthInterface): DynamicModule {
-    return {
-      module: AuthModule,
-      providers: [
-        AuthService,
-        {
-          provide: 'AUTH_SERVICE',
-          useValue: options,
-        },
-      ],
-      exports: [AuthService],
     };
   }
 }

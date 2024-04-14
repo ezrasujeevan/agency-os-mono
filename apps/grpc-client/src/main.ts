@@ -4,10 +4,11 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { join } from 'path';
 import { ClientProto, clientProtoFile } from '@agency-os/proto';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
+import { env } from 'process';
 
 async function bootstrap() {
-  const host = process.env.HOST;
-  const port = process.env.PORT;
+  const host = env.HOST;
+  const port = env.PORT;
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     AppModule,
     {

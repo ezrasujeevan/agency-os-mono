@@ -9,7 +9,7 @@ service UserService {
     rpc ValidateUser (ValidateUserRequest) returns (ValidateUserResponse) {}
     
     rpc CreateUser(CreateUserRequest) returns (User) {}
-    rpc FindAllUser(Empty) returns (stream FindOneUserByEmailRequest) {}
+    rpc FindAllUser(Empty) returns (stream Users) {}
     rpc FindOneUserbyId(FindOneUserByIdRequest) returns (User) {}
     rpc FindOneUserByEmail(FindOneUserByEmailRequest) returns  (User) {}
     rpc UpdateUser(UpdateUserRequest) returns (User) {}

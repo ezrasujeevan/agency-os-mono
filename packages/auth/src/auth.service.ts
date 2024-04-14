@@ -36,4 +36,30 @@ export class AuthService implements OnModuleInit {
       await this.userService.validateUser(validateUserRequestDto),
     );
   }
+
+  async registerClient(createClientDto: Client.CreateClientRequestDto) {
+    return await firstValueFrom(
+      await this.clientService.createClient(createClientDto),
+    );
+  }
+
+  async registerUser(createUserDto: User.CreateUserRequestDto) {
+    return await firstValueFrom(
+      await this.userService.createUser(createUserDto),
+    );
+  }
+
+  async loginClient(loginClientDto: Client.LoginClientRequestDto) {
+    return await firstValueFrom(
+      await this.clientService.loginClient(loginClientDto),
+    );
+  }
+
+  async loginUser(loginUserDto: User.LoginUserRequestDto) {
+    return await firstValueFrom(await this.userService.loginUser(loginUserDto));
+  }
+
+  getHello(): string {
+    return 'hello from atuh service';
+  }
 }

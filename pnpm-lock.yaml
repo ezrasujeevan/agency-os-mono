@@ -266,6 +266,9 @@ importers:
 
   apps/grpc-user:
     dependencies:
+      '@agency-os/auth':
+        specifier: workspace:^
+        version: link:../../packages/auth
       '@agency-os/common':
         specifier: workspace:^
         version: link:../../packages/common
@@ -420,6 +423,9 @@ importers:
       '@nestjs/common':
         specifier: ^10.0.0
         version: 10.3.3(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.1)(rxjs@7.8.1)
+      '@nestjs/config':
+        specifier: ^3.2.0
+        version: 3.2.0(@nestjs/common@10.3.3)(rxjs@7.8.1)
       '@nestjs/core':
         specifier: ^10.0.0
         version: 10.3.3(@nestjs/common@10.3.3)(@nestjs/microservices@10.3.3)(@nestjs/platform-express@10.3.3)(reflect-metadata@0.2.1)(rxjs@7.8.1)
@@ -434,7 +440,10 @@ importers:
         version: 10.3.3(@nestjs/common@10.3.3)(@nestjs/core@10.3.3)
       '@nestjs/swagger':
         specifier: ^7.3.0
-        version: 7.3.0(@nestjs/common@10.3.3)(@nestjs/core@10.3.3)(reflect-metadata@0.2.1)
+        version: 7.3.0(@nestjs/common@10.3.3)(@nestjs/core@10.3.3)(class-validator@0.14.1)(reflect-metadata@0.2.1)
+      class-validator:
+        specifier: ^0.14.1
+        version: 0.14.1
       reflect-metadata:
         specifier: ^0.2.0
         version: 0.2.1
@@ -2183,7 +2192,7 @@ packages:
       swagger-ui-dist: 5.11.2
     dev: false
 
-  /@nestjs/swagger@7.3.0(@nestjs/common@10.3.3)(@nestjs/core@10.3.3)(reflect-metadata@0.2.1):
+  /@nestjs/swagger@7.3.0(@nestjs/common@10.3.3)(@nestjs/core@10.3.3)(class-validator@0.14.1)(reflect-metadata@0.2.1):
     resolution: {integrity: sha512-zLkfKZ+ioYsIZ3dfv7Bj8YHnZMNAGWFUmx2ZDuLp/fBE4P8BSjB7hldzDueFXsmwaPL90v7lgyd82P+s7KME1Q==}
     peerDependencies:
       '@fastify/static': ^6.0.0 || ^7.0.0
@@ -2204,6 +2213,7 @@ packages:
       '@nestjs/common': 10.3.3(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.1)(rxjs@7.8.1)
       '@nestjs/core': 10.3.3(@nestjs/common@10.3.3)(@nestjs/microservices@10.3.3)(@nestjs/platform-express@10.3.3)(reflect-metadata@0.2.1)(rxjs@7.8.1)
       '@nestjs/mapped-types': 2.0.5(@nestjs/common@10.3.3)(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.1)
+      class-validator: 0.14.1
       js-yaml: 4.1.0
       lodash: 4.17.21
       path-to-regexp: 3.2.0

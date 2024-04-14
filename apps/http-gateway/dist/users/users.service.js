@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersService = void 0;
 const common_1 = require("@nestjs/common");
 const proto_1 = require("@agency-os/proto");
+const rxjs_1 = require("rxjs");
 let UsersService = class UsersService {
     constructor(client) {
         this.client = client;
@@ -25,8 +26,8 @@ let UsersService = class UsersService {
     async create(createUserDto) {
         return this.userService.createUser(createUserDto);
     }
-    async findAll() {
-        return await this.userService.findAllUser({});
+    async findAll({}, metadata) {
+        return await (0, rxjs_1.firstValueFrom)(await this.userService.findAllUser({}, metadata));
     }
     findOnebyUserId(id) {
         return this.userService.findOneUserbyId({ id });

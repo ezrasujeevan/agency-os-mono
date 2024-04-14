@@ -7,18 +7,21 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Metadata } from '@grpc/grpc-js';
-import { AuthService } from '../auth.service';
 import { User } from '@agency-os/common';
+import { UserService } from './user.service';
 import { BaseRpcContext } from '@nestjs/microservices';
+import { RpcArgumentsHost } from '@nestjs/common/interfaces';
+import { request } from 'express';
 
 @Injectable()
 export class GrpcUserAuthGuard implements CanActivate {
-  constructor(@Inject(AuthService) public readonly service: AuthService) {}
+  constructor(private readonly userService: UserService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> | never {
-    const rpcContext = context.switchToRpc();
-    const request: BaseRpcContext = rpcContext.getContext();
-    const metadata: Metadata = request.getArgByIndex(1);
+    // const rpcArgumentsHost: RpcArgumentsHost = context.switchToRpc();
+    // const rpcContext = rpcArgumentsHost.getContext<ExecutionContext>();
+    const metadata: Metadata = context.getArgByIndex(1);
+    // const baseRpcContext = rpcContext.getArgByIndex(1);
 
     if (!metadata) {
       throw new UnauthorizedException();
@@ -38,11 +41,10 @@ export class GrpcUserAuthGuard implements CanActivate {
     const token: string = bearer[1];
 
     const { status, userId, error }: User.ValidateUserResponseDto =
-      await this.service.validateUser({ token });
-    if (error || status !== HttpStatus.OK) {
+      await this.userService.validate({ token });
+    if (error.length !== 0 || status !== HttpStatus.OK) {
       throw new UnauthorizedException(error);
     }
-    request['user'] = userId;
 
     return true;
   }

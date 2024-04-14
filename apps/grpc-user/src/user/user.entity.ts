@@ -12,7 +12,6 @@ import {
 
 @Entity('user')
 export class UserEntity extends BaseEntity implements User.User {
-
   @PrimaryGeneratedColumn('uuid', { name: '_id' })
   id: string;
 
@@ -31,7 +30,7 @@ export class UserEntity extends BaseEntity implements User.User {
   @Column({ unique: true, nullable: false })
   email: string;
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, select: false })
   password: string;
 
   @Column({ nullable: true })

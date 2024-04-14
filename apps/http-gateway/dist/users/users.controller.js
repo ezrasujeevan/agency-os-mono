@@ -17,16 +17,21 @@ const common_1 = require("@nestjs/common");
 const users_service_1 = require("./users.service");
 const swagger_1 = require("@nestjs/swagger");
 const common_2 = require("@agency-os/common");
+const auth_1 = require("@agency-os/auth");
+const grpc_js_1 = require("@grpc/grpc-js");
 let UsersController = class UsersController {
     constructor(usersService) {
         this.usersService = usersService;
     }
     create(createUserDto) {
-        console.log('asdasd');
         return this.usersService.create(createUserDto);
     }
-    findAll() {
-        return this.usersService.findAll();
+    async findAll(request) {
+        const token = this.getTokenFromRequest(request);
+        const metadata = new grpc_js_1.Metadata();
+        metadata.set('Authorization', token);
+        const users = await this.usersService.findAll({}, metadata);
+        return users.users;
     }
     findOneById(id) {
         return this.usersService.findOnebyUserId(id);
@@ -40,6 +45,9 @@ let UsersController = class UsersController {
     remove(id) {
         return this.usersService.remove(id);
     }
+    getTokenFromRequest(request) {
+        return request.headers.authorization;
+    }
 };
 exports.UsersController = UsersController;
 __decorate([
@@ -52,12 +60,14 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "create", null);
 __decorate([
+    (0, common_1.UseGuards)(auth_1.UserAuthGuard),
     (0, swagger_1.ApiOperation)({ summary: 'Find All Users' }),
     (0, swagger_1.ApiOkResponse)({ description: 'Got All Users' }),
     (0, common_1.Get)(),
+    __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
 ], UsersController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)(':id'),
@@ -93,6 +103,7 @@ __decorate([
 exports.UsersController = UsersController = __decorate([
     (0, swagger_1.ApiTags)('user'),
     (0, common_1.Controller)('users'),
+    (0, swagger_1.ApiBearerAuth)(),
     __metadata("design:paramtypes", [users_service_1.UsersService])
 ], UsersController);
 //# sourceMappingURL=users.controller.js.map

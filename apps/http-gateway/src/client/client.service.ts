@@ -2,6 +2,7 @@ import { Inject, Injectable, Module, OnModuleInit } from '@nestjs/common';
 import { ClientProto } from '@agency-os/proto';
 import { ClientGrpc } from '@nestjs/microservices';
 import { Client } from '@agency-os/common';
+import { Metadata } from '@grpc/grpc-js';
 
 @Injectable()
 export class ClientService implements OnModuleInit {
@@ -21,8 +22,8 @@ export class ClientService implements OnModuleInit {
     return this.clientService.createClient(CreateClientRequestDto);
   }
 
-  findAll() {
-    return this.clientService.findAllClient({});
+  findAll({}, metadata?: Metadata) {
+    return this.clientService.findAllClient({}, metadata);
   }
 
   findOneById(findOneClientByIdRequestDto: Client.FindOneClientByIdRequestDto) {
