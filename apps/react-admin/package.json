@@ -2,6 +2,7 @@
     "name": "@agency-os/react-admin",
     "version": "1.0.0",
     "type": "module",
+    "private": true,
     "author": {
         "name": "Cristiano Raimondi",
         "url": "https://github.com/chrisuser"
