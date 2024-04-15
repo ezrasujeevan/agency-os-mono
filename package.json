@@ -57,7 +57,11 @@
     "ts-jest": "^29.1.2",
     "typescript": "^5.4.3",
     "vite-plugin-env-compatible": "^2.0.1",
-    "vite-plugin-html": "^3.2.2"
+    "vite-plugin-html": "^3.2.2",
+    "nx": "18.2.4",
+    "@nx/eslint": "18.2.4",
+    "@nx/vite": "18.2.4",
+    "@nx/jest": "18.2.4"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.10.2",
