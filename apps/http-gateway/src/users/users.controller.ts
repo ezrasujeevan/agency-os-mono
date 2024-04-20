@@ -17,8 +17,8 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { User } from '@agency-os/common';
-import { UserAuthGuard } from '@agency-os/auth';
+import { User } from '@agency-os/class';
+import { ClientAuthGuard, UserAuthGuard } from '@agency-os/auth';
 import { Request } from 'express';
 import { Metadata } from '@grpc/grpc-js';
 
@@ -34,17 +34,17 @@ export class UsersController {
   create(@Body() createUserDto: User.CreateUserRequestDto) {
     return this.usersService.create(createUserDto);
   }
-
+  @UseGuards(ClientAuthGuard)
   @UseGuards(UserAuthGuard)
   @ApiOperation({ summary: 'Find All Users' })
   @ApiOkResponse({ description: 'Got All Users' })
   @Get()
-  async findAll(@Req() request: Request): Promise<User.User[]> {
+  async findAll(@Req() request: Request) {
     const token = this.getTokenFromRequest(request)!;
     const metadata: Metadata = new Metadata();
     metadata.set('Authorization', token);
-    const users = await this.usersService.findAll({}, metadata);
-    return users.users;
+    const users = (await this.usersService.findAll({}, metadata)).users;
+    return users;
   }
 
   @Get(':id')

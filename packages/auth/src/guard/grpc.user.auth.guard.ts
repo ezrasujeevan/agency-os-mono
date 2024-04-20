@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { Metadata } from '@grpc/grpc-js';
 import { AuthService } from '../auth.service';
-import { User } from '@agency-os/common';
+import { User } from '@agency-os/class';
 import { BaseRpcContext } from '@nestjs/microservices';
 
 @Injectable()

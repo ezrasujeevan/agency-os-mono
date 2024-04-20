@@ -7,7 +7,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { AuthService } from '../auth.service';
-import { Client } from '@agency-os/common';
+import { Client } from '@agency-os/class';
 import { Metadata } from '@grpc/grpc-js';
 import { BaseRpcContext } from '@nestjs/microservices';
 

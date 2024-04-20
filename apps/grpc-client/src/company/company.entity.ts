@@ -13,7 +13,7 @@ import {
   VersionColumn,
 } from 'typeorm';
 
-@Entity('user')
+@Entity('company')
 export class CompanyEntity extends BaseEntity implements Company.Company {
   @PrimaryGeneratedColumn('uuid', { name: '_id' })
   id: string;

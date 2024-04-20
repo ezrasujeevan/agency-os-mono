@@ -1,5 +1,5 @@
 {
-  "name": "@agency-os/common",
+  "name": "@agency-os/class",
   "version": "1.0.0",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -18,12 +18,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@nestjs/mapped-types": "*",
-    "@nestjs/swagger": "^7.3.0",
-    "class-transformer": "^0.5.1",
-    "class-validator": "^0.14.1",
-    "typeorm": "^0.3.20",
-    "uuid": "^9.0.1"
+    "@agency-os/proto": "workspace:^",
+    "@agency-os/common": "workspace:^"
   },
   "devDependencies": {
     "@nestjs/common": "^10.0.0",

@@ -2,36 +2,33 @@ import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { CompanyService } from './company.service';
 import { Company } from '@agency-os/common';
+import { ClientProto } from '@agency-os/proto';
 
 @Controller()
+@ClientProto.CompanyServiceControllerMethods()
 export class CompanyController {
   constructor(private readonly companyService: CompanyService) {}
 
-  @MessagePattern('createCompany')
-  create(createCompanyRequestDto: Company.CreateCompanyRequestDto) {
+  createCompany(createCompanyRequestDto: Company.CreateCompanyRequestDto) {
     return this.companyService.create(createCompanyRequestDto);
   }
 
-  @MessagePattern('findAllCompany')
-  findAll({}) {
+  findAllCompany({}) {
     return this.companyService.findAll();
   }
 
-  @MessagePattern('findOneCompany')
-  findOne(findOneCompanyRequestDto: Company.FindOneCompanyRequestDto) {
+  findOneCompany(findOneCompanyRequestDto: Company.FindOneCompanyRequestDto) {
     return this.companyService.findOne(findOneCompanyRequestDto);
   }
 
-  @MessagePattern('updateCompany')
-  update(updateCompanyRequestDto: Company.UpdateCompanyRequestDto) {
+  updateCompany(updateCompanyRequestDto: Company.UpdateCompanyRequestDto) {
     return this.companyService.update(
       updateCompanyRequestDto.id,
       updateCompanyRequestDto,
     );
   }
 
-  @MessagePattern('removeCompany')
-  remove(findOneCompanyRequestDto: Company.FindOneCompanyRequestDto) {
+  removeCompany(findOneCompanyRequestDto: Company.FindOneCompanyRequestDto) {
     return this.companyService.remove(findOneCompanyRequestDto);
   }
 }

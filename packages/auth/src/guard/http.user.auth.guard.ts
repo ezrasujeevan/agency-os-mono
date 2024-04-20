@@ -9,7 +9,7 @@ import {
 import { Observable } from 'rxjs';
 import { AuthService } from '../auth.service';
 import { Request } from 'express';
-import { User } from '@agency-os/common';
+import { User } from '@agency-os/class';
 
 @Injectable()
 export class HttpUserAuthGuard implements CanActivate {

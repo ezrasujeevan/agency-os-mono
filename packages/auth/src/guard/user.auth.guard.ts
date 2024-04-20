@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from '../auth.service';
 import { Metadata } from '@grpc/grpc-js';
-import { User } from '@agency-os/common';
+import { User } from '@agency-os/class';
 
 @Injectable()
 export class UserAuthGuard implements CanActivate {

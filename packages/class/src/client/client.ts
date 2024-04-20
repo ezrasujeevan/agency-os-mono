@@ -9,8 +9,10 @@ import {
   IsNumber,
 } from 'class-validator';
 import { PartialType } from '@nestjs/mapped-types';
-import { CommonEntity } from 'src/database/common.entity';
 import { Company } from './company';
+import { CommonEntity } from '@agency-os/common';
+
+export type Clientss = Client;
 
 export abstract class Client
   extends CommonEntity
@@ -199,7 +201,7 @@ export class ValidateClientResponseDto
   })
   @IsString()
   compnayId: string;
- 
+
   @ApiProperty({
     description: 'Client ID of token ',
     example: '',

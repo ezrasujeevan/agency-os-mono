@@ -6,11 +6,9 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Observable } from 'rxjs';
 import { AuthService } from '../auth.service';
 import { Request } from 'express';
-import { User } from '@agency-os/common';
-import { Client } from '@agency-os/common';
+import { Client } from '@agency-os/class';
 
 @Injectable()
 export class HttpClientAuthGuard implements CanActivate {

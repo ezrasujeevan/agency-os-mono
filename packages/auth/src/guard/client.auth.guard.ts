@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from '../auth.service';
 import { Metadata } from '@grpc/grpc-js';
-import { Client } from '@agency-os/common';
+import { Client } from '@agency-os/class';
 
 @Injectable()
 export class ClientAuthGuard implements CanActivate {

@@ -1,5 +1,5 @@
 import { ClientProto } from '@agency-os/proto';
-import { CommonEntity } from '../database/common.entity';
+import { CommonEntity } from '@agency-os/common';
 import { PartialType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
@@ -9,7 +9,6 @@ export abstract class Company
   extends CommonEntity
   implements ClientProto.Company
 {
- 
   @ApiProperty({
     description: 'This is the Name of the Company',
     example: 'Super Flat Studio',

@@ -9,6 +9,9 @@ import {
   CONFIG_GRPC_CLIENT,
   Iapp_grpc_client,
 } from '../grpc.client.validations';
+import { CompanyService } from './company.service';
+import { Company } from '@agency-os/class';
+import { CompanyController } from './company.controller';
 
 @Module({
   imports: [
@@ -52,7 +55,7 @@ import {
       },
     ]),
   ],
-  controllers: [ClientController],
-  providers: [ClientService],
+  controllers: [ClientController, CompanyController],
+  providers: [ClientService, CompanyService],
 })
 export class ClientModule {}

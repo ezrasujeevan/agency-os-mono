@@ -1,9 +1,8 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { Client } from '@agency-os/common';
+import { Client } from '@agency-os/class';
 import { AuthService } from '@agency-os/auth';
 import { ApiTags } from '@nestjs/swagger';
 
-@ApiTags('client')
 @ApiTags('auth')
 @Controller('auth/client')
 export class AuthClientController {

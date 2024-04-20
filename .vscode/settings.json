@@ -37,5 +37,8 @@
   ],
   "a-file-icon-vscode.arrowTheme": "triangle",
   "a-file-icon-vscode.folderColor": "#979fad",
-  "a-file-icon-vscode.folderTheme": "specific"
+  "a-file-icon-vscode.folderTheme": "specific",
+  "[sass]": {
+    "editor.defaultFormatter": "syler.sass-indented"
+  }
 }

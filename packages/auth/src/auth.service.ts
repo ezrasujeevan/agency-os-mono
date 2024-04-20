@@ -1,7 +1,7 @@
 import { ClientProto, UserProto } from '@agency-os/proto';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
-import { Client, User } from '@agency-os/common';
+import { Client, User } from '@agency-os/class';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable()

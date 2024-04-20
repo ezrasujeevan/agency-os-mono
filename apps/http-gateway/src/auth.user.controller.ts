@@ -1,8 +1,8 @@
 import { AuthService } from '@agency-os/auth';
-import { User } from '@agency-os/common';
+import { User } from '@agency-os/class';
 import { Body, Controller, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-@ApiTags('user')
+
 @ApiTags('auth')
 @Controller('auth/user')
 export class AuthUserController {

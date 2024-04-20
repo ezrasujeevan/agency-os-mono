@@ -1,4 +1,4 @@
-import { User } from '@agency-os/common';
+import { User } from '@agency-os/class';
 import {
   BaseEntity,
   Column,

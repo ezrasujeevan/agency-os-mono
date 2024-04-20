@@ -9,7 +9,7 @@ import {
   IsString,
   MinLength,
 } from 'class-validator';
-import { CommonEntity } from 'src/database/common.entity';
+import { CommonEntity } from '@agency-os/common';
 
 export abstract class User extends CommonEntity implements UserProto.User {
   @ApiProperty({
