@@ -3,28 +3,42 @@ import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, 
 import storage from 'redux-persist/lib/storage' // defaults to localStorage
 import data from './data'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
+import themeReducer from './theme'
+import jwtRedcuer from './jwt'
+import  authReducer  from './auth'
+import { rootApiSlice } from '../api/rootApi'
+
+const jwtPersistConfig = {
+    key: 'jwt',
+    storage: storage,
+    verstion: 1
+}
+const jwt = persistReducer(jwtPersistConfig, jwtRedcuer)
 
 const rootReducer = combineReducers({
-    data
+    [rootApiSlice.reducerPath]: rootApiSlice.reducer,
+    data,
+    theme: themeReducer,
+    auth:authReducer
+    jwt
 })
+const persistConfig = {
+    key: 'root',
+    storage,
+    whitelist: ['theme']
+}
 
-const persistedReducer = persistReducer(
-    {
-        key: 'root',
-        storage,
-        whitelist: ['data']
-    },
-    rootReducer
-)
+const rootPersistedReducer = persistReducer(persistConfig, rootReducer)
 
 export const store = configureStore({
-    reducer: persistedReducer,
+    reducer: rootPersistedReducer,
+    devTools: process.env.NODE_ENV !== 'production',
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
             serializableCheck: {
                 ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER]
             }
-        })
+        }).concat(rootApi.middleware)
 })
 
 export type RootState = ReturnType<typeof store.getState>
