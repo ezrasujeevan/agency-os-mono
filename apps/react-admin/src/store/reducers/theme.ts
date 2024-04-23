@@ -1,19 +1,31 @@
-import { createReducer } from '@reduxjs/toolkit'
+import { PayloadAction, createReducer, createSlice } from '@reduxjs/toolkit'
 import { setTheme } from '../actions/theme'
 import { PaletteMode } from '@mui/material'
 
-interface ThemeReducer {
+interface ThemeState {
     mode: PaletteMode
 }
 
-const initialState: ThemeReducer = {
+const initialState: ThemeState = {
     mode: 'light'
 }
 
-const themeReducer = createReducer<ThemeReducer>(initialState, (builder) => {
-    builder.addCase(setTheme, (state, action) => {
-        state.mode = action.payload
-    })
+export const themeSlice = createSlice({
+    name: 'theme',
+    initialState,
+    reducers: {
+        setDarkTheme: (state) => {
+            state.mode = 'dark'
+        },
+        setLightTheme: (state) => {
+            state.mode = 'light'
+        }
+    },
+    extraReducers: (builder) => {
+        builder.addCase(setTheme, (state, action:PayloadAction<PaletteMode>) => {
+            state.mode = action.payload
+        })
+    }
 })
 
-export default themeReducer
+export const { setDarkTheme, setLightTheme } = themeSlice.actions

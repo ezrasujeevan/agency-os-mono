@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { AppDispatch } from '../reducers/store'
+import { AppDispatch } from '..'
 import { setContents } from './data'
 
 export const getData = createAsyncThunk<any[], string, { dispatch: AppDispatch }>('groupedActions/getData', async (string, { dispatch }) => {

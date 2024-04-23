@@ -14,7 +14,7 @@ const initialState: DataReducer = {
     error: undefined
 }
 
-const dataReducer = createReducer<DataReducer>(initialState, (builder) => {
+export const dataReducer = createReducer<DataReducer>(initialState, (builder) => {
     builder.addCase(setContents, (state, action) => {
         state.contents = action.payload
     })
@@ -31,4 +31,3 @@ const dataReducer = createReducer<DataReducer>(initialState, (builder) => {
     })
 })
 
-export default dataReducer

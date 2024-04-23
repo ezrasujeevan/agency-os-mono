@@ -1,40 +1,39 @@
 import { User } from '@agency-os/class'
-import { rootApiSlice } from './Root.Api'
+import { rootApiSlice } from './root.api.slice'
 
-export const UserApi = rootApiSlice.injectEndpoints({
+export const userApiSlice = rootApiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getUserbyId: builder.query<User.User, User.FindOneUserByIdRequestDto>({
             query: (id: User.FindOneUserByIdRequestDto) => ({
-                url: `users/${id}`,
+                url: `user/${id}`,
                 method: 'GET'
             })
         }),
         getUserByEmail: builder.query<User.User, User.FindOneUserByEmailRequestDto>({
             query: (email: User.FindOneUserByEmailRequestDto) => ({
-                url: `users/${email}`,
+                url: `user/${email}`,
                 method: 'GET'
             })
         }),
         getAllUsers: builder.query<User.User[], void>({
             query: () => ({
-                url: `users`,
+                url: `user`,
                 method: 'GET'
             })
         }),
         updateUser: builder.mutation<User.User, User.UpdateUserRequestDto>({
             query: (data: User.UpdateUserRequestDto) => ({
-                url: `users/${data.id}`,
+                url: `user/${data.id}`,
                 method: 'PATCH',
                 body: data
             })
         }),
         deleteUser: builder.mutation<User.User, string>({
             query: (id: string) => ({
-                url: `users/${id}`,
+                url: `user/${id}`,
                 method: 'DELETE'
             })
         })
     })
 })
 
-export const { useDeleteUserMutation, useGetAllUsersQuery, useGetUserbyIdQuery, useGetUserByEmailQuery, useUpdateUserMutation } = UserApi

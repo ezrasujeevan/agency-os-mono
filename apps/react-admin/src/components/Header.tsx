@@ -6,7 +6,7 @@ import { Container, Box, IconButton, Menu, MenuItem, Button, Tooltip, Avatar, Un
 import { Adb, Menu as MenuIcon, Pets } from '@mui/icons-material'
 import MaterialUISwitch from './MaterialUISwitch'
 import { log } from 'console'
-import { useAppDispatch, useAppSelector } from '~/store/reducers/store'
+import { useAppDispatch, useAppSelector } from '~/store'
 import { THEME_ACTION } from '~/resources/action-constants'
 
 const Header: React.FC = () => {

@@ -1,5 +1,4 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
-import { Reducer } from 'redux'
 
 // /home/ezra/workspace/agency-os-mono/apps/react-admin/src/store/reducers/jwt.ts
 interface JwtState {
@@ -14,7 +13,7 @@ const initialState: JwtState = {
 }
 
 // Define the JWT reducer
-const jwtSlice = createSlice({
+export const jwtSlice = createSlice({
     name: 'jwt',
     initialState,
     reducers: {
@@ -28,4 +27,4 @@ const jwtSlice = createSlice({
 })
 
 export const { setBearer, setRefresh } = jwtSlice.actions
-export default jwtSlice.reducer
+
