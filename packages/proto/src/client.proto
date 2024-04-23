@@ -8,7 +8,8 @@ service ClientService {
     rpc RegisterClient (CreateClientRequest) returns (RegisterClientResponse) {}
     rpc LoginClient (LoginClientRequest) returns (LoginClientResponse) {}
     rpc ValidateClient (ValidateClientRequest) returns (ValidateClientResponse) {}
-    
+    rpc RefreshTokenClient (RefreshTokenClientRequest) returns (LoginClientResponse) {}
+
     rpc CreateClient(CreateClientRequest) returns (Client) {}
     rpc FindAllClient(Empty) returns (stream FindOneClientByEmailRequest) {}
     rpc FindOneClientbyId(FindOneClientByIdRequest) returns (Client) {}
@@ -16,7 +17,9 @@ service ClientService {
     rpc UpdateClient(UpdateClientRequest) returns (Client) {}
     rpc RemoveClient(FindOneClientByIdRequest) returns (Client) {}
 }
-
+message RefreshTokenClientRequest {
+  string refreshToken = 1;
+}
 message Empty {
 }
 message RegisterClientResponse {
@@ -33,6 +36,8 @@ message LoginClientRequest {
     int32 status = 1;
     repeated string error = 2;
     string token = 3;
+    string refreshToken = 4;
+    string clientId = 5;
   }
   
   message ValidateClientRequest {

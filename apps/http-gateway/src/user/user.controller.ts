@@ -9,7 +9,7 @@ import {
   UseGuards,
   Req,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { UserService } from './user.service';
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
@@ -23,16 +23,16 @@ import { Request } from 'express';
 import { Metadata } from '@grpc/grpc-js';
 
 @ApiTags('user')
-@Controller('users')
+@Controller('user')
 @ApiBearerAuth()
-export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+export class UserController {
+  constructor(private readonly userService: UserService) {}
 
   @ApiOperation({ summary: 'Create User' })
   @ApiCreatedResponse({ description: 'User Created', type: User.User })
   @Post()
   create(@Body() createUserDto: User.CreateUserRequestDto) {
-    return this.usersService.create(createUserDto);
+    return this.userService.create(createUserDto);
   }
   @UseGuards(ClientAuthGuard)
   @UseGuards(UserAuthGuard)
@@ -43,19 +43,19 @@ export class UsersController {
     const token = this.getTokenFromRequest(request)!;
     const metadata: Metadata = new Metadata();
     metadata.set('Authorization', token);
-    const users = (await this.usersService.findAll({}, metadata)).users;
+    const users = (await this.userService.findAll({}, metadata)).users;
     return users;
   }
 
   @Get(':id')
   @ApiOperation({})
   findOneById(@Param('id') id: string) {
-    return this.usersService.findOnebyUserId(id);
+    return this.userService.findOnebyUserId(id);
   }
   @Get(':email')
   @ApiOperation({})
   findOneByEmail(@Param('email') email: string) {
-    return this.usersService.findOnebyUserEmail(email);
+    return this.userService.findOnebyUserEmail(email);
   }
 
   @Patch(':id')
@@ -63,12 +63,12 @@ export class UsersController {
     @Param('id') id: string,
     @Body() updateUserDto: User.UpdateUserRequestDto,
   ) {
-    return this.usersService.update(id, updateUserDto);
+    return this.userService.update(id, updateUserDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.usersService.remove(id);
+    return this.userService.remove(id);
   }
   private getTokenFromRequest(request: Request) {
     return request.headers.authorization;

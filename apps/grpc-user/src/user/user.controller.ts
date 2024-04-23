@@ -68,4 +68,10 @@ export class UserController {
   ): Promise<User.ValidateUserResponseDto> {
     return await this.userService.validate(validateUserRequestDto);
   }
+
+  async refreshTokenUser(
+    refreshTokenUserRequestDto: User.RefreshTokenUserRequestDto,
+  ): Promise<User.LoginUserResponceDto> {
+    return await this.userService.refreshToken(refreshTokenUserRequestDto);
+  }
 }

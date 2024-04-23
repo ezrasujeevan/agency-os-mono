@@ -20,4 +20,10 @@ export class AuthUserController {
   async validate(@Body() validateUserRequestDto: User.ValidateUserRequestDto) {
     return await this.authService.validateUser(validateUserRequestDto);
   }
+  @Post('refresh')
+  async refresh(
+    @Body() refreshTokenUserRequestDto: User.RefreshTokenUserRequestDto,
+  ) {
+    return await this.authService.refeshTokenUser(refreshTokenUserRequestDto);
+  }
 }

@@ -167,6 +167,24 @@ export class LoginUserResponceDto implements UserProto.LoginUserResponse {
   @IsString()
   @IsOptional()
   token: string;
+
+  @ApiProperty({
+    description: 'JWT Refesh Token ',
+    example: '',
+    title: 'Refesh Token',
+  })
+  @IsString()
+  @IsOptional()
+  refreshToken: string;
+
+  @ApiProperty({
+    description: 'User ID',
+    example: '',
+    title: 'ID',
+  })
+  @IsString()
+  @IsOptional()
+  userId: string;
 }
 export class ValidateUserRequestDto implements UserProto.ValidateUserRequest {
   @ApiProperty({
@@ -224,6 +242,18 @@ export class RegisterUserResponseDto implements UserProto.RegisterUserResponse {
   @IsString()
   @IsOptional()
   error: string[];
+}
+
+export class RefreshTokenUserRequestDto
+  implements UserProto.RefreshTokenUserRequest
+{
+  @ApiProperty({
+    description: 'JWT Refresh Token ',
+    example: '',
+    title: 'Token',
+  })
+  @IsString()
+  refreshToken: string;
 }
 
 export class Users implements UserProto.Users {

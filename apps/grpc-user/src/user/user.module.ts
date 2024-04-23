@@ -3,7 +3,7 @@ import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { UserEntity } from './user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { JwtModule, JwtModuleOptions, JwtService } from '@nestjs/jwt';
+import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CONFIG_JWT, Igrpc_jwt, validate_jwt } from './user.vaidation';
 import { cp } from 'fs';

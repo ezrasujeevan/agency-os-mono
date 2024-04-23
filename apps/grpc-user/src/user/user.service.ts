@@ -1,15 +1,8 @@
-import {
-  HttpStatus,
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { User } from '@agency-os/common';
+import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { User } from '@agency-os/class';
 import { UserEntity } from './user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { error, log } from 'console';
-import { UserProto } from '@agency-os/proto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
@@ -23,8 +16,10 @@ export class UserService {
     private readonly configService: ConfigService,
   ) {}
 
-  async create(createUserDto: User.CreateUserRequestDto): Promise<User.User> {
-    const { password, ...rest } = createUserDto;
+  async create(
+    createUserRequestDto: User.CreateUserRequestDto,
+  ): Promise<User.User> {
+    const { password, ...rest } = createUserRequestDto;
     const encryptedPassword = await bcrypt.hash(password, 10);
     const user = this.userRepo.create({ password: encryptedPassword, ...rest });
     return await this.userRepo.save(user);
@@ -112,13 +107,25 @@ export class UserService {
       const passwordMatch = await bcrypt.compare(password, user.password);
       if (passwordMatch) {
         const token = await this.jwtService.signAsync({ id: user.id, email });
-        return { token, error: [], status: HttpStatus.OK };
+        const refreshToken = await this.jwtService.signAsync(
+          { id: user.id, email },
+          { expiresIn: '7d' },
+        );
+        return {
+          token,
+          error: [],
+          status: HttpStatus.OK,
+          userId: user.id,
+          refreshToken,
+        };
       }
     }
     return {
       token: '',
       error: ['invalid email or password'],
       status: HttpStatus.UNAUTHORIZED,
+      userId: '',
+      refreshToken: '',
     };
   }
 
@@ -144,6 +151,52 @@ export class UserService {
       error: ['invalid token'],
       status: HttpStatus.UNAUTHORIZED,
       userId: '',
+    };
+  }
+
+  async refreshToken(
+    refreshTokenUserRequestDto: User.RefreshTokenUserRequestDto,
+  ): Promise<User.LoginUserResponceDto> {
+    try {
+      const { refreshToken } = refreshTokenUserRequestDto;
+
+      const payload = await this.jwtService.verifyAsync(refreshToken);
+      const user = await this.findOneById({ id: payload['id'] });
+      if (payload && payload !== undefined && user && user !== undefined) {
+        const token = await this.jwtService.signAsync({
+          id: user.id,
+          email: user.email,
+        });
+        const refreshToken = await this.jwtService.signAsync(
+          {
+            id: user.id,
+            email: user.email,
+          },
+          { expiresIn: '7d' },
+        );
+        return {
+          error: [],
+          status: HttpStatus.OK,
+          userId: user.id,
+          refreshToken,
+          token,
+        };
+      }
+    } catch (error) {
+      return {
+        error: error,
+        status: HttpStatus.UNAUTHORIZED,
+        userId: '',
+        refreshToken: '',
+        token: '',
+      };
+    }
+    return {
+      error: ['invalid token'],
+      status: HttpStatus.BAD_REQUEST,
+      userId: '',
+      refreshToken: '',
+      token: '',
     };
   }
 }

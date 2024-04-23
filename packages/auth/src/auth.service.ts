@@ -59,6 +59,19 @@ export class AuthService implements OnModuleInit {
     return await firstValueFrom(await this.userService.loginUser(loginUserDto));
   }
 
+  async refeshTokenClient(
+    refreshTokenClientDto: Client.RefreshTokenClientRequestDto,
+  ) {
+    return await firstValueFrom(
+      await this.clientService.refreshTokenClient(refreshTokenClientDto),
+    );
+  }
+  async refeshTokenUser(refreshTokenUserDto: User.RefreshTokenUserRequestDto) {
+    return await firstValueFrom(
+      await this.userService.refreshTokenUser(refreshTokenUserDto),
+    );
+  }
+
   getHello(): string {
     return 'hello from atuh service';
   }

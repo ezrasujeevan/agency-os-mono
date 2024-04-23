@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { UsersController } from './users.controller';
+import { UserService } from './user.service';
+import { UserController } from './user.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { UserProto, userProtoFile } from '@agency-os/proto';
 import { join } from 'path';
@@ -50,7 +50,7 @@ import { CONFIG_GRPC_USER, Iapp_grpc_user } from '../grpc.users.validations';
       },
     ]),
   ],
-  controllers: [UsersController],
-  providers: [UsersService, UserAuthGuard],
+  controllers: [UserController],
+  providers: [UserService, UserAuthGuard],
 })
-export class UsersModule {}
+export class UserModule {}

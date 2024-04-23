@@ -1,15 +1,33 @@
 services:
+  http-gateway:
+    build:
+      context: ./apps/http-gateway
+      dockerfile: Dockerfile
+      target: development
+    command: npm run start:dev
+    env_file:
+      - ./apps/http-gateway/.env
+    container_name: agency-os-http-gateway
+    ports:
+      - 3000:3000
+    volumes:
+      - ./apps/http-gateway:/usr/src/app
+      - http-gateway-node-modules:/usr/src/app/node_modules
+
   rabbitmq:
     image: rabbitmq:3-management-alpine
+    container_name: 'agency-os-rabbitmq'
     ports:
       - 5672:5672
       - 15672:15672
     volumes:
       - rmq_lib:/var/lib/rabbitmq
       - rmq_log:/var/log/rabbitmq
+    restart: always
 
   postegres:
     image: postgres:13.14-alpine
+    container_name: 'agency-os-postegres'
     ports:
       - 5432:5432
     environment:
@@ -18,13 +36,9 @@ services:
     volumes:
       - pg_data:/var/lib/postgresql/data
     restart: always
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
 
 volumes:
   pg_data:
   rmq_lib:
   rmq_log:
+  http-gateway-node-modules:

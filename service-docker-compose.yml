@@ -1,0 +1,18 @@
+services:
+  http-gateway:
+    build:
+      context: ./apps/http-gateway
+      dockerfile: Dockerfile
+      target: development
+    command: npm run start:dev
+    env_file:
+      - ./apps/http-gateway/.env
+    container_name: agency-os-http-gateway
+    ports:
+      - 3000:3000
+    volumes:
+      - ./apps/http-gateway:/usr/src/app
+      - http-gateway-node-modules
+
+volumes:
+  http-gateway-node-modules: /user/src/app/node_modules

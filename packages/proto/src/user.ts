@@ -5,6 +5,10 @@ import { Observable } from "rxjs";
 
 export const protobufPackage = "user";
 
+export interface RefreshTokenUserRequest {
+  refreshToken: string;
+}
+
 export interface RegisterUserResponse {
   status: number;
   error: string[];
@@ -19,6 +23,8 @@ export interface LoginUserResponse {
   status: number;
   error: string[];
   token: string;
+  refreshToken: string;
+  userId: string;
 }
 
 export interface ValidateUserRequest {
@@ -74,6 +80,8 @@ export interface UserServiceClient {
 
   validateUser(request: ValidateUserRequest, metadata?: Metadata): Observable<ValidateUserResponse>;
 
+  refreshTokenUser(request: RefreshTokenUserRequest, metadata?: Metadata): Observable<LoginUserResponse>;
+
   createUser(request: CreateUserRequest, metadata?: Metadata): Observable<User>;
 
   findAllUser(request: Empty, metadata?: Metadata): Observable<Users>;
@@ -103,6 +111,11 @@ export interface UserServiceController {
     metadata?: Metadata,
   ): Promise<ValidateUserResponse> | Observable<ValidateUserResponse> | ValidateUserResponse;
 
+  refreshTokenUser(
+    request: RefreshTokenUserRequest,
+    metadata?: Metadata,
+  ): Promise<LoginUserResponse> | Observable<LoginUserResponse> | LoginUserResponse;
+
   createUser(request: CreateUserRequest, metadata?: Metadata): Promise<User> | Observable<User> | User;
 
   findAllUser(request: Empty, metadata?: Metadata): Observable<Users>;
@@ -122,6 +135,7 @@ export function UserServiceControllerMethods() {
       "registerUser",
       "loginUser",
       "validateUser",
+      "refreshTokenUser",
       "createUser",
       "findAllUser",
       "findOneUserbyId",

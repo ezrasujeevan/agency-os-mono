@@ -24,4 +24,12 @@ export class AuthClientController {
   ) {
     return await this.authService.validateClient(validateClientRequestDto);
   }
+  @Post('refresh')
+  async refresh(
+    @Body() refreshTokenClientRequestDto: Client.RefreshTokenClientRequestDto,
+  ) {
+    return await this.authService.refeshTokenClient(
+      refreshTokenClientRequestDto,
+    );
+  }
 }

@@ -5,6 +5,10 @@ import { Observable } from "rxjs";
 
 export const protobufPackage = "client";
 
+export interface RefreshTokenClientRequest {
+  refreshToken: string;
+}
+
 export interface Empty {
 }
 
@@ -22,6 +26,8 @@ export interface LoginClientResponse {
   status: number;
   error: string[];
   token: string;
+  refreshToken: string;
+  clientId: string;
 }
 
 export interface ValidateClientRequest {
@@ -101,6 +107,8 @@ export interface ClientServiceClient {
 
   validateClient(request: ValidateClientRequest, metadata?: Metadata): Observable<ValidateClientResponse>;
 
+  refreshTokenClient(request: RefreshTokenClientRequest, metadata?: Metadata): Observable<LoginClientResponse>;
+
   createClient(request: CreateClientRequest, metadata?: Metadata): Observable<Client>;
 
   findAllClient(request: Empty, metadata?: Metadata): Observable<FindOneClientByEmailRequest>;
@@ -130,6 +138,11 @@ export interface ClientServiceController {
     metadata?: Metadata,
   ): Promise<ValidateClientResponse> | Observable<ValidateClientResponse> | ValidateClientResponse;
 
+  refreshTokenClient(
+    request: RefreshTokenClientRequest,
+    metadata?: Metadata,
+  ): Promise<LoginClientResponse> | Observable<LoginClientResponse> | LoginClientResponse;
+
   createClient(request: CreateClientRequest, metadata?: Metadata): Promise<Client> | Observable<Client> | Client;
 
   findAllClient(request: Empty, metadata?: Metadata): Observable<FindOneClientByEmailRequest>;
@@ -155,6 +168,7 @@ export function ClientServiceControllerMethods() {
       "registerClient",
       "loginClient",
       "validateClient",
+      "refreshTokenClient",
       "createClient",
       "findAllClient",
       "findOneClientbyId",

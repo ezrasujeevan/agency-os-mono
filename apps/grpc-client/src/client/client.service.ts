@@ -1,19 +1,29 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ClientEntity } from './client.entity';
 import { Repository } from 'typeorm';
-import { Client } from '@agency-os/common';
+import { Client } from '@agency-os/class';
+import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class ClientService {
   constructor(
     @InjectRepository(ClientEntity)
     private readonly clientRepo: Repository<ClientEntity>,
+    private readonly jwtService: JwtService,
   ) {}
 
-  async create(CreateClientRequestDto: Client.CreateClientRequestDto) {
-    const user = this.clientRepo.create(CreateClientRequestDto);
-    return this.clientRepo.save(user);
+  async create(
+    CreateClientRequestDto: Client.CreateClientRequestDto,
+  ): Promise<Client.Client> {
+    const { password, ...rest } = CreateClientRequestDto;
+    const encryptedPassword = await bcrypt.hash(password, 10);
+    const client = this.clientRepo.create({
+      password: encryptedPassword,
+      ...rest,
+    });
+    return this.clientRepo.save(client);
   }
 
   async findAll() {
@@ -68,7 +78,124 @@ export class ClientService {
     );
   }
 
-  async registerClient() {}
-  async loginClient() {}
-  async validateClient() {}
+  async register(
+    createClientRequestDto: Client.CreateClientRequestDto,
+  ): Promise<Client.RegisterClientResponseDto> {
+    const { email } = createClientRequestDto;
+    const client = await this.findOneByEmail({ email });
+    if (client && client !== undefined) {
+      return {
+        error: ['user already exists'],
+        status: HttpStatus.BAD_REQUEST,
+      };
+    } else {
+      await this.create(createClientRequestDto);
+      return { error: [], status: HttpStatus.CREATED };
+    }
+  }
+
+  async login(
+    loginClientRequestDto: Client.LoginClientRequestDto,
+  ): Promise<Client.LoginClientResponceDto> {
+    const { email, password } = loginClientRequestDto;
+    const user = await this.clientRepo.findOne({
+      where: { email },
+      select: ['password', 'id'],
+    });
+    if (user && user !== undefined) {
+      const passwordMatch = await bcrypt.compare(password, user.password);
+      if (passwordMatch) {
+        const token = await this.jwtService.signAsync({ id: user.id, email });
+        const refreshToken = await this.jwtService.signAsync(
+          { id: user.id, email },
+          { expiresIn: '7d' },
+        );
+        return {
+          token,
+          error: [],
+          status: HttpStatus.OK,
+          clientId: user.id,
+          refreshToken,
+        };
+      }
+    }
+    return {
+      token: '',
+      error: ['invalid email or password'],
+      status: HttpStatus.UNAUTHORIZED,
+      clientId: '',
+      refreshToken: '',
+    };
+  }
+
+  async validate(
+    validateClientRequestDto: Client.ValidateClientRequestDto,
+  ): Promise<Client.ValidateClientResponseDto> {
+    try {
+      const { token } = validateClientRequestDto;
+
+      const payload = await this.jwtService.verifyAsync(token);
+      const user = await this.findOneById({ id: payload['id'] });
+      if (payload && payload !== undefined && user && user !== undefined) {
+        return {
+          error: [],
+          status: HttpStatus.OK,
+          userId: user.id,
+        };
+      }
+    } catch (error) {
+      return { error: error, status: HttpStatus.UNAUTHORIZED, userId: '' };
+    }
+    return {
+      error: ['invalid token'],
+      status: HttpStatus.UNAUTHORIZED,
+      userId: '',
+    };
+  }
+
+  async refreshToken(
+    RefreshTokenClientRequestDto: Client.RefreshTokenClientRequestDto,
+  ): Promise<Client.LoginClientResponseDto> {
+    try {
+      const { refreshToken } = RefreshTokenClientRequestDto;
+
+      const payload = await this.jwtService.verifyAsync(refreshToken);
+      const user = await this.findOneById({ id: payload['id'] });
+      if (payload && payload !== undefined && user && user !== undefined) {
+        const token = await this.jwtService.signAsync({
+          id: user.id,
+          email: user.email,
+        });
+        const refreshToken = await this.jwtService.signAsync(
+          {
+            id: user.id,
+            email: user.email,
+          },
+          { expiresIn: '7d' },
+        );
+        return {
+          error: [],
+          status: HttpStatus.OK,
+          userId: user.id,
+          refreshToken,
+          token,
+        };
+      }
+    } catch (error) {
+      return {
+        error: error,
+        status: HttpStatus.UNAUTHORIZED,
+        userId: '',
+        refreshToken: '',
+        token: '',
+      };
+    }
+    return {
+      error: ['invalid token'],
+      status: HttpStatus.BAD_REQUEST,
+      userId: '',
+      refreshToken: '',
+      token: '',
+    };
+  }
 }

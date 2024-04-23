@@ -1,6 +1,7 @@
 import { Inject, Logger, Module, OnModuleInit } from '@nestjs/common';
+import { DevtoolsModule } from '@nestjs/devtools-integration';
 import { AppController } from './app.controller';
-import { UsersModule } from './users/users.module';
+import { UserModule } from './user/user.module';
 import { ClientModule } from './client/client.module';
 import { AuthModule } from '@agency-os/auth';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -9,17 +10,23 @@ import { validate_user } from './grpc.users.validations';
 import { validate_client } from './grpc.client.validations';
 import { AuthClientController } from './auth.client.controller';
 import { AuthUserController } from './auth.user.controller';
+import { ProjectModule } from './project/project.module';
+
 @Module({
   imports: [
+    DevtoolsModule.register({
+      http: process.env.NODE_ENV !== 'production',
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
     }),
     ConfigModule.forFeature(validate_app),
     ConfigModule.forFeature(validate_user),
     ConfigModule.forFeature(validate_client),
-    UsersModule,
+    UserModule,
     ClientModule,
     AuthModule.register({}),
+    ProjectModule,
   ],
   controllers: [AppController, AuthClientController, AuthUserController],
 })

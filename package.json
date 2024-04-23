@@ -7,18 +7,21 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "prepare": "husky install",
     "ezra": "pnpm --filter ezra",
     "common": "pnpm --filter common",
     "class": "pnpm --filter class",
     "log": "pnpm --filter log",
     "proto": "pnpm --filter proto",
     "auth": "pnpm --filter auth",
+    "tcp": "pnpm --filter tcp-service",
+    "rmq": "pnpm --filter rmq-service",
+    "grpc": "pnpm --filter grpc-service",
     "http": "pnpm --filter http-gateway",
     "grpc:auth": "pnpm --filter grpc-auth",
     "grpc:user": "pnpm --filter grpc-user",
     "grpc:client": "pnpm --filter grpc-client",
-    "react:admin": "pnpm --filter react-admin"
+    "react:admin": "pnpm --filter react-admin",
+    "tcp:project": "pnpm --filter tcp-project"
   },
   "lint-staged": {
     "**/*.{js,ts,tsx}": [

@@ -5,7 +5,7 @@ import { User } from '@agency-os/class';
 import { firstValueFrom } from 'rxjs';
 import { Metadata } from '@grpc/grpc-js';
 @Injectable()
-export class UsersService implements OnModuleInit {
+export class UserService implements OnModuleInit {
   private userService: UserProto.UserServiceClient;
   constructor(@Inject(UserProto.protobufPackage) private client: ClientGrpc) {}
 

@@ -178,6 +178,24 @@ export class LoginClientResponceDto implements ClientProto.LoginClientResponse {
   @IsString()
   @IsOptional()
   token: string;
+
+  @ApiProperty({
+    description: 'JWT Refesh Token ',
+    example: '',
+    title: 'Token',
+  })
+  @IsString()
+  @IsOptional()
+  refreshToken: string;
+
+  @ApiProperty({
+    description: 'Client ID ',
+    example: '',
+    title: 'ID',
+  })
+  @IsString()
+  @IsOptional()
+  clientId: string;
 }
 export class ValidateClientRequestDto
   implements ClientProto.ValidateClientRequest
@@ -250,6 +268,19 @@ export class RegisterClientResponseDto
   @IsOptional()
   error: string[];
 }
+
+export class RefreshTokenClientRequestDto
+  implements ClientProto.RefreshTokenClientRequest
+{
+  @ApiProperty({
+    description: 'JWT Refresh Token ',
+    example: '',
+    title: 'Token',
+  })
+  @IsString()
+  refreshToken: string;
+}
+
 export class Clients implements ClientProto.Clients {
   @ApiProperty({
     description: 'List Of Clients ',
