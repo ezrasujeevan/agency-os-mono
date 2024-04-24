@@ -16,10 +16,6 @@ export class GrpcService {
       '../',
       `${name}.proto`,
     );
-    console.log('url', url);
-    console.log('host', host);
-    console.log('port', port);
-    console.log('protoPath', protoPath);
     return {
       transport: Transport.GRPC,
       options: {
