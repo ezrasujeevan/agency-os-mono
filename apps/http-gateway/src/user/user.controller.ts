@@ -34,8 +34,7 @@ export class UserController {
   create(@Body() createUserDto: User.CreateUserRequestDto) {
     return this.userService.create(createUserDto);
   }
-  @UseGuards(ClientAuthGuard)
-  @UseGuards(UserAuthGuard)
+
   @ApiOperation({ summary: 'Find All Users' })
   @ApiOkResponse({ description: 'Got All Users' })
   @Get()
