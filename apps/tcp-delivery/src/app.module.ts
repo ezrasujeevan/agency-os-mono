@@ -2,7 +2,7 @@ import { Inject, Logger, Module, OnModuleInit } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { validate_app, Igrpc_app, CONFIG_APP } from './app.validation';
 import { TcpModule } from '@agency-os/tcp-service';
-import { ProjectModule } from './project/project.module';
+import { ProjectModule } from './delivery/project.module';
 
 @Module({
   imports: [

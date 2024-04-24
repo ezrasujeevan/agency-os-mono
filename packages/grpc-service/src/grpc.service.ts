@@ -1,16 +1,31 @@
 import { Injectable } from '@nestjs/common';
-import { TcpClientOptions, Transport } from '@nestjs/microservices';
+import { GrpcOptions, Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
+import { join } from 'path';
 
 @Injectable()
-export class TcpService {
+export class GrpcService {
   constructor(private readonly configService: ConfigService) {}
-  getOptions(name: string): TcpClientOptions {
+  getOptions(name: string): GrpcOptions {
+    const host = this.configService.get(`GRPC_${name.toUpperCase()}_HOST`);
+    const port = this.configService.get(`GRPC_${name.toUpperCase()}_PORT`);
+    const url = this.configService.get(`GRPC_${name.toUpperCase()}_URL`);
+
+    const protoPath = join(
+      require.resolve('@agency-os/proto'),
+      '../',
+      `${name}.proto`,
+    );
+    console.log('url', url);
+    console.log('host', host);
+    console.log('port', port);
+    console.log('protoPath', protoPath);
     return {
-      transport: Transport.TCP,
+      transport: Transport.GRPC,
       options: {
-        host: this.configService.get<string>(`TCP_${name}_HOST`),
-        port: this.configService.get<number>(`TCP_${name}_PORT`),
+        protoPath,
+        package: `${name}`,
+        url,
       },
     };
   }

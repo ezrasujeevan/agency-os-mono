@@ -1,2 +1,2 @@
-export * from './rmq.module';
+export * from './grpc.module';
 export * from './grpc.service';

@@ -16,12 +16,12 @@ class AppEnvironmentVariables extends EnvironmentVariables {
   NODE_ENV: Environment;
 
   @IsUrl({ require_tld: false })
-  HOST: string;
+  GRPC_USER_HOST: string;
 
   @IsNumber()
   @Min(0)
   @Max(65535)
-  PORT: number;
+  GRPC_USER_PORT: number;
 }
 
 export interface Igrpc_app {
@@ -40,8 +40,8 @@ export const validate_app = registerAs(CONFIG_APP, (): Igrpc_app => {
   const config: Igrpc_app = {
     env: configs.NODE_ENV,
     app: {
-      host: configs.HOST,
-      port: configs.PORT,
+      host: configs.GRPC_USER_HOST,
+      port: configs.GRPC_USER_PORT,
     },
   };
   return config;

@@ -13,12 +13,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CONFIG_DB, Igrpc_db, validate_db } from './db.validation';
 import { CONFIG_APP, Igrpc_app, validate_app } from './app.validation';
 import { AuthModule } from '@agency-os/auth';
+import { GrpcModule } from '@agency-os/grpc-service';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    GrpcModule,
     ConfigModule.forFeature(validate_app),
     ConfigModule.forFeature(validate_db),
     TypeOrmModule.forRootAsync({

@@ -1,16 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { TcpClientOptions, Transport } from '@nestjs/microservices';
+import { RmqOptions, Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
-export class TcpService {
+export class RmqService {
   constructor(private readonly configService: ConfigService) {}
-  getOptions(name: string): TcpClientOptions {
+  getOptions(name: string): RmqOptions {
+    const url = this.configService.get<string>(`RMQ_${name}_URL`);
+    const urls = url.split(',');
+    const queue = this.configService.get<string>(`RMQ_${name}_QUEUE`);
     return {
-      transport: Transport.TCP,
+      transport: Transport.RMQ,
       options: {
-        host: this.configService.get<string>(`TCP_${name}_HOST`),
-        port: this.configService.get<number>(`TCP_${name}_PORT`),
+        urls,
+        queue,
       },
     };
   }

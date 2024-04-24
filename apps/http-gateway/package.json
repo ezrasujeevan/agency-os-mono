@@ -23,6 +23,7 @@
     "@agency-os/auth": "workspace:^",
     "@agency-os/class": "workspace:^",
     "@agency-os/common": "workspace:^",
+    "@agency-os/grpc-service": "workspace:^",
     "@agency-os/proto": "workspace:^",
     "@agency-os/tcp-service": "workspace:^",
     "@grpc/grpc-js": "^1.10.2",

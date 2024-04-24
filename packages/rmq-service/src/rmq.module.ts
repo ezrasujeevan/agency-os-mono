@@ -1,26 +1,26 @@
 import { DynamicModule, Module } from '@nestjs/common';
-import { TcpService } from './rmq.service';
+import { RmqService } from './rmq.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
-interface TcpModuleOptions {
+interface RmqModuleOptions {
   name: string;
+  noAck?: boolean;
+  durable?: boolean;
 }
 
 @Module({
-  providers: [TcpService],
-  exports: [TcpService],
+  providers: [RmqService],
+  exports: [RmqService],
 })
-export class TcpModule {
-  static register({ name }: TcpModuleOptions): DynamicModule {
+export class RmqModule {
+  static register({
+    name,
+    noAck = false,
+    durable = true,
+  }: RmqModuleOptions): DynamicModule {
     return {
-      module: TcpModule,
-      providers: [
-        {
-          provide: 'TCP_MODULE_OPTIONS',
-          useValue: { name },
-        },
-      ],
+      module: RmqModule,
       exports: [ClientsModule],
       imports: [
         ClientsModule.registerAsync([
@@ -29,11 +29,19 @@ export class TcpModule {
             imports: [ConfigModule],
             inject: [ConfigService],
             useFactory: (configService: ConfigService) => {
+              const urls = configService
+                .get<string>(`RMQ_${name}_URL`)!
+                .split(',');
+              const queue = configService.get<string>(`RMQ_${name}_QUEUE`);
               return {
-                transport: Transport.TCP,
+                transport: Transport.RMQ,
                 options: {
-                  host: configService.get<string>(`TCP_${name}_HOST`),
-                  port: configService.get<number>(`TCP_${name}_PORT`),
+                  urls,
+                  queue,
+                  queueOptions: {
+                    durable,
+                  },
+                  noAck,
                 },
               };
             },

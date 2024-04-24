@@ -3,8 +3,8 @@ export const TCP = {
 };
 
 export const GRPC = {
-  USER_SERVICE: 'USER_SERVICE',
-  CLIENT_SERVICE: 'CLIENT_SERVICE',
+  USER_SERVICE: 'user',
+  CLIENT_SERVICE: 'client',
 };
 
 export const RMQ = {};
