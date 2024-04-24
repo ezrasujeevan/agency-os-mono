@@ -39,6 +39,6 @@ import { GRPC } from 'src/constants';
     GrpcModule.register({ name: GRPC.USER_SERVICE }),
   ],
   controllers: [UserController],
-  providers: [UserService, UserAuthGuard],
+  providers: [UserService],
 })
 export class UserModule {}
