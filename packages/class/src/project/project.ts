@@ -121,7 +121,7 @@ export class FindAllProjectByClientRequestDto {
 export const Message = {
   create: 'createProject',
   findAll: 'findAllProject',
-  findAllByBrandManager: 'findAllProjectByClient',
+  findAllByClient: 'findAllProjectByClient',
   findAllByCompany: 'findAllProjectByCompany',
   findAllByUser: 'findAllByUser',
   findOneById: 'findOneProjectById',

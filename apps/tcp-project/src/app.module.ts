@@ -3,6 +3,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { validate_app, Igrpc_app, CONFIG_APP } from './app.validation';
 import { TcpModule } from '@agency-os/tcp-service';
 import { ProjectModule } from './project/project.module';
+import { CONFIG_DB, Igrpc_db, validate_db } from './db.validation';
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 
 @Module({
   imports: [
@@ -10,6 +12,37 @@ import { ProjectModule } from './project/project.module';
       isGlobal: true,
     }),
     ConfigModule.forFeature(validate_app),
+    ConfigModule.forFeature(validate_db),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (
+        configService: ConfigService,
+      ): Promise<TypeOrmModuleOptions> => {
+        const config: Igrpc_db = configService.get<Igrpc_db>(CONFIG_DB)!;
+        const {
+          host,
+          name: database,
+          password,
+          port,
+          schema,
+          username,
+        } = config.db;
+        const options: TypeOrmModuleOptions = {
+          type: 'postgres',
+          host,
+          port,
+          username,
+          password,
+          database,
+          schema,
+          synchronize: true,
+          logging: true,
+          autoLoadEntities: true,
+        };
+        return options;
+      },
+      inject: [ConfigService],
+    }),
     TcpModule,
     ProjectModule,
   ],

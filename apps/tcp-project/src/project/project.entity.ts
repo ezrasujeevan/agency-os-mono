@@ -28,7 +28,7 @@ export class ProjectEntity extends BaseEntity implements Project.Project {
   @Column({ name: 'start_date' })
   startDate: Date;
 
-  @Column({ name: 'end_date', nullable: true })
+  @Column({ name: 'end_date', nullable: true, type: 'date' })
   endDate?: Date | null | undefined;
 
   @Column({ name: 'project_value' })

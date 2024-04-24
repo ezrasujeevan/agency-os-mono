@@ -99,8 +99,8 @@ export class ProjectService {
   ): Promise<Project.ProjectResponse> {
     const project = await this.projectRepo.findOne({ where: { id } });
     if (project) {
-      const updatedProject = await this.projectRepo.update(
-        id,
+      const updatedProject = await this.projectRepo.merge(
+        project,
         UpdateProjectRequestDto,
       );
       return {

@@ -7,11 +7,13 @@ export class TcpService {
   constructor(private readonly configService: ConfigService) {}
 
   getOptions(name: string): TcpOptions {
+    const host = this.configService.get<string>(`TCP_${name}_HOST`);
+    const port = this.configService.get<number>(`TCP_${name}_PORT`);
     return {
       transport: Transport.TCP,
       options: {
-        host: this.configService.get<string>(`TCP_${name}_HOST`),
-        port: this.configService.get<number>(`TCP_${name}_PORT`),
+        host,
+        port,
       },
     };
   }
