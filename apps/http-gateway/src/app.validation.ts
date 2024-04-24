@@ -1,6 +1,6 @@
 import { EnvironmentVariables, validateUtil } from '@agency-os/common';
 import { registerAs } from '@nestjs/config';
-import { IsEnum, IsNumber, IsUrl, Max, Min } from 'class-validator';
+import { IsEnum, IsNumber, Max, Min } from 'class-validator';
 
 export const CONFIG_APP = 'agency-os-config-app';
 

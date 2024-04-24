@@ -6,14 +6,16 @@ import {
   Query,
   BadRequestException,
   UseGuards,
-  Req,
 } from '@nestjs/common';
-import { Metadata } from '@grpc/grpc-js';
 import { ClientService } from './client.service';
 import { Client } from '@agency-os/class';
-import { ApiBearerAuth, ApiCreatedResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ClientAuthGuard } from '@agency-os/auth';
-import { Request } from 'express';
 
 @ApiTags('client')
 @ApiBearerAuth()
@@ -29,7 +31,7 @@ export class ClientController {
   }
 
   @Get()
-  findAll(@Req() request: Request) {
+  findAll() {
     return this.clientService.findAll({});
   }
 

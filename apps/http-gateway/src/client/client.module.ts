@@ -1,16 +1,15 @@
 import { Module } from '@nestjs/common';
 import { ClientService } from './client.service';
 import { ClientController } from './client.controller';
-import { ClientsModule, Transport } from '@nestjs/microservices';
-import { ClientProto, clientProtoFile } from '@agency-os/proto';
-import { join } from 'path';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import {
-  CONFIG_GRPC_CLIENT,
-  Iapp_grpc_client,
-} from '../grpc.client.validations';
+// import { ClientsModule, Transport } from '@nestjs/microservices';
+// import { ClientProto, clientProtoFile } from '@agency-os/proto';
+// import { join } from 'path';
+// import { ConfigModule, ConfigService } from '@nestjs/config';
+// import {
+//   CONFIG_GRPC_CLIENT,
+//   Iapp_grpc_client,
+// } from '../grpc.client.validations';
 import { CompanyService } from './company.service';
-import { Company } from '@agency-os/class';
 import { CompanyController } from './company.controller';
 import { GRPC } from 'src/constants';
 import { GrpcModule } from '@agency-os/grpc-service';

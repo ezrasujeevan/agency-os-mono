@@ -1,4 +1,4 @@
-import { Inject, Injectable, Module, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ClientProto } from '@agency-os/proto';
 import { ClientGrpc } from '@nestjs/microservices';
 import { Client } from '@agency-os/class';
