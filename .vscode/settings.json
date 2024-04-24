@@ -40,5 +40,6 @@
   "a-file-icon-vscode.folderTheme": "specific",
   "[sass]": {
     "editor.defaultFormatter": "syler.sass-indented"
-  }
+  },
+  "cSpell.words": ["typeorm"]
 }

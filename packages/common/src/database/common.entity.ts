@@ -2,10 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import { IsDateString, IsNumber, IsString } from 'class-validator';
 import {
-  BaseEntity,
   CreateDateColumn,
   DeleteDateColumn,
-  PrimaryGeneratedColumn,
   UpdateDateColumn,
   VersionColumn,
 } from 'typeorm';
@@ -27,12 +25,12 @@ export abstract class CommonEntity {
   @Exclude()
   @IsDateString()
   @UpdateDateColumn({ name: 'updated_at' })
-  UpdatedAt: Date;
+  updatedAt: Date;
 
   @Exclude()
   @IsDateString()
   @DeleteDateColumn({ name: 'deleted_at' })
-  DeletedAt: Date;
+  deletedAt: Date;
 
   @Exclude()
   @IsNumber()

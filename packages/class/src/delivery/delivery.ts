@@ -1,4 +1,5 @@
 import { CommonEntity } from '@agency-os/common';
+import { PartialType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
 
 export abstract class Delivery extends CommonEntity {
@@ -52,7 +53,7 @@ export abstract class Delivery extends CommonEntity {
   tags: string[];
 
   @ApiProperty({
-    description: 'The access status of the deliverable',
+    description: 'If accessible by Client',
     example: true,
     title: 'Access',
   })
@@ -64,4 +65,30 @@ export abstract class Delivery extends CommonEntity {
     title: 'Created By',
   })
   createdBy: string;
+}
+
+export class CreateDeliveryRequestDto {
+  projectId: string;
+  deliverableName: string;
+  deliverableType: string;
+  description: string;
+  deliverableVersion: number;
+  fileUrl: string;
+  tags: string[];
+  access: boolean;
+  createdBy: string;
+}
+
+export class UpdateDeliveryRequestDto extends PartialType(
+  CreateDeliveryRequestDto,
+) {
+  id: string;
+}
+
+export class FindOneDeliveryRequestDto {
+  id: string;
+}
+
+export class FindAllDeliveryByProjectRequestDto {
+  projectId: string;
 }

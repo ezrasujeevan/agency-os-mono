@@ -34,14 +34,14 @@ export class ProjectEntity extends BaseEntity implements Project.Project {
   @Column({ name: 'project_value' })
   projectValue: number;
 
-  @Column({ name: 'brand_manager_id' })
-  brandManagerId: string;
+  @Column({ name: 'client_id' })
+  clientId: string;
 
-  @Column({ name: 'project_manager_id' })
-  projectManagerId: string;
+  @Column({ name: 'user_id' })
+  userId: string;
 
-  @Column({ name: 'organization_id' })
-  organizationId: string;
+  @Column({ name: 'company_id' })
+  companyId: string;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
