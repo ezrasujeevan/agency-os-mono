@@ -3,7 +3,7 @@ import { Client } from '@agency-os/class';
 import { AuthService } from '@agency-os/auth';
 import { ApiTags } from '@nestjs/swagger';
 
-@ApiTags('auth')
+@ApiTags('auth', 'client', 'auth/client')
 @Controller('auth/client')
 export class AuthClientController {
   constructor(private readonly authService: AuthService) {}

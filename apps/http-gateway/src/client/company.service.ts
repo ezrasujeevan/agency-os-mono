@@ -3,13 +3,12 @@ import { ClientProto } from '@agency-os/proto';
 import { ClientGrpc } from '@nestjs/microservices';
 import { Company } from '@agency-os/class';
 import { Metadata } from '@grpc/grpc-js';
+import { GRPC } from 'src/constants';
 
 @Injectable()
 export class CompanyService implements OnModuleInit {
   private companyService: ClientProto.CompanyServiceClient;
-  constructor(
-    @Inject(ClientProto.protobufPackage) private companyGrpc: ClientGrpc,
-  ) {}
+  constructor(@Inject(GRPC.CLIENT_SERVICE) private companyGrpc: ClientGrpc) {}
 
   onModuleInit() {
     this.companyService =
