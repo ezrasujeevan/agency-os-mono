@@ -3,6 +3,7 @@ import { Delivery } from './delivery';
 import { CommonEntity } from '@agency-os/common';
 import { ApiProperty } from '@nestjs/swagger';
 import { PartialType } from '@nestjs/mapped-types';
+import { HttpStatus } from '@nestjs/common';
 
 export abstract class Asset extends CommonEntity {
   @ApiProperty({
@@ -130,5 +131,20 @@ export class FindAllAssetsOfDeliveryRequestDto {
     example: '456',
     title: 'Delivery ID',
   })
-  delivery: Delivery;
+  deliveryId: string;
+}
+
+export const Message = {
+  create: 'createAsset',
+  update: 'updateAsset',
+  delete: 'deleteAsset',
+  findAll: 'findAllAssets',
+  findAllByDelivery: 'findAllAssetsByDelivery',
+  findOne: 'findOneAsset',
+};
+
+export interface AssetResponseDto {
+  status: HttpStatus;
+  error?: string | string[];
+  asset?: Asset | Asset[];
 }

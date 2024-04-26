@@ -1,4 +1,5 @@
 import { CommonEntity } from '@agency-os/common';
+import { HttpStatus } from '@nestjs/common';
 import { PartialType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -91,4 +92,19 @@ export class FindOneDeliveryRequestDto {
 
 export class FindAllDeliveryByProjectRequestDto {
   projectId: string;
+}
+
+export const Message = {
+  create: 'CreateDelivery',
+  update: 'UpdateDelivery',
+  delete: 'DeleteDelivery',
+  findOne: 'FindOneDelivery',
+  findAll: 'FindAllDelivery',
+  findAllByProject: 'FindAllDeliveryByProject',
+};
+
+export interface DeliveryResponse {
+  status: HttpStatus;
+  error?: string | string[];
+  delivery?: Delivery | Delivery[];
 }

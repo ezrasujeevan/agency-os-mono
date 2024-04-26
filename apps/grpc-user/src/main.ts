@@ -12,8 +12,9 @@ import { GrpcService } from '@agency-os/grpc-service';
 import { env } from 'process';
 
 async function bootstrap() {
-  const host = env.HOST;
-  const port = env.PORT;
+  const host = env.GRPC_USER_HOST!;
+  const port = env.GRPC_USER_PORT!;
+  const name = env.GRPC_USER_NAME!;
   // const app = await NestFactory.createMicroservice<MicroserviceOptions>(
   //   AppModule,
   //   {
@@ -31,7 +32,7 @@ async function bootstrap() {
   // );
   const app = await NestFactory.create(AppModule);
   const grpcService = app.get<GrpcService>(GrpcService);
-  app.connectMicroservice<GrpcOptions>(grpcService.getOptions('user'));
+  app.connectMicroservice<GrpcOptions>(grpcService.getOptions(name));
   app.useGlobalPipes(new ValidationPipe({}));
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   await app.startAllMicroservices();

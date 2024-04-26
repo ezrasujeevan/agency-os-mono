@@ -135,16 +135,17 @@ export class ClientService {
       const { token } = validateClientRequestDto;
 
       const payload = await this.jwtService.verifyAsync(token);
-      const user = await this.findOneById({ id: payload['id'] });
-      if (payload && payload !== undefined && user && user !== undefined) {
+      const client = await this.findOneById({ id: payload['id'] });
+      if (payload && payload !== undefined && client && client !== undefined) {
         return {
           error: [],
           status: HttpStatus.OK,
-          userId: user.id,
+          clientId: client.id,
+          compnayId: '', // Add the missing property 'compnayId'
         };
       }
     } catch (error) {
-      return { error: error, status: HttpStatus.UNAUTHORIZED, userId: '' };
+      return { error: error, status: HttpStatus.UNAUTHORIZED, clientId: '' };
     }
     return {
       error: ['invalid token'],

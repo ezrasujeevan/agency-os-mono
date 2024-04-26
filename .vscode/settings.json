@@ -41,5 +41,8 @@
   "[sass]": {
     "editor.defaultFormatter": "syler.sass-indented"
   },
-  "cSpell.words": ["typeorm"]
+  "cSpell.words": ["typeorm"],
+  "[sql]": {
+    "editor.defaultFormatter": "mtxr.sqltools"
+  }
 }

@@ -3,8 +3,9 @@ import { ClientModule } from './client/client.module';
 import { CompanyModule } from './company/company.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { CONFIG_APP, Igrpc_app, validateApp, } from './app.validation';
-import { Igrpc_db, CONFIG_DB, validateDB,} from './db.validation';
+import { CONFIG_APP, Igrpc_app, validateApp } from './app.validation';
+import { Igrpc_db, CONFIG_DB, validateDB } from './db.validation';
+import { GrpcModule } from '@agency-os/grpc-service';
 
 @Module({
   imports: [
@@ -43,12 +44,13 @@ import { Igrpc_db, CONFIG_DB, validateDB,} from './db.validation';
     }),
     ClientModule,
     CompanyModule,
+    GrpcModule,
   ],
 })
 export class AppModule implements OnModuleInit {
   private logger: Logger;
   @Inject() private configService: ConfigService;
-  
+
   constructor() {
     this.logger = new Logger(AppModule.name);
   }

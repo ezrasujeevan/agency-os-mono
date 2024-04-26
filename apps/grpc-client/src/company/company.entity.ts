@@ -1,4 +1,4 @@
-import { Company } from '@agency-os/common';
+import { Company } from '@agency-os/class';
 import { ClientEntity } from '../client/client.entity';
 
 import {
@@ -22,10 +22,10 @@ export class CompanyEntity extends BaseEntity implements Company.Company {
   createdAt: Date;
 
   @UpdateDateColumn({ name: 'updated_at' })
-  UpdatedAt: Date;
+  updatedAt: Date;
 
   @DeleteDateColumn({ name: 'deleted_at' })
-  DeletedAt: Date;
+  deletedAt: Date;
 
   @VersionColumn({ name: '_v' })
   version: number;

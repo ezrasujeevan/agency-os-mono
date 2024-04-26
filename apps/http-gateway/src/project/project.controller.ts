@@ -36,14 +36,31 @@ export class ProjectController {
     return this.projectService.removeProject({ id });
   }
 
+  @ApiQuery({
+    name: 'id',
+    type: String,
+    description: 'Find by id',
+    required: false,
+  })
+  @ApiQuery({
+    name: 'trialName',
+    type: String,
+    description: 'Find by trialName',
+    required: false,
+  })
   @Get('find')
-  findOne(@Query('id') id?: string, @Query('trialName') trialName?: string) {
+  findOneBy(@Query('id') id?: string, @Query('trialName') trialName?: string) {
     if (id) {
       return this.projectService.findOneProjectById({ id });
     } else if (trialName) {
       return this.projectService.findOneProjectByTrialName({ trialName });
     }
     throw new BadRequestException('need at least one query of id or trialName');
+  }
+
+  @Get('id')
+  findOne(@Param('id') id: string) {
+    return this.projectService.findOneProjectById({ id });
   }
 
   @ApiQuery({

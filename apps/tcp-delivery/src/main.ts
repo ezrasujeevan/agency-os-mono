@@ -5,10 +5,10 @@ import { env } from 'process';
 import { TcpOptions } from '@nestjs/microservices';
 
 async function bootstrap() {
-  const projectName = env.TCP_PROJECT_NAME!;
+  const deliveryName = env.TCP_DELIVERY_NAME!;
   const app = await NestFactory.create(AppModule);
   const tcpService = app.get<TcpService>(TcpService);
-  app.connectMicroservice<TcpOptions>(tcpService.getOptions(projectName));
+  app.connectMicroservice<TcpOptions>(tcpService.getOptions(deliveryName));
   await app.startAllMicroservices();
 }
 bootstrap();

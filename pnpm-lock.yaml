@@ -316,9 +316,18 @@ importers:
       '@agency-os/common':
         specifier: workspace:^
         version: link:../../packages/common
+      '@agency-os/grpc-service':
+        specifier: workspace:^
+        version: link:../../packages/grpc-service
       '@agency-os/proto':
         specifier: workspace:^
         version: link:../../packages/proto
+      '@agency-os/rmq-service':
+        specifier: workspace:^
+        version: link:../../packages/rmq-service
+      '@agency-os/tcp-service':
+        specifier: workspace:^
+        version: link:../../packages/tcp-service
       '@grpc/grpc-js':
         specifier: ^1.10.2
         version: 1.10.6
@@ -845,6 +854,12 @@ importers:
       '@agency-os/common':
         specifier: workspace:^
         version: link:../../packages/common
+      '@agency-os/grpc-service':
+        specifier: workspace:^
+        version: link:../../packages/grpc-service
+      '@agency-os/rmq-service':
+        specifier: workspace:^
+        version: link:../../packages/rmq-service
       '@agency-os/tcp-service':
         specifier: workspace:^
         version: link:../../packages/tcp-service
@@ -873,7 +888,7 @@ importers:
         specifier: ^0.10.3
         version: 0.10.4
       pg:
-        specifier: ^8.11.3
+        specifier: ^8.11.5
         version: 8.11.5
       reflect-metadata:
         specifier: ^0.2.0
