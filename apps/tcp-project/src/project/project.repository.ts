@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ProjectEntity } from './project.entity';
 import { Project } from '@agency-os/class';
 import { InjectRepository } from '@nestjs/typeorm';

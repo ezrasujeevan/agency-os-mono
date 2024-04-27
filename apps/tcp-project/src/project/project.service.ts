@@ -3,11 +3,11 @@ import { ProjectEntity } from './project.entity';
 import { ProjectRepository } from './project.repository';
 import { ProjectHelperService } from './project.helper.service';
 import { Project } from '@agency-os/class';
-import e from 'express';
-@Injectable()
+
 /**
  * Service class for managing projects.
  */
+@Injectable()
 export class ProjectService {
   constructor(
     private readonly projectRepo: ProjectRepository,
@@ -167,31 +167,31 @@ export class ProjectService {
     const { id, clientId, companyId, userId } = updateProjectRequestDto;
     const project = await this.projectRepo.findOneById({ id });
     if (project) {
-      //todo
-      if (
-        clientId &&
-        (await this.projectHelperService.isValidClient(clientId)) &&
-        userId &&
-        (await this.projectHelperService.isValidUser(userId)) &&
-        companyId &&
-        (await this.projectHelperService.isValidCompany(companyId))
-      ) {
-        const updatedProject = await this.projectRepo.update(
-          id,
-          updateProjectRequestDto,
-        );
+      // const client = clientId ? await this.projectHelperService.isValidClient(clientId): true;
+      // //todo
+      // if (
+      //   clientId &&
+      //   () &&
+      //   userId &&
+      //   (await this.projectHelperService.isValidUser(userId)) &&
+      //   companyId &&
+      //   (await this.projectHelperService.isValidCompany(companyId))
+      // ) {
+      const updatedProject = await this.projectRepo.update(
+        id,
+        updateProjectRequestDto,
+      );
 
-        if (updatedProject instanceof ProjectEntity) {
-          return {
-            project: updatedProject,
-            status: HttpStatus.OK,
-          };
-        } else if (updatedProject instanceof Error) {
-          return {
-            status: HttpStatus.BAD_REQUEST,
-            error: updatedProject.name + '-' + updatedProject.message,
-          };
-        }
+      if (updatedProject instanceof ProjectEntity) {
+        return {
+          project: updatedProject,
+          status: HttpStatus.OK,
+        };
+      } else if (updatedProject instanceof Error) {
+        return {
+          status: HttpStatus.BAD_REQUEST,
+          error: updatedProject.name + '-' + updatedProject.message,
+        };
       }
     }
     return {
