@@ -9,6 +9,7 @@ import { UserController } from './user.controller';
 // import { CONFIG_GRPC_USER, Iapp_grpc_user } from '../grpc.users.validations';
 import { GrpcModule } from '@agency-os/grpc-service';
 import { GRPC } from 'src/constants';
+import { UserProto } from '@agency-os/proto';
 
 @Module({
   imports: [
@@ -36,7 +37,7 @@ import { GRPC } from 'src/constants';
     //     },
     //   },
     // ]),
-    GrpcModule.register({ name: GRPC.USER_SERVICE }),
+    GrpcModule.register({ name: UserProto.USER_PACKAGE_NAME }),
   ],
   controllers: [UserController],
   providers: [UserService],

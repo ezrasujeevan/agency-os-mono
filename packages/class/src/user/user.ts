@@ -10,6 +10,9 @@ import {
   MinLength,
 } from 'class-validator';
 import { CommonEntity } from '@agency-os/common';
+import { HttpStatus } from '@nestjs/common';
+
+export const SERVICE_NAME = UserProto.protobufPackage;
 
 export abstract class User extends CommonEntity implements UserProto.User {
   @ApiProperty({
@@ -266,4 +269,12 @@ export class Users implements UserProto.Users {
   @IsString()
   @IsOptional()
   users: User[];
+}
+
+export type user = User | User[];
+
+export interface UserResponseDto {
+  status: HttpStatus;
+  error?: string[] | string;
+  user?: User | User[];
 }

@@ -972,6 +972,15 @@ importers:
       '@agency-os/common':
         specifier: workspace:^
         version: link:../../packages/common
+      '@agency-os/grpc-service':
+        specifier: workspace:^
+        version: link:../../packages/grpc-service
+      '@agency-os/proto':
+        specifier: workspace:^
+        version: link:../../packages/proto
+      '@agency-os/rmq-service':
+        specifier: workspace:^
+        version: link:../../packages/rmq-service
       '@agency-os/tcp-service':
         specifier: workspace:^
         version: link:../../packages/tcp-service

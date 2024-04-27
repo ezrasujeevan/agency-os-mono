@@ -3,6 +3,8 @@ import { HttpStatus } from '@nestjs/common';
 import { PartialType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
 
+export const SERVICE_NAME = 'DELIVERY_SERVICE';
+
 export abstract class Delivery extends CommonEntity {
   @ApiProperty({
     description: 'The ID of the project',
@@ -103,8 +105,9 @@ export const Message = {
   findAllByProject: 'FindAllDeliveryByProject',
 };
 
+export type delivery = Delivery | Delivery[];
 export interface DeliveryResponse {
   status: HttpStatus;
   error?: string | string[];
-  delivery?: Delivery | Delivery[];
+  delivery?: delivery;
 }

@@ -4,6 +4,7 @@ import { PartialType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsString, MinLength, IsOptional } from 'class-validator';
+import { HttpStatus } from '@nestjs/common';
 
 export abstract class Company
   extends CommonEntity
@@ -88,4 +89,12 @@ export class Companys implements ClientProto.Companys {
   @IsString()
   @IsOptional()
   companys: ClientProto.Company[];
+}
+
+export type company = Company | Company[];
+
+export interface companyResponseDto {
+  status: HttpStatus;
+  error?: string | string[];
+  client?: company;
 }

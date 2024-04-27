@@ -1,4 +1,3 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { Delivery } from './delivery';
 import { CommonEntity } from '@agency-os/common';
 import { ApiProperty } from '@nestjs/swagger';
@@ -143,8 +142,10 @@ export const Message = {
   findOne: 'findOneAsset',
 };
 
+export type asset = Asset | Asset[];
+
 export interface AssetResponseDto {
   status: HttpStatus;
   error?: string | string[];
-  asset?: Asset | Asset[];
+  asset?: asset;
 }

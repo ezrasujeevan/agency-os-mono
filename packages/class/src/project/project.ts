@@ -1,11 +1,9 @@
 import { CommonEntity } from '@agency-os/common';
 import { ApiProperty } from '@nestjs/swagger';
-import { Client } from '../client/client';
-import { User } from '../user/user';
-import { Company } from '../client/company';
-import exp from 'constants';
 import { PartialType } from '@nestjs/mapped-types';
 import { HttpStatus } from '@nestjs/common';
+
+export const SERVICE_NAME = 'PROJECT_SERVICE';
 
 export abstract class Project extends CommonEntity {
   @ApiProperty({
@@ -87,9 +85,9 @@ export class CreateProjectRequestDto {
   startDate: Date;
   endDate: Date;
   projectValue: number;
-  brandManagerId: string;
-  projectManagerId: string;
-  organizationId: string;
+  clientId: string;
+  userId: string;
+  companyId: string;
 }
 
 export class UpdateProjectRequestDto extends PartialType(
@@ -130,8 +128,10 @@ export const Message = {
   remove: 'removeProject',
 };
 
+export type project = Project | Project[];
+
 export interface ProjectResponse {
   status: HttpStatus;
-  project?: Project | Project[];
+  project?: project;
   error?: string[] | string;
 }

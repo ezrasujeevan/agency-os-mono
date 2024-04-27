@@ -1,112 +1,198 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { ProjectEntity } from './project.entity';
-import { Repository } from 'typeorm';
+import { ProjectRepository } from './project.repository';
+import { ProjectHelperService } from './project.helper.service';
 import { Project } from '@agency-os/class';
-import { error } from 'console';
-import { stat } from 'fs';
+import e from 'express';
 @Injectable()
+/**
+ * Service class for managing projects.
+ */
 export class ProjectService {
   constructor(
-    @InjectRepository(ProjectEntity)
-    private projectRepo: Repository<ProjectEntity>,
+    private readonly projectRepo: ProjectRepository,
+    private readonly projectHelperService: ProjectHelperService,
   ) {}
 
   async create(
     createProjectRequestDto: Project.CreateProjectRequestDto,
   ): Promise<Project.ProjectResponse> {
-    try {
-      const project = this.projectRepo.create(createProjectRequestDto);
-      await this.projectRepo.save(project);
+    const { userId, clientId, companyId, trialName } = createProjectRequestDto;
+    const project = await this.projectRepo.findOneByTrialName({ trialName });
+    if (project) {
       return {
-        project,
-        status: HttpStatus.CREATED,
+        status: HttpStatus.BAD_REQUEST,
+        error: 'Project - Trail Name already exists',
       };
-    } catch (error) {
+    } else if (
+      (await this.projectHelperService.isValidClient(clientId)) &&
+      (await this.projectHelperService.isValidUser(userId)) &&
+      (await this.projectHelperService.isValidCompany(companyId))
+    ) {
+      const newProject = await this.projectRepo.create(createProjectRequestDto);
+      if (newProject instanceof ProjectEntity) {
+        return {
+          project: newProject,
+          status: HttpStatus.CREATED,
+        };
+      } else {
+        return {
+          status: HttpStatus.BAD_REQUEST,
+          error: newProject.name + '-' + newProject.message,
+        };
+      }
+    } else {
       return {
-        error: error.message,
-        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        status: HttpStatus.BAD_REQUEST,
+        error: 'Invalid User, Client or Company',
       };
     }
   }
 
-  async findOneById({
-    id,
-  }: Project.FindOneProjectRequestByIdDto): Promise<Project.ProjectResponse> {
-    const project = await this.projectRepo.findOne({ where: { id } });
+  async findOneById(
+    FindOneProjectRequestByIdDto: Project.FindOneProjectRequestByIdDto,
+  ): Promise<Project.ProjectResponse> {
+    const project = await this.projectRepo.findOneById(
+      FindOneProjectRequestByIdDto,
+    );
     if (project) {
       return { project, status: HttpStatus.OK };
+    } else {
+      return {
+        status: HttpStatus.NO_CONTENT,
+      };
     }
-    return {
-      error: 'Project not found',
-      status: HttpStatus.BAD_REQUEST,
-    };
   }
 
-  async findOneByTrialName({
-    trialName,
-  }: Project.FindOneProjectRequestByTrialNameDto): Promise<Project.ProjectResponse> {
-    const project = await this.projectRepo.findOne({ where: { trialName } });
+  async findOneByTrialName(
+    findOneProjectRequestByTrialNameDto: Project.FindOneProjectRequestByTrialNameDto,
+  ): Promise<Project.ProjectResponse> {
+    const project = await this.projectRepo.findOneByTrialName(
+      findOneProjectRequestByTrialNameDto,
+    );
     if (project) {
       return { project, status: HttpStatus.OK };
+    } else {
+      return {
+        status: HttpStatus.NO_CONTENT,
+      };
     }
-    return {
-      error: 'Project not found',
-      status: HttpStatus.BAD_REQUEST,
-    };
   }
 
   async findAll(): Promise<Project.ProjectResponse> {
-    const project = await this.projectRepo.find({});
-    return {
-      project,
-      status: HttpStatus.OK,
-    };
+    const project = await this.projectRepo.findAll();
+    if (project) {
+      return {
+        project,
+        status: HttpStatus.OK,
+      };
+    } else {
+      return {
+        status: HttpStatus.NO_CONTENT,
+      };
+    }
   }
 
   async findAllByCompany({
     companyId,
   }: Project.FindAllProjectByCompanyRequestDto): Promise<Project.ProjectResponse> {
-    const project = await this.projectRepo.find({ where: { companyId } });
-    return {
-      project,
-      status: HttpStatus.OK,
-    };
+    if (await this.projectHelperService.isValidCompany(companyId)) {
+      const project = await this.projectRepo.findAllByCompany({ companyId });
+      if (project) {
+        return {
+          project,
+          status: HttpStatus.OK,
+        };
+      } else {
+        return {
+          status: HttpStatus.NO_CONTENT,
+        };
+      }
+    } else {
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        error: 'incorrect Company ID',
+      };
+    }
   }
   async findAllByUser({
     userId,
   }: Project.FindAllProjectByUserRequestDto): Promise<Project.ProjectResponse> {
-    const project = await this.projectRepo.find({ where: { userId } });
-    return {
-      project,
-      status: HttpStatus.OK,
-    };
+    if (await this.projectHelperService.isValidClient(userId)) {
+      const project = await this.projectRepo.findAllByUser({ userId });
+      if (project) {
+        return {
+          project,
+          status: HttpStatus.OK,
+        };
+      } else {
+        return {
+          status: HttpStatus.NO_CONTENT,
+        };
+      }
+    } else {
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        error: 'incorrect User ID',
+      };
+    }
   }
 
   async findAllByClient({
     clientId,
   }: Project.FindAllProjectByClientRequestDto): Promise<Project.ProjectResponse> {
-    const project = await this.projectRepo.find({ where: { clientId } });
-    return {
-      project,
-      status: HttpStatus.OK,
-    };
+    if (await this.projectHelperService.isValidClient(clientId)) {
+      const project = await this.projectRepo.findAllByClient({ clientId });
+      if (project) {
+        return {
+          project,
+          status: HttpStatus.OK,
+        };
+      } else {
+        return {
+          status: HttpStatus.NO_CONTENT,
+        };
+      }
+    } else {
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        error: 'incorrect Client ID',
+      };
+    }
   }
 
   async update(
-    id: string,
-    UpdateProjectRequestDto: Project.UpdateProjectRequestDto,
+    updateProjectRequestDto: Project.UpdateProjectRequestDto,
   ): Promise<Project.ProjectResponse> {
-    const project = await this.projectRepo.findOne({ where: { id } });
+    const { id, clientId, companyId, userId } = updateProjectRequestDto;
+    const project = await this.projectRepo.findOneById({ id });
     if (project) {
-      const updatedProject = await this.projectRepo.merge(
-        project,
-        UpdateProjectRequestDto,
-      );
-      return {
-        project: updatedProject,
-        status: HttpStatus.OK,
-      };
+      //todo
+      if (
+        clientId &&
+        (await this.projectHelperService.isValidClient(clientId)) &&
+        userId &&
+        (await this.projectHelperService.isValidUser(userId)) &&
+        companyId &&
+        (await this.projectHelperService.isValidCompany(companyId))
+      ) {
+        const updatedProject = await this.projectRepo.update(
+          id,
+          updateProjectRequestDto,
+        );
+
+        if (updatedProject instanceof ProjectEntity) {
+          return {
+            project: updatedProject,
+            status: HttpStatus.OK,
+          };
+        } else if (updatedProject instanceof Error) {
+          return {
+            status: HttpStatus.BAD_REQUEST,
+            error: updatedProject.name + '-' + updatedProject.message,
+          };
+        }
+      }
     }
     return {
       status: HttpStatus.BAD_REQUEST,
@@ -117,9 +203,9 @@ export class ProjectService {
   async remove({
     id,
   }: Project.FindOneProjectRequestByIdDto): Promise<Project.ProjectResponse> {
-    const project = await this.projectRepo.findOne({ where: { id } });
+    const project = await this.projectRepo.findOneById({ id });
     if (project) {
-      await this.projectRepo.delete(id);
+      await this.projectRepo.remove({ id });
       return {
         status: HttpStatus.NO_CONTENT,
       };

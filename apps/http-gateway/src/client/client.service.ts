@@ -8,7 +8,9 @@ import { GRPC } from 'src/constants';
 @Injectable()
 export class ClientService implements OnModuleInit {
   private clientService: ClientProto.ClientServiceClient;
-  constructor(@Inject(GRPC.CLIENT_SERVICE) private clientGrpc: ClientGrpc) {}
+  constructor(
+    @Inject(ClientProto.CLIENT_PACKAGE_NAME) private clientGrpc: ClientGrpc,
+  ) {}
 
   onModuleInit() {
     this.clientService =

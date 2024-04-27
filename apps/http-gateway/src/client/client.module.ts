@@ -13,6 +13,7 @@ import { CompanyService } from './company.service';
 import { CompanyController } from './company.controller';
 import { GRPC } from 'src/constants';
 import { GrpcModule } from '@agency-os/grpc-service';
+import { ClientProto } from '@agency-os/proto';
 
 @Module({
   imports: [
@@ -55,7 +56,7 @@ import { GrpcModule } from '@agency-os/grpc-service';
     //     },
     //   },
     // ]),
-    GrpcModule.register({ name: GRPC.CLIENT_SERVICE }),
+    GrpcModule.register({ name: ClientProto.CLIENT_PACKAGE_NAME }),
   ],
   controllers: [ClientController, CompanyController],
   providers: [ClientService, CompanyService],

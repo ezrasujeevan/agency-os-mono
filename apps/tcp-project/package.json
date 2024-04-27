@@ -22,6 +22,9 @@
   "dependencies": {
     "@agency-os/class": "workspace:^",
     "@agency-os/common": "workspace:^",
+    "@agency-os/grpc-service": "workspace:^",
+    "@agency-os/proto": "workspace:^",
+    "@agency-os/rmq-service": "workspace:^",
     "@agency-os/tcp-service": "workspace:^",
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",

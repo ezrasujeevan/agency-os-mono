@@ -11,8 +11,9 @@ import {
 import { PartialType } from '@nestjs/mapped-types';
 import { Company } from './company';
 import { CommonEntity } from '@agency-os/common';
+import { HttpStatus } from '@nestjs/common';
 
-export type Clientss = Client;
+export const SERVICE_NAME = ClientProto.protobufPackage;
 
 export abstract class Client
   extends CommonEntity
@@ -291,4 +292,12 @@ export class Clients implements ClientProto.Clients {
   @IsString()
   @IsOptional()
   clients: Client[];
+}
+
+export type client = Client | Client[];
+
+export interface ClientResponseDto {
+  status: HttpStatus;
+  error?: string | string[];
+  client?: client;
 }
