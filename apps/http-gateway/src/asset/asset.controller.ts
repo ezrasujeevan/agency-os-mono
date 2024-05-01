@@ -10,9 +10,10 @@ import {
 } from '@nestjs/common';
 import { AssetService } from './asset.service';
 import { Asset } from '@agency-os/class';
-import { ApiQuery } from '@nestjs/swagger';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { asset } from '@agency-os/class/dist/asset';
 
+@ApiTags('asset')
 @Controller('asset')
 export class AssetController {
   constructor(private readonly assetService: AssetService) {}

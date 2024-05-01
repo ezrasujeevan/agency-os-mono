@@ -1,26 +1,76 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateDeliveryDto } from './dto/create-delivery.dto';
 import { UpdateDeliveryDto } from './dto/update-delivery.dto';
+import { Delivery } from '@agency-os/class';
+import { ClientTCP } from '@nestjs/microservices';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class DeliveryService {
-  create(createDeliveryDto: CreateDeliveryDto) {
-    return 'This action adds a new delivery';
+  constructor(
+    @Inject(Delivery.SERVICE_NAME) private readonly deliveryService: ClientTCP,
+  ) {}
+  async createDelivery(
+    createDeliveryRequestDto: Delivery.CreateDeliveryRequestDto,
+  ): Promise<Delivery.DeliveryResponse> {
+    return await firstValueFrom(
+      this.deliveryService.send<
+        Delivery.DeliveryResponse,
+        Delivery.CreateDeliveryRequestDto
+      >(Delivery.Message.create, createDeliveryRequestDto),
+    );
   }
 
-  findAll() {
-    return `This action returns all delivery`;
+  async findAllDelivery(): Promise<Delivery.DeliveryResponse> {
+    return await firstValueFrom(
+      this.deliveryService.send<Delivery.DeliveryResponse, object>(
+        Delivery.Message.findAll,
+        {},
+      ),
+    );
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} delivery`;
+  async findAllDeliveryByProject(
+    projectId: Delivery.FindAllDeliveryByProjectRequestDto,
+  ): Promise<Delivery.DeliveryResponse> {
+    return await firstValueFrom(
+      this.deliveryService.send<
+        Delivery.DeliveryResponse,
+        Delivery.FindAllDeliveryByProjectRequestDto
+      >(Delivery.Message.findAllByProject, projectId),
+    );
   }
 
-  update(id: number, updateDeliveryDto: UpdateDeliveryDto) {
-    return `This action updates a #${id} delivery`;
+  async findOneDelivery(
+    id: Delivery.FindOneDeliveryRequestDto,
+  ): Promise<Delivery.DeliveryResponse> {
+    return await firstValueFrom(
+      this.deliveryService.send<
+        Delivery.DeliveryResponse,
+        Delivery.FindOneDeliveryRequestDto
+      >(Delivery.Message.findOne, id),
+    );
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} delivery`;
+  async updateDelivery(
+    updateDeliveryRequestDto: Delivery.UpdateDeliveryRequestDto,
+  ): Promise<Delivery.DeliveryResponse> {
+    return await firstValueFrom(
+      this.deliveryService.send<
+        Delivery.DeliveryResponse,
+        Delivery.UpdateDeliveryRequestDto
+      >(Delivery.Message.update, updateDeliveryRequestDto),
+    );
+  }
+
+  async removeDelivery(
+    id: Delivery.FindOneDeliveryRequestDto,
+  ): Promise<Delivery.DeliveryResponse> {
+    return await firstValueFrom(
+      this.deliveryService.send<
+        Delivery.DeliveryResponse,
+        Delivery.FindOneDeliveryRequestDto
+      >(Delivery.Message.delete, id),
+    );
   }
 }
