@@ -33,7 +33,7 @@ export class CompanyService {
   }
 
   async findOneCompanyByCode(
-    code: Company.FindOneCompanyByIdRequestDto,
+    code: Company.findOneCompanyByCodeRequestDto,
   ): Promise<Company.companyResponseDto> {
     return await firstValueFrom(
       this.companyService.send<

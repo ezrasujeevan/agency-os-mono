@@ -17,10 +17,10 @@ import {
 } from '@nestjs/swagger';
 import { ClientAuthGuard } from '@agency-os/auth';
 
-@ApiTags('client')
+@ApiTags('client', 'grpc')
 @ApiBearerAuth()
 @UseGuards(ClientAuthGuard)
-@Controller('client')
+@Controller('client-grpc')
 export class ClientController {
   constructor(private readonly clientService: ClientService) {}
 

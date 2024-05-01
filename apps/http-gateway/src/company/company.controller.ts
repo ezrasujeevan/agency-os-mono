@@ -1,34 +1,52 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { CompanyService } from './company.service';
-import { CreateCompanyDto } from './dto/create-company.dto';
-import { UpdateCompanyDto } from './dto/update-company.dto';
+import { Company } from '@agency-os/class';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('company')
 @Controller('company')
 export class CompanyController {
   constructor(private readonly companyService: CompanyService) {}
 
   @Post()
-  create(@Body() createCompanyDto: CreateCompanyDto) {
-    return this.companyService.create(createCompanyDto);
+  create(@Body() create: Company.CreateCompanyRequestDto) {
+    return this.companyService.createCompany(create);
   }
 
+  @ApiQuery({ name: 'code', required: false })
   @Get()
-  findAll() {
-    return this.companyService.findAll();
+  findAll(@Query('code') code?: string) {
+    if (code) {
+      return this.companyService.findOneCompanyByCode({ code });
+    }
+    return this.companyService.findAllCompany();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.companyService.findOne(+id);
+    return this.companyService.findOneCompanyById({ id });
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCompanyDto: UpdateCompanyDto) {
-    return this.companyService.update(+id, updateCompanyDto);
+  update(
+    @Param('id') id: string,
+    @Body() update: Company.UpdateCompanyRequestDto,
+  ) {
+    update.id = id;
+    return this.companyService.updateCompany(update);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.companyService.remove(+id);
+    return this.companyService.removeCompany({ id });
   }
 }
