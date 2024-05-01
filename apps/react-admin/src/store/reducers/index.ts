@@ -5,6 +5,8 @@ import { snackAlertSlice, MuiAlertType, SnackAlertState, snackAlertActions } fro
 import { themeSlice, setDarkTheme, setLightTheme } from './theme'
 import { userSlice } from './user'
 import { projectSlice } from './project'
+import { assetSlice } from './asset'
+import { deliverySlice } from './delivery'
 
 export {
     authSlice,
@@ -13,7 +15,9 @@ export {
     snackAlertSlice,
     themeSlice,
     userSlice,
-    projectSlice
+    projectSlice,
+    assetSlice,
+    deliverySlice
 }
 export { setDarkTheme, setLightTheme }
 export const {

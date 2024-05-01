@@ -1,19 +1,14 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { clientApiSlice } from '../api'
-import { Client, Company } from '@agency-os/class'
+import { Client} from '@agency-os/class'
 
-const company: Partial<Company.Company> = {
-    id: '',
-    name: '',
-    code: ''
-}
 
 const initialState: Partial<Client.Client> = {
     id: '',
     email: '',
     firstName: '',
     lastName: '',
-    company: company
+    companyId: ''
 }
 
 export const clientSlice = createSlice({
@@ -23,26 +18,38 @@ export const clientSlice = createSlice({
     extraReducers: (builder) => {
         builder.addMatcher(
             clientApiSlice.endpoints.getClientById.matchFulfilled,
-            (state, action: PayloadAction<Client.Client>) => {
-                state = { ...state, ...action.payload }
+            (state, action: PayloadAction<Client.ClientResponseDto>) => {
+                const { status, client } = action.payload
+                if (status === 200 && client && !Array.isArray(client)) {
+                    state = client
+                }
             }
         )
         builder.addMatcher(
             clientApiSlice.endpoints.getClientByEmail.matchFulfilled,
-            (state, action: PayloadAction<Client.Client>) => {
-                state = { ...state, ...action.payload }
+            (state, action: PayloadAction<Client.ClientResponseDto>) => {
+                const { status, client } = action.payload
+                if (status === 200 && client && !Array.isArray(client)) {
+                    state = client
+                }
             }
         )
         builder.addMatcher(
             clientApiSlice.endpoints.updateClient.matchFulfilled,
-            (state, action: PayloadAction<Client.Client>) => {
-                state = { ...state, ...action.payload }
+            (state, action: PayloadAction<Client.ClientResponseDto>) => {
+                const { status, client } = action.payload
+                if (status === 200 && client && !Array.isArray(client)) {
+                    state = client
+                }
             }
         )
         builder.addMatcher(
             clientApiSlice.endpoints.deleteClient.matchFulfilled,
-            (state) => {
-                state = initialState
+            (state, action: PayloadAction<Client.ClientResponseDto>) => {
+                const { status } = action.payload
+                if (status === 204) {
+                    state = initialState
+                }
             }
         )
     }

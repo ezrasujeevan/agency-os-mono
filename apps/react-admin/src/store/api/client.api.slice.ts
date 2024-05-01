@@ -3,32 +3,44 @@ import { rootApiSlice } from './root.api.slice'
 
 export const clientApiSlice = rootApiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        getClientById: builder.query<Client.Client, Client.FindOneClientByIdRequestDto>({
+        getClientById: builder.query<Client.ClientResponseDto, Client.FindOneClientByIdRequestDto>({
             query: (id: Client.FindOneClientByIdRequestDto) => ({
                 url: `client/${id}`,
                 method: 'GET'
             })
         }),
-        getClientByEmail: builder.query<Client.Client, Client.FindOneClientByEmailRequestDto>({
+        getClientByEmail: builder.query<
+            Client.ClientResponseDto,
+            Client.FindOneClientByEmailRequestDto
+        >({
             query: (email: Client.FindOneClientByEmailRequestDto) => ({
-                url: `client/${email}`,
+                url: `client?email=${email}`,
                 method: 'GET'
             })
         }),
-        getAllClients: builder.query<Client.Client[], void>({
+        getAllClients: builder.query<Client.ClientResponseDto, void>({
             query: () => ({
                 url: `client`,
                 method: 'GET'
             })
         }),
-        updateClient: builder.mutation<Client.Client, Client.UpdateClientRequestDto>({
+        getAllClientsByCompany: builder.query<
+            Client.ClientResponseDto,
+            Client.findAllOfCompanyRequestDto
+        >({
+            query: (company: Client.findAllOfCompanyRequestDto) => ({
+                url: `client?company=${company}`,
+                method: 'GET'
+            })
+        }),
+        updateClient: builder.mutation<Client.ClientResponseDto, Client.UpdateClientRequestDto>({
             query: (data: Client.UpdateClientRequestDto) => ({
                 url: `client/${data.id}`,
                 method: 'PATCH',
                 body: data
             })
         }),
-        deleteClient: builder.mutation<Client.Client, string>({
+        deleteClient: builder.mutation<Client.ClientResponseDto, string>({
             query: (id: string) => ({
                 url: `client/${id}`,
                 method: 'DELETE'

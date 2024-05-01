@@ -13,7 +13,7 @@ const initialState:Partial<Asset.Asset> = {
     id: "",
 }
 
-export const AssetSlice = createSlice({
+export const assetSlice = createSlice({
     name: 'asset',
     initialState,
     reducers: {},

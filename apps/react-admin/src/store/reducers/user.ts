@@ -23,26 +23,38 @@ export const userSlice = createSlice({
     extraReducers: (builder) => {
         builder.addMatcher(
             userApiSlice.endpoints.getUserById.matchFulfilled,
-            (state, action: PayloadAction<User.User>) => {
-                state = { ...state, ...action.payload }
+            (state, action: PayloadAction<User.UserResponseDto>) => {
+                const { status, user } = action.payload
+                if (status === 200 && user && !Array.isArray(user)) {
+                    state = user
+                }
             }
         )
         builder.addMatcher(
             userApiSlice.endpoints.getUserByEmail.matchFulfilled,
-            (state, action: PayloadAction<User.User>) => {
-                state = { ...state, ...action.payload }
+            (state, action: PayloadAction<User.UserResponseDto>) => {
+                const { status, user } = action.payload
+                if (status === 200 && user && !Array.isArray(user)) {
+                    state = user
+                }
             }
         )
         builder.addMatcher(
             userApiSlice.endpoints.updateUser.matchFulfilled,
-            (state, action: PayloadAction<User.User>) => {
-                state = { ...state, ...action.payload }
+            (state, action: PayloadAction<User.UserResponseDto>) => {
+                const { status, user } = action.payload
+                if (status === 200 && user && !Array.isArray(user)) {
+                    state = user
+                }
             }
         )
         builder.addMatcher(
             userApiSlice.endpoints.deleteUser.matchFulfilled,
-            (state) => {
-                state = initialState
+            (state, action: PayloadAction<User.UserResponseDto>) => {
+                const { status } = action.payload
+                if (status === 204) {
+                    state = initialState
+                }
             }
         )
     }

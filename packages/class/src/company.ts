@@ -40,7 +40,7 @@ export type company = Company | Company[];
 export interface companyResponseDto {
   status: HttpStatus;
   error?: string | string[];
-  client?: company;
+  company?: company;
 }
 
 export class CreateCompanyRequestDto {

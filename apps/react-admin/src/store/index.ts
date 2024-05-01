@@ -1,10 +1,30 @@
 import { ThunkDispatch, UnknownAction, combineReducers, configureStore } from '@reduxjs/toolkit'
-import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist'
+import {
+    persistStore,
+    persistReducer,
+    FLUSH,
+    REHYDRATE,
+    PAUSE,
+    PERSIST,
+    PURGE,
+    REGISTER
+} from 'redux-persist'
 import storage from 'redux-persist/lib/storage' // defaults to localStorage
 import { dataReducer } from './reducers/data'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import { rootApiSlice } from './api/root.api.slice'
-import { authSlice, clientSlice, companySlice, projectSlice, snackAlertSlice, themeSlice, userSlice } from './reducers'
+import {
+    assetSlice,
+    authSlice,
+    clientSlice,
+    companySlice,
+    deliverySlice,
+    projectSlice,
+    snackAlertSlice,
+    themeSlice,
+    userSlice
+} from './reducers'
+
 
 const rootReducer = combineReducers({
     [rootApiSlice.reducerPath]: rootApiSlice.reducer,
@@ -15,6 +35,8 @@ const rootReducer = combineReducers({
     [clientSlice.reducerPath]: clientSlice.reducer,
     [snackAlertSlice.reducerPath]: snackAlertSlice.reducer,
     [projectSlice.reducerPath]: projectSlice.reducer,
+    [assetSlice.reducerPath]: assetSlice.reducer,
+    [deliverySlice.reducerPath]: deliverySlice.reducer
 })
 const persistConfig = {
     key: 'root',

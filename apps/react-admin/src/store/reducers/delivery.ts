@@ -15,7 +15,7 @@ const initialState:Partial<Delivery.Delivery> = {
     id: "",
 }
 
-export const DeliverySlice = createSlice({
+export const deliverySlice = createSlice({
     name: 'delivery',
     initialState,
     reducers: {},
