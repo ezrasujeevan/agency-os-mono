@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { CompanyService } from './company.service';
-import { Company } from '@agency-os/common';
+import { Company } from '@agency-os/class';
 import { ClientProto } from '@agency-os/proto';
 
 @Controller()

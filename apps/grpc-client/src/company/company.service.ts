@@ -1,4 +1,4 @@
-import { Company } from '@agency-os/common';
+import { Company } from '@agency-os/class';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CompanyEntity } from './company.entity';

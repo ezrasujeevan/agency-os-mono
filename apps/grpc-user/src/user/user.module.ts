@@ -6,7 +6,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CONFIG_JWT, Igrpc_jwt, validate_jwt } from './user.vaidation';
-import { cp } from 'fs';
 
 @Module({
   imports: [

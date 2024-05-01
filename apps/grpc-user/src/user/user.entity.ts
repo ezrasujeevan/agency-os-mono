@@ -19,10 +19,10 @@ export class UserEntity extends BaseEntity implements User.User {
   createdAt: Date;
 
   @UpdateDateColumn({ name: 'updated_at' })
-  UpdatedAt: Date;
+  updatedAt: Date;
 
   @DeleteDateColumn({ name: 'deleted_at' })
-  DeletedAt: Date;
+  deletedAt: Date;
 
   @VersionColumn({ name: '_v' })
   version: number;

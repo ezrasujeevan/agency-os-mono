@@ -8,33 +8,27 @@ import { UserAuthGuard } from '@agency-os/auth';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @UseGuards(UserAuthGuard)
   async createUser(
     createUserRequestDto: User.CreateUserRequestDto,
   ): Promise<User.User> {
     return await this.userService.create(createUserRequestDto);
   }
 
-  @UseGuards(UserAuthGuard)
   async findAllUser(): Promise<User.Users> {
     return { users: await this.userService.findAll({}) };
   }
 
-  @UseGuards(UserAuthGuard)
   async findOneUserbyId(
     findOneUserByIdRequestDto: User.FindOneUserByIdRequestDto,
   ): Promise<User.User> {
     return await this.userService.findOneById(findOneUserByIdRequestDto);
   }
-
-  @UseGuards(UserAuthGuard)
   async findOneUserByEmail(
     findOneUserByEmailRequestDto: User.FindOneUserByEmailRequestDto,
   ): Promise<User.User> {
     return await this.userService.findOneByEmail(findOneUserByEmailRequestDto);
   }
 
-  @UseGuards(UserAuthGuard)
   async updateUser(
     updateUserRequestDto: User.UpdateUserRequestDto,
   ): Promise<User.User> {
@@ -44,7 +38,6 @@ export class UserController {
     );
   }
 
-  @UseGuards(UserAuthGuard)
   async removeUser(
     findOneUserByIdRequestDto: User.FindOneUserByIdRequestDto,
   ): Promise<User.User> {

@@ -145,39 +145,45 @@ export class ClientService {
         };
       }
     } catch (error) {
-      return { error: error, status: HttpStatus.UNAUTHORIZED, clientId: '' };
+      return {
+        error: error,
+        status: HttpStatus.UNAUTHORIZED,
+        clientId: '',
+        compnayId: '',
+      };
     }
     return {
       error: ['invalid token'],
       status: HttpStatus.UNAUTHORIZED,
-      userId: '',
+      clientId: '',
+      compnayId: '',
     };
   }
 
   async refreshToken(
     RefreshTokenClientRequestDto: Client.RefreshTokenClientRequestDto,
-  ): Promise<Client.LoginClientResponseDto> {
+  ): Promise<Client.LoginClientResponceDto> {
     try {
       const { refreshToken } = RefreshTokenClientRequestDto;
 
       const payload = await this.jwtService.verifyAsync(refreshToken);
-      const user = await this.findOneById({ id: payload['id'] });
-      if (payload && payload !== undefined && user && user !== undefined) {
+      const client = await this.findOneById({ id: payload['id'] });
+      if (payload && payload !== undefined && client && client !== undefined) {
         const token = await this.jwtService.signAsync({
-          id: user.id,
-          email: user.email,
+          id: client.id,
+          email: client.email,
         });
         const refreshToken = await this.jwtService.signAsync(
           {
-            id: user.id,
-            email: user.email,
+            id: client.id,
+            email: client.email,
           },
           { expiresIn: '7d' },
         );
         return {
           error: [],
           status: HttpStatus.OK,
-          userId: user.id,
+          clientId: client.id,
           refreshToken,
           token,
         };
@@ -186,7 +192,7 @@ export class ClientService {
       return {
         error: error,
         status: HttpStatus.UNAUTHORIZED,
-        userId: '',
+        clientId: '',
         refreshToken: '',
         token: '',
       };
@@ -194,7 +200,7 @@ export class ClientService {
     return {
       error: ['invalid token'],
       status: HttpStatus.BAD_REQUEST,
-      userId: '',
+      clientId: '',
       refreshToken: '',
       token: '',
     };
