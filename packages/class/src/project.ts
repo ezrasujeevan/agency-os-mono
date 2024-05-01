@@ -3,8 +3,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { PartialType } from '@nestjs/mapped-types';
 import { HttpStatus } from '@nestjs/common';
 
-export const SERVICE_NAME = 'PROJECT_SERVICE';
-
 export abstract class Project extends CommonEntity {
   @ApiProperty({
     description: 'this is the name of project ',
@@ -78,6 +76,27 @@ export abstract class Project extends CommonEntity {
   companyId: string;
 }
 
+export const SERVICE_NAME = 'PROJECT_SERVICE';
+export const Message = {
+  create: 'createProject',
+  findAll: 'findAllProject',
+  findAllByClient: 'findAllProjectByClient',
+  findAllByCompany: 'findAllProjectByCompany',
+  findAllByUser: 'findAllByUser',
+  findOneById: 'findOneProjectById',
+  findOneByTrialName: 'findOneProjectByTrialName',
+  update: 'updateProject',
+  remove: 'removeProject',
+};
+
+export type project = Project | Project[];
+
+export interface ProjectResponse {
+  status: HttpStatus;
+  project?: project;
+  error?: string[] | string;
+}
+
 export class CreateProjectRequestDto {
   trialName: string;
   name: string;
@@ -90,9 +109,7 @@ export class CreateProjectRequestDto {
   companyId: string;
 }
 
-export class UpdateProjectRequestDto extends PartialType(
-  CreateProjectRequestDto,
-) {
+export class UpdateProjectRequestDto extends PartialType(CreateProjectRequestDto) {
   id: string;
 }
 
@@ -114,24 +131,4 @@ export class FindAllProjectByUserRequestDto {
 
 export class FindAllProjectByClientRequestDto {
   clientId: string;
-}
-
-export const Message = {
-  create: 'createProject',
-  findAll: 'findAllProject',
-  findAllByClient: 'findAllProjectByClient',
-  findAllByCompany: 'findAllProjectByCompany',
-  findAllByUser: 'findAllByUser',
-  findOneById: 'findOneProjectById',
-  findOneByTrialName: 'findOneProjectByTrialName',
-  update: 'updateProject',
-  remove: 'removeProject',
-};
-
-export type project = Project | Project[];
-
-export interface ProjectResponse {
-  status: HttpStatus;
-  project?: project;
-  error?: string[] | string;
 }

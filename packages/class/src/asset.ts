@@ -1,4 +1,3 @@
-import { Delivery } from './delivery';
 import { CommonEntity } from '@agency-os/common';
 import { ApiProperty } from '@nestjs/swagger';
 import { PartialType } from '@nestjs/mapped-types';
@@ -10,7 +9,7 @@ export abstract class Asset extends CommonEntity {
     example: '456',
     title: 'Delivery ID',
   })
-  delivery: Delivery;
+  deliveryId: string;
 
   @ApiProperty({
     description: 'The name of the asset',
@@ -61,7 +60,7 @@ export class CreateAssetRequestDto {
     example: '456',
     title: 'Delivery ID',
   })
-  delivery: Delivery;
+  deliveryId: string;
 
   @ApiProperty({
     description: 'The name of the asset',

@@ -1,14 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { GrpcOptions, Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
 import { join } from 'path';
 
 @Injectable()
 export class GrpcService {
+  private readonly logger = new Logger(GrpcService.name);
   constructor(private readonly configService: ConfigService) {}
   getOptions(name: string): GrpcOptions {
-    const host = this.configService.get(`GRPC_${name.toUpperCase()}_HOST`);
-    const port = this.configService.get(`GRPC_${name.toUpperCase()}_PORT`);
     const url = this.configService.get(`GRPC_${name.toUpperCase()}_URL`);
 
     const protoPath = join(
@@ -16,6 +15,8 @@ export class GrpcService {
       '../',
       `${name}.proto`,
     );
+
+    this.logger.log(`GRPC Service ${name} is running on ${url}`);
     return {
       transport: Transport.GRPC,
       options: {

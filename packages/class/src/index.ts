@@ -1,6 +1,9 @@
-export * as User from './user/user';
-export * as Client from './client/client';
-export * as Company from './client/company';
-export * as Project from './project/project';
-export * as Delivery from './delivery/delivery';
-export * as Asset from './delivery/asset';
+export * as UserGrpc from './user/user';
+export * as ClientGrpc from './client/client';
+export * as CompanyGrpc from './client/company';
+export * as Project from './project';
+export * as Delivery from './delivery';
+export * as Asset from './asset';
+export * as User from './user';
+export * as Company from './company';
+export * as Client from './client';

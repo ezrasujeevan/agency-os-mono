@@ -7,9 +7,7 @@ import { Company } from './company';
 import { CommonEntity } from '@agency-os/common';
 import { HttpStatus } from '@nestjs/common';
 
-export const SERVICE_NAME = ClientProto.protobufPackage;
-
-export abstract class Client extends CommonEntity implements ClientProto.Client {
+export abstract class Client extends CommonEntity {
   @ApiProperty({
     description: 'this is the email of Client ',
     example: 'john.doe@gmail.com',
@@ -43,10 +41,36 @@ export abstract class Client extends CommonEntity implements ClientProto.Client 
     title: 'Last Name',
     name: 'lastName',
   })
-  company: ClientProto.Company;
+  companyId: string;
 }
 
-export class CreateClientRequestDto implements ClientProto.CreateClientRequest {
+export const SERVICE_NAME = 'CLIENT_SERVICE';
+export const Message = {
+  create: 'createClient',
+  findAll: 'findAllClient',
+  findAllOfCompany: 'findAllOfCompanyClient',
+  findOneById: 'findOneByIdClient',
+  findOneByEmail: 'findOneByEmailClient',
+  update: 'updateClient',
+  delete: 'deleteClient',
+  register: 'registerClient',
+  login: 'loginClient',
+  validate: 'validateClient',
+  refresh: 'refreshClient',
+};
+export type client = Client | Client[];
+
+export interface ClientResponseDto {
+  status: HttpStatus;
+  error?: string | string[];
+  client?: client;
+}
+
+export class findAllOfCompanyRequestDto {
+  companyId: string;
+}
+
+export class CreateClientRequestDto {
   @ApiProperty({
     description: 'this is the email of Client ',
     example: 'john.doe@gmail.com',
@@ -86,13 +110,10 @@ export class CreateClientRequestDto implements ClientProto.CreateClientRequest {
   @IsOptional()
   lastName: string;
 
-  company: Company;
+  companyId: string;
 }
 
-export class UpdateClientRequestDto
-  extends PartialType(CreateClientRequestDto)
-  implements ClientProto.UpdateClientRequest
-{
+export class UpdateClientRequestDto extends PartialType(CreateClientRequestDto) {
   @ApiProperty({
     description: 'this is the id',
     example: 'a51861f8-c071-440f-b644-4d223a0628bf',
@@ -107,18 +128,18 @@ export class UpdateClientRequestDto
   Point?: CreateClientRequestDto;
 }
 
-export class FindOneClientByIdRequestDto implements ClientProto.FindOneClientByIdRequest {
+export class FindOneClientByIdRequestDto {
   @ApiProperty({})
   @IsString()
   id: string;
 }
-export class FindOneClientByEmailRequestDto implements ClientProto.FindOneClientByEmailRequest {
+export class FindOneClientByEmailRequestDto {
   @ApiProperty({})
   @IsString()
   email: string;
 }
 
-export class LoginClientRequestDto implements ClientProto.LoginClientRequest {
+export class LoginClientRequestDto {
   @ApiProperty({
     description: 'this is the email of Client ',
     example: 'john.doe@gmail.com',
@@ -139,7 +160,7 @@ export class LoginClientRequestDto implements ClientProto.LoginClientRequest {
   password: string;
 }
 
-export class LoginClientResponceDto implements ClientProto.LoginClientResponse {
+export class LoginClientResponseDto {
   @ApiProperty({
     description: 'HTTP Status ',
     example: '200',
@@ -185,7 +206,7 @@ export class LoginClientResponceDto implements ClientProto.LoginClientResponse {
   @IsOptional()
   clientId: string;
 }
-export class ValidateClientRequestDto implements ClientProto.ValidateClientRequest {
+export class ValidateClientRequestDto {
   @ApiProperty({
     description: 'JWT Token ',
     example: '',
@@ -195,7 +216,7 @@ export class ValidateClientRequestDto implements ClientProto.ValidateClientReque
   token: string;
 }
 
-export class ValidateClientResponseDto implements ClientProto.ValidateClientResponse {
+export class ValidateClientResponseDto {
   @ApiProperty({
     description: 'Company ID of token ',
     example: '',
@@ -231,27 +252,7 @@ export class ValidateClientResponseDto implements ClientProto.ValidateClientResp
   error: string[];
 }
 
-export class RegisterClientResponseDto implements ClientProto.RegisterClientResponse {
-  @ApiProperty({
-    description: 'HTTP Status ',
-    example: '200',
-    title: 'Status',
-  })
-  @IsNumber()
-  status: number;
-
-  @ApiProperty({
-    description: 'Errors ',
-    example: '',
-    title: 'Error',
-    isArray: true,
-  })
-  @IsString()
-  @IsOptional()
-  error: string[];
-}
-
-export class RefreshTokenClientRequestDto implements ClientProto.RefreshTokenClientRequest {
+export class RefreshTokenClientRequestDto {
   @ApiProperty({
     description: 'JWT Refresh Token ',
     example: '',
@@ -259,24 +260,4 @@ export class RefreshTokenClientRequestDto implements ClientProto.RefreshTokenCli
   })
   @IsString()
   refreshToken: string;
-}
-
-export class Clients implements ClientProto.Clients {
-  @ApiProperty({
-    description: 'List Of Clients ',
-    example: '',
-    title: 'Clients',
-    isArray: true,
-  })
-  @IsString()
-  @IsOptional()
-  clients: Client[];
-}
-
-export type client = Client | Client[];
-
-export interface ClientResponseDto {
-  status: HttpStatus;
-  error?: string | string[];
-  client?: client;
 }
