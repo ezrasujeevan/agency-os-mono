@@ -15,7 +15,7 @@ import {
 } from 'typeorm';
 
 @Entity('client')
-export class ClientEntity extends BaseEntity implements Client.Client {
+export class ClientEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid', { name: '_id' })
   id: string;
 

@@ -6,6 +6,7 @@ import { ClientEntity } from './client.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { CONFIG_JWT, Igrpc_jwt, validate_jwt } from './client.vaidation';
+import { ClientRepository } from './client.repository';
 
 @Module({
   imports: [
@@ -30,6 +31,6 @@ import { CONFIG_JWT, Igrpc_jwt, validate_jwt } from './client.vaidation';
     }),
   ],
   controllers: [ClientController],
-  providers: [ClientService],
+  providers: [ClientService, ClientRepository],
 })
 export class ClientModule {}
