@@ -13,6 +13,7 @@
     "log": "pnpm --filter log",
     "proto": "pnpm --filter proto",
     "auth": "pnpm --filter auth",
+    "google": "pnpm --filter google",
     "tcp": "pnpm --filter tcp-service",
     "rmq": "pnpm --filter rmq-service",
     "grpc": "pnpm --filter grpc-service",
@@ -21,7 +22,12 @@
     "grpc:user": "pnpm --filter grpc-user",
     "grpc:client": "pnpm --filter grpc-client",
     "react:admin": "pnpm --filter react-admin",
-    "tcp:project": "pnpm --filter tcp-project"
+    "tcp:project": "pnpm --filter tcp-project",
+    "tcp:user": "pnpm --filter tcp-user",
+    "tcp:client": "pnpm --filter tcp-client",
+    "tcp:company": "pnpm --filter tcp-company",
+    "tcp:asset": "pnpm --filter tcp-asset",
+    "tcp:delivery": "pnpm --filter tcp-project"
   },
   "lint-staged": {
     "**/*.{js,ts,tsx}": [

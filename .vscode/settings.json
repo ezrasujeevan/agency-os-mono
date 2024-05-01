@@ -23,18 +23,45 @@
       "database": "grpc_user",
       "username": "postgres",
       "password": "password"
+    },
+    {
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "name": "grpc_client",
+      "group": "agencyOs-psql",
+      "database": "grpc_client",
+      "username": "postgres",
+      "password": "password"
+    },
+    {
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "name": "tcp_project",
+      "group": "agencyOs-psql",
+      "database": "tcp_project",
+      "username": "postgres",
+      "password": "password"
+    },
+    {
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "name": "tcp_delivery",
+      "group": "agencyOs-psql",
+      "database": "tcp_delivery",
+      "username": "postgres",
+      "password": "password"
     }
   ],
   "[proto3]": {
     "editor.defaultFormatter": "zxh404.vscode-proto3"
   },
-  "a-file-icon-vscode.activeIconPacks": [
-    "nest",
-    "react",
-    "redux",
-    "recoil",
-    "rails"
-  ],
+  "a-file-icon-vscode.activeIconPacks": ["nest", "react", "redux", "recoil", "rails"],
   "a-file-icon-vscode.arrowTheme": "triangle",
   "a-file-icon-vscode.folderColor": "#979fad",
   "a-file-icon-vscode.folderTheme": "specific",
