@@ -1,58 +1,26 @@
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
-import { ClientProto } from '@agency-os/proto';
-import { ClientGrpc } from '@nestjs/microservices';
-import { Client } from '@agency-os/class';
-import { Metadata } from '@grpc/grpc-js';
-import { GRPC } from 'src/constants';
+import { Injectable } from '@nestjs/common';
+import { CreateClientDto } from './dto/create-client.dto';
+import { UpdateClientDto } from './dto/update-client.dto';
 
 @Injectable()
-export class ClientService implements OnModuleInit {
-  private clientService: ClientProto.ClientServiceClient;
-  constructor(
-    @Inject(ClientProto.CLIENT_PACKAGE_NAME) private clientGrpc: ClientGrpc,
-  ) {}
-
-  onModuleInit() {
-    this.clientService =
-      this.clientGrpc.getService<ClientProto.ClientServiceClient>(
-        ClientProto.CLIENT_SERVICE_NAME,
-      );
+export class ClientService {
+  create(createClientDto: CreateClientDto) {
+    return 'This action adds a new client';
   }
 
-  create(CreateClientRequestDto: Client.CreateClientRequestDto) {
-    return this.clientService.createClient(CreateClientRequestDto);
+  findAll() {
+    return `This action returns all client`;
   }
 
-  findAll({}, metadata?: Metadata) {
-    return this.clientService.findAllClient({}, metadata);
+  findOne(id: number) {
+    return `This action returns a #${id} client`;
   }
 
-  findOneById(findOneClientByIdRequestDto: Client.FindOneClientByIdRequestDto) {
-    return this.clientService.findOneClientbyId(findOneClientByIdRequestDto);
+  update(id: number, updateClientDto: UpdateClientDto) {
+    return `This action updates a #${id} client`;
   }
 
-  findOneByEmail(
-    findOneClientByEmailRequestDto: Client.FindOneClientByEmailRequestDto,
-  ) {
-    return this.clientService.findOneClientByEmail(
-      findOneClientByEmailRequestDto,
-    );
-  }
-
-  async update(
-    id: string,
-    updateClientRequestDto: Client.UpdateClientRequestDto,
-  ) {
-    const client = this.findOneById({ id });
-    if (client && client !== undefined) {
-      updateClientRequestDto = { ...updateClientRequestDto, id };
-      return this.clientService.updateClient(updateClientRequestDto);
-    }
-  }
-
-  async remove(
-    findOneClientByIdRequestDto: Client.FindOneClientByIdRequestDto,
-  ) {
-    return this.clientService.removeClient(findOneClientByIdRequestDto);
+  remove(id: number) {
+    return `This action removes a #${id} client`;
   }
 }

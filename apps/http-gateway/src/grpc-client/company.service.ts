@@ -3,7 +3,6 @@ import { ClientProto } from '@agency-os/proto';
 import { ClientGrpc } from '@nestjs/microservices';
 import { Company } from '@agency-os/class';
 import { Metadata } from '@grpc/grpc-js';
-import { GRPC } from 'src/constants';
 
 @Injectable()
 export class CompanyService implements OnModuleInit {
@@ -27,7 +26,7 @@ export class CompanyService implements OnModuleInit {
     return this.companyService.findAllCompany({}, metadata);
   }
 
-  findOne(findOneCompanyRequestDto: Company.FindOneCompanyRequestDto) {
+  findOne(findOneCompanyRequestDto: Company.FindOneCompanyByIdRequestDto) {
     return this.companyService.findOneCompany(findOneCompanyRequestDto);
   }
 
@@ -39,7 +38,7 @@ export class CompanyService implements OnModuleInit {
     }
   }
 
-  remove(findOneCompanyRequestDto: Company.FindOneCompanyRequestDto) {
+  remove(findOneCompanyRequestDto: Company.FindOneCompanyByIdRequestDto) {
     return this.companyService.removeCompany(findOneCompanyRequestDto);
   }
 }

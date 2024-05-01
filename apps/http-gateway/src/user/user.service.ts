@@ -1,45 +1,70 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { UserProto } from '@agency-os/proto';
-import { ClientGrpc } from '@nestjs/microservices';
+import { ClientGrpc, ClientProxy } from '@nestjs/microservices';
 import { User } from '@agency-os/class';
 import { firstValueFrom } from 'rxjs';
 import { Metadata } from '@grpc/grpc-js';
+import { FindOneClientByEmailRequestDto } from '@agency-os/class/dist/client';
 @Injectable()
-export class UserService implements OnModuleInit {
+export class UserService {
   private userService: UserProto.UserServiceClient;
-  constructor(
-    @Inject(UserProto.USER_PACKAGE_NAME) private client: ClientGrpc,
-  ) {}
-
-  onModuleInit() {
-    this.userService = this.client.getService<UserProto.UserServiceClient>(
-      UserProto.USER_SERVICE_NAME,
-    );
-  }
+  constructor(@Inject(User.SERVICE_NAME) private userClient: ClientProxy) {}
 
   async create(createUserDto: User.CreateUserRequestDto) {
-    return this.userService.createUser(createUserDto);
-  }
-
-  async findAll({}, metadata: Metadata) {
     return await firstValueFrom(
-      await this.userService.findAllUser({}, metadata),
+      this.userClient.send<User.UserResponseDto, User.CreateUserRequestDto>(
+        User.Message.create,
+        createUserDto,
+      ),
     );
   }
 
-  findOnebyUserId(id: string) {
-    return this.userService.findOneUserbyId({ id });
+  async findAll() {
+    return await firstValueFrom(
+      this.userClient.send<User.UserResponseDto, object>(
+        User.Message.findAll,
+        {},
+      ),
+    );
   }
 
-  findOnebyUserEmail(email: string) {
-    return this.userService.findOneUserByEmail({ email });
+  async findOneUserById(
+    findOneUserByIdRequestDto: User.FindOneUserByIdRequestDto,
+  ) {
+    return await firstValueFrom(
+      this.userClient.send<
+        User.UserResponseDto,
+        User.FindOneUserByIdRequestDto
+      >(User.Message.findOneById, findOneUserByIdRequestDto),
+    );
   }
 
-  update(id: string, updateUserDto: User.UpdateUserRequestDto) {
-    return this.userService.updateUser({ ...updateUserDto, id });
+  async findOneUserByEmail(
+    findOneUserByEmailRequestDto: User.FindOneUserByEmailRequestDto,
+  ) {
+    return await firstValueFrom(
+      this.userClient.send<
+        User.UserResponseDto,
+        User.FindOneUserByEmailRequestDto
+      >(User.Message.findOneByEmail, findOneUserByEmailRequestDto),
+    );
   }
 
-  remove(id: string) {
-    return this.userService.removeUser({ id });
+  async update(updateUserRequestDto: User.UpdateUserRequestDto) {
+    return await firstValueFrom(
+      this.userClient.send<User.UserResponseDto, User.UpdateUserRequestDto>(
+        User.Message.update,
+        updateUserRequestDto,
+      ),
+    );
+  }
+
+  async remove(findOneUserByIdRequestDto: User.FindOneUserByIdRequestDto) {
+    return await firstValueFrom(
+      this.userClient.send<
+        User.UserResponseDto,
+        User.FindOneUserByIdRequestDto
+      >(User.Message.delete, findOneUserByIdRequestDto),
+    );
   }
 }

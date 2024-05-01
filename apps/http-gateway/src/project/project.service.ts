@@ -2,12 +2,11 @@ import { Project } from '@agency-os/class';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
-import { TCP } from 'src/constants';
 
 @Injectable()
 export class ProjectService {
   constructor(
-    @Inject(TCP.PROJECT_SERVICE) private projectClient: ClientProxy,
+    @Inject(Project.SERVICE_NAME) private projectClient: ClientProxy,
   ) {}
 
   async createProject(
