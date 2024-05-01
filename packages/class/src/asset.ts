@@ -54,6 +54,24 @@ export abstract class Asset extends CommonEntity {
   createdBy: string;
 }
 
+export const SERVICE_NAME = 'ASSET_SERVICE';
+export const Message = {
+  create: 'createAsset',
+  update: 'updateAsset',
+  delete: 'deleteAsset',
+  findAll: 'findAllAssets',
+  findAllByDelivery: 'findAllAssetsByDelivery',
+  findOne: 'findOneAsset',
+};
+
+export type asset = Asset | Asset[];
+
+export interface AssetResponseDto {
+  status: HttpStatus;
+  error?: string | string[];
+  asset?: asset;
+}
+
 export class CreateAssetRequestDto {
   @ApiProperty({
     description: 'The ID of the delivery',
@@ -130,21 +148,4 @@ export class FindAllAssetsOfDeliveryRequestDto {
     title: 'Delivery ID',
   })
   deliveryId: string;
-}
-
-export const Message = {
-  create: 'createAsset',
-  update: 'updateAsset',
-  delete: 'deleteAsset',
-  findAll: 'findAllAssets',
-  findAllByDelivery: 'findAllAssetsByDelivery',
-  findOne: 'findOneAsset',
-};
-
-export type asset = Asset | Asset[];
-
-export interface AssetResponseDto {
-  status: HttpStatus;
-  error?: string | string[];
-  asset?: asset;
 }

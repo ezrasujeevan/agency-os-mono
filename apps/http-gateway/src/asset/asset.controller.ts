@@ -1,34 +1,56 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { AssetService } from './asset.service';
-import { CreateAssetDto } from './dto/create-asset.dto';
-import { UpdateAssetDto } from './dto/update-asset.dto';
+import { Asset } from '@agency-os/class';
+import { ApiQuery } from '@nestjs/swagger';
+import { asset } from '@agency-os/class/dist/asset';
 
 @Controller('asset')
 export class AssetController {
   constructor(private readonly assetService: AssetService) {}
 
   @Post()
-  create(@Body() createAssetDto: CreateAssetDto) {
-    return this.assetService.create(createAssetDto);
+  createAsset(
+    @Body() createAssetRequestDto: Asset.CreateAssetRequestDto,
+  ): Promise<Asset.AssetResponseDto> {
+    return this.assetService.createAsset(createAssetRequestDto);
   }
 
+  @ApiQuery({ name: 'delivery', required: false })
   @Get()
-  findAll() {
-    return this.assetService.findAll();
+  findAll(
+    @Query('delivery') deliveryId?: string,
+  ): Promise<Asset.AssetResponseDto> {
+    if (deliveryId) {
+      return this.assetService.findAllAssetByDeliveryId({ deliveryId });
+    }
+    return this.assetService.findAllAsset();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.assetService.findOne(+id);
+    return this.assetService.findOneAsset({ id });
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAssetDto: UpdateAssetDto) {
-    return this.assetService.update(+id, updateAssetDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateAssetRequestDto: Asset.UpdateAssetRequestDto,
+  ) {
+    updateAssetRequestDto.id = id;
+    return this.assetService.updateAsset(updateAssetRequestDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.assetService.remove(+id);
+    return this.assetService.removeAsset({ id });
   }
 }

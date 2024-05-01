@@ -1,26 +1,77 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateAssetDto } from './dto/create-asset.dto';
 import { UpdateAssetDto } from './dto/update-asset.dto';
+import { Asset } from '@agency-os/class';
+import { ClientTCP } from '@nestjs/microservices';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class AssetService {
-  create(createAssetDto: CreateAssetDto) {
-    return 'This action adds a new asset';
+  constructor(
+    @Inject(Asset.SERVICE_NAME) private readonly assetService: ClientTCP,
+  ) {}
+
+  async createAsset(
+    createAssetRequestDto: Asset.CreateAssetRequestDto,
+  ): Promise<Asset.AssetResponseDto> {
+    return await firstValueFrom(
+      this.assetService.send<
+        Asset.AssetResponseDto,
+        Asset.CreateAssetRequestDto
+      >(Asset.Message.create, createAssetRequestDto),
+    );
   }
 
-  findAll() {
-    return `This action returns all asset`;
+  async findAllAsset(): Promise<Asset.AssetResponseDto> {
+    return await firstValueFrom(
+      this.assetService.send<Asset.AssetResponseDto, object>(
+        Asset.Message.findAll,
+        {},
+      ),
+    );
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} asset`;
+  async findAllAssetByDeliveryId(
+    deliveryId: Asset.FindAllAssetsOfDeliveryRequestDto,
+  ): Promise<Asset.AssetResponseDto> {
+    return await firstValueFrom(
+      this.assetService.send<
+        Asset.AssetResponseDto,
+        Asset.FindAllAssetsOfDeliveryRequestDto
+      >(Asset.Message.findAllByDelivery, deliveryId),
+    );
   }
 
-  update(id: number, updateAssetDto: UpdateAssetDto) {
-    return `This action updates a #${id} asset`;
+  async findOneAsset(
+    id: Asset.FindOneAssetRequestDto,
+  ): Promise<Asset.AssetResponseDto> {
+    return await firstValueFrom(
+      this.assetService.send<
+        Asset.AssetResponseDto,
+        Asset.FindOneAssetRequestDto
+      >(Asset.Message.findOne, id),
+    );
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} asset`;
+  async updateAsset(
+    updateAssetRequestDto: Asset.UpdateAssetRequestDto,
+  ): Promise<Asset.AssetResponseDto> {
+    return await firstValueFrom(
+      this.assetService.send<
+        Asset.AssetResponseDto,
+        Asset.UpdateAssetRequestDto
+      >(Asset.Message.update, updateAssetRequestDto),
+    );
+  }
+
+  async removeAsset(
+    id: Asset.FindOneAssetRequestDto,
+  ): Promise<Asset.AssetResponseDto> {
+    return await firstValueFrom(
+      this.assetService.send<
+        Asset.AssetResponseDto,
+        Asset.FindOneAssetRequestDto
+      >(Asset.Message.delete, id),
+    );
   }
 }
