@@ -38,7 +38,7 @@ export class CompanyService {
     return await firstValueFrom(
       this.companyService.send<
         Company.companyResponseDto,
-        Company.FindOneCompanyByIdRequestDto
+        Company.findOneCompanyByCodeRequestDto
       >(Company.Message.findOneByCode, code),
     );
   }
