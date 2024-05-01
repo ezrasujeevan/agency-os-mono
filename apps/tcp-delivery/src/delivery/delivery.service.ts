@@ -14,6 +14,12 @@ export class DeliveryService {
   async createDelivery(
     createDeliveryRequestDto: Delivery.CreateDeliveryRequestDto,
   ): Promise<Delivery.DeliveryResponse> {
+    if (!(await this.checkProject(createDeliveryRequestDto.projectId))) {
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        error: 'No Project with Id: ' + createDeliveryRequestDto.projectId,
+      };
+    }
     const delivery = await this.deliveryRepo.create(createDeliveryRequestDto);
     if (delivery instanceof DeliveryEntity) {
       return {
@@ -45,22 +51,10 @@ export class DeliveryService {
   async findAllDeliveryByProject({
     projectId,
   }: Delivery.FindAllDeliveryByProjectRequestDto): Promise<Delivery.DeliveryResponse> {
-    const project = await firstValueFrom(
-      await this.projectClient.send<
-        Project.ProjectResponse,
-        Project.FindOneProjectRequestByIdDto
-      >(Project.Message.findOneById, { id: projectId }),
-    );
-    if (project.status === HttpStatus.NO_CONTENT) {
+    if (!(await this.checkProject(projectId))) {
       return {
         status: HttpStatus.BAD_REQUEST,
         error: 'No Project with Id: ' + projectId,
-      };
-    }
-    if (project.status !== HttpStatus.OK) {
-      return {
-        status: HttpStatus.BAD_REQUEST,
-        error: project.error,
       };
     }
     const delivery = await this.deliveryRepo.findAllByProject({
@@ -98,10 +92,16 @@ export class DeliveryService {
   async updateDelivery(
     updateDeliveryRequestDto: Delivery.UpdateDeliveryRequestDto,
   ): Promise<Delivery.DeliveryResponse> {
-    const delivery = await this.deliveryRepo.update(
-      updateDeliveryRequestDto.id,
-      updateDeliveryRequestDto,
-    );
+    if (
+      updateDeliveryRequestDto.projectId &&
+      !(await this.checkProject(updateDeliveryRequestDto.projectId))
+    ) {
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        error: 'No Project with Id: ' + updateDeliveryRequestDto.projectId,
+      };
+    }
+    const delivery = await this.deliveryRepo.update(updateDeliveryRequestDto);
     if (delivery instanceof DeliveryEntity) {
       return {
         status: HttpStatus.OK,
@@ -128,5 +128,17 @@ export class DeliveryService {
         error: delivery.name + ' - ' + delivery.message,
       };
     }
+  }
+
+  private async checkProject(projectId: string): Promise<boolean> {
+    const project = await firstValueFrom(
+      this.projectClient.send<
+        Project.ProjectResponse,
+        Project.FindOneProjectRequestByIdDto
+      >(Project.Message.findOneById, {
+        id: projectId,
+      }),
+    );
+    return project.status === HttpStatus.OK;
   }
 }

@@ -18,6 +18,7 @@ export class DeliveryController {
   findAll() {
     return this.deliveryService.findAllDelivery();
   }
+  
   @MessagePattern(Delivery.Message.findAllByProject)
   findAllByProject(
     @Payload()
@@ -42,7 +43,7 @@ export class DeliveryController {
     return this.deliveryService.updateDelivery(updateDeliveryRequestDto);
   }
 
-  @MessagePattern('removeDelivery')
+  @MessagePattern(Delivery.Message.delete)
   remove(
     @Payload() findOneDeliveryRequestDto: Delivery.FindOneDeliveryRequestDto,
   ) {

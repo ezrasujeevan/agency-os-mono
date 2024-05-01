@@ -54,13 +54,16 @@ export class DeliveryRepository implements OnModuleInit {
   }
 
   async update(
-    id: string,
     updateDeliveryRequestDto: Delivery.UpdateDeliveryRequestDto,
   ): Promise<DeliveryEntity | Error> {
     try {
-      const delivery = await this.deliveryRepo.findOne({ where: { id } });
+      const delivery = await this.deliveryRepo.findOne({
+        where: { id: updateDeliveryRequestDto.id },
+      });
       if (!delivery) {
-        throw new EntityNotFoundError(DeliveryEntity, { id });
+        throw new EntityNotFoundError(DeliveryEntity, {
+          id: updateDeliveryRequestDto.id,
+        });
       }
       this.logger.verbose('Delivery found', delivery);
       const updatedDelivery = await this.deliveryRepo.save({
