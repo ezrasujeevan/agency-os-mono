@@ -1,6 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { CreateAssetDto } from './dto/create-asset.dto';
-import { UpdateAssetDto } from './dto/update-asset.dto';
 import { Asset } from '@agency-os/class';
 import { ClientTCP } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
