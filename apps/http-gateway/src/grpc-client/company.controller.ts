@@ -17,10 +17,10 @@ import {
 import { ClientAuthGuard } from '@agency-os/auth';
 import { CompanyService } from './company.service';
 
-@ApiTags('compnay')
+@ApiTags('company', 'grpc')
 @ApiBearerAuth()
 @UseGuards(ClientAuthGuard)
-@Controller('compnay')
+@Controller('grpc/company')
 export class CompanyController {
   constructor(private readonly companyService: CompanyService) {}
 

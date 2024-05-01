@@ -9,9 +9,10 @@ import {
   Query,
 } from '@nestjs/common';
 import { DeliveryService } from './delivery.service';
-import { ApiQuery } from '@nestjs/swagger';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Delivery } from '@agency-os/class';
 
+@ApiTags('delivery')
 @Controller('delivery')
 export class DeliveryController {
   constructor(private readonly deliveryService: DeliveryService) {}
