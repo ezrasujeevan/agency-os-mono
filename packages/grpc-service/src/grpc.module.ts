@@ -1,4 +1,4 @@
-import { DynamicModule, Module } from '@nestjs/common';
+import { DynamicModule, Logger, Module } from '@nestjs/common';
 import { GrpcService } from './grpc.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -13,7 +13,9 @@ interface GrpcModuleOptions {
   exports: [GrpcService],
 })
 export class GrpcModule {
+  private static logger: Logger = new Logger(GrpcModule.name);
   static register({ name }: GrpcModuleOptions): DynamicModule {
+    this.logger.log(`Registering ${name} grpc module`);
     return {
       module: GrpcModule,
       exports: [ClientsModule],
@@ -32,6 +34,12 @@ export class GrpcModule {
                 require.resolve('@agency-os/proto'),
                 '../',
                 `${name}.proto`,
+              );
+              this.logger.log(
+                `Registering ${name} grpc module with protoPath: ${protoPath}`,
+              );
+              this.logger.log(
+                `Registering ${name} grpc module with url: ${url}`,
               );
               return {
                 transport: Transport.GRPC,

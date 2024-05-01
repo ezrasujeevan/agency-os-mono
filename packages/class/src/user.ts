@@ -1,4 +1,3 @@
-import { UserProto } from '@agency-os/proto';
 import { PartialType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Type } from 'class-transformer';

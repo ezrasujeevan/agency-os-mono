@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@agency-os/class": "workspace:^",
+    "@agency-os/grpc-service": "workspace:^",
     "@agency-os/proto": "workspace:^"
   },
   "devDependencies": {

@@ -1637,6 +1637,9 @@ importers:
       '@agency-os/class':
         specifier: workspace:^
         version: link:../class
+      '@agency-os/grpc-service':
+        specifier: workspace:^
+        version: link:../grpc-service
       '@agency-os/proto':
         specifier: workspace:^
         version: link:../proto
