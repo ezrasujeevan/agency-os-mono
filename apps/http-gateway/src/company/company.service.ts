@@ -1,26 +1,76 @@
-import { Injectable } from '@nestjs/common';
-import { CreateCompanyDto } from './dto/create-company.dto';
-import { UpdateCompanyDto } from './dto/update-company.dto';
+import { Inject, Injectable } from '@nestjs/common';
+
+import { Company } from '@agency-os/class';
+import { ClientTCP } from '@nestjs/microservices';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class CompanyService {
-  create(createCompanyDto: CreateCompanyDto) {
-    return 'This action adds a new company';
+  constructor(
+    @Inject(Company.SERVICE_NAME) private readonly companyService: ClientTCP,
+  ) {}
+
+  async createCompany(
+    create: Company.CreateCompanyRequestDto,
+  ): Promise<Company.companyResponseDto> {
+    return await firstValueFrom(
+      this.companyService.send<
+        Company.companyResponseDto,
+        Company.CreateCompanyRequestDto
+      >(Company.Message.create, create),
+    );
   }
 
-  findAll() {
-    return `This action returns all company`;
+  async findOneCompanyById(
+    id: Company.FindOneCompanyByIdRequestDto,
+  ): Promise<Company.companyResponseDto> {
+    return await firstValueFrom(
+      this.companyService.send<
+        Company.companyResponseDto,
+        Company.FindOneCompanyByIdRequestDto
+      >(Company.Message.findOneById, id),
+    );
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} company`;
+  async findOneCompanyByCode(
+    code: Company.FindOneCompanyByIdRequestDto,
+  ): Promise<Company.companyResponseDto> {
+    return await firstValueFrom(
+      this.companyService.send<
+        Company.companyResponseDto,
+        Company.FindOneCompanyByIdRequestDto
+      >(Company.Message.findOneByCode, code),
+    );
   }
 
-  update(id: number, updateCompanyDto: UpdateCompanyDto) {
-    return `This action updates a #${id} company`;
+  async findAllCompany(): Promise<Company.companyResponseDto> {
+    return await firstValueFrom(
+      this.companyService.send<Company.companyResponseDto, object>(
+        Company.Message.findAll,
+        {},
+      ),
+    );
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} company`;
+  async updateCompany(
+    update: Company.UpdateCompanyRequestDto,
+  ): Promise<Company.companyResponseDto> {
+    return await firstValueFrom(
+      this.companyService.send<
+        Company.companyResponseDto,
+        Company.UpdateCompanyRequestDto
+      >(Company.Message.update, update),
+    );
+  }
+
+  async removeCompany(
+    id: Company.FindOneCompanyByIdRequestDto,
+  ): Promise<Company.companyResponseDto> {
+    return await firstValueFrom(
+      this.companyService.send<
+        Company.companyResponseDto,
+        Company.FindOneCompanyByIdRequestDto
+      >(Company.Message.delete, id),
+    );
   }
 }

@@ -26,7 +26,7 @@ export abstract class Company extends CommonEntity {
 
 export const SERVICE_NAME = 'COMPANY_SERVICE';
 
-export const Messages = {
+export const Message = {
   create: 'createCompany',
   update: 'updateCompany',
   delete: 'deleteCompany',

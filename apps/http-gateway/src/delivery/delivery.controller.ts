@@ -38,10 +38,10 @@ export class DeliveryController {
   @Patch(':id')
   update(
     @Param('id') id: string,
-    @Body() updateDeliveryDto: UpdateDeliveryDto,
+    @Body() updateDeliveryRequestDto: Delivery.UpdateDeliveryRequestDto,
   ) {
-    updateDeliveryDto.id = id;
-    return this.deliveryService.updateDelivery(updateDeliveryDto);
+    updateDeliveryRequestDto.id = id;
+    return this.deliveryService.updateDelivery(updateDeliveryRequestDto);
   }
 
   @Delete(':id')

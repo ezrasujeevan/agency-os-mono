@@ -1,6 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { CreateDeliveryDto } from './dto/create-delivery.dto';
-import { UpdateDeliveryDto } from './dto/update-delivery.dto';
 import { Delivery } from '@agency-os/class';
 import { ClientTCP } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
