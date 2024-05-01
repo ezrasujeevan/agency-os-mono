@@ -17,6 +17,16 @@ export class AssetController {
     return this.assetService.findAll();
   }
 
+  @MessagePattern(Asset.Message.findAllByDelivery)
+  findAllByDelivery(
+    @Payload()
+    findAllAssetsOfDeliveryRequestDto: Asset.FindAllAssetsOfDeliveryRequestDto,
+  ) {
+    return this.assetService.findAllByDelivery(
+      findAllAssetsOfDeliveryRequestDto,
+    );
+  }
+
   @MessagePattern(Asset.Message.findOne)
   findOne(@Payload() id: Asset.FindOneAssetRequestDto) {
     return this.assetService.findOne(id);

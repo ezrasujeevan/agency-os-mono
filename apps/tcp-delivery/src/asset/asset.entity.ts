@@ -31,18 +31,8 @@ export class AssetEntity extends BaseEntity implements Asset.Asset {
   @VersionColumn({ name: '_v' })
   version: number;
 
-  @ManyToOne(
-    () => DeliveryEntity,
-    (delivery) => (
-      delivery.id,
-      { nullable: false, eager: true, type: 'uuid', onDelete: 'CASCADE' }
-    ),
-  )
-  @JoinColumn({
-    name: 'delivery_id',
-    referencedColumnName: 'id',
-  })
-  delivery: DeliveryEntity;
+  @Column('uuid', { name: 'delivery_id' })
+  deliveryId: string;
 
   @Column({ name: 'name' })
   name: string;
@@ -53,7 +43,7 @@ export class AssetEntity extends BaseEntity implements Asset.Asset {
   @Column('text', { name: 'description' })
   description: string;
 
-  @Column('text', { name: 'file_url' })
+  @Column('text', { name: 'file_url', nullable: true })
   fileURL: string;
 
   @Column('boolean', { name: 'access', default: false })

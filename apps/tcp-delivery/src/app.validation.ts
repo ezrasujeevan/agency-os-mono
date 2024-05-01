@@ -16,15 +16,15 @@ class AppEnvironmentVariables extends EnvironmentVariables {
   NODE_ENV: Environment;
 
   @IsString()
-  TCP_DElIVERY_SERVICE_NAME: string;
+  TCP_DELIVERY_SERVICE_NAME: string;
 
   @IsUrl({ require_tld: false })
-  TCP_DElIVERY_SERVICE_HOST: string;
+  TCP_DELIVERY_SERVICE_HOST: string;
 
   @IsNumber()
   @Min(0)
   @Max(65535)
-  TCP_DElIVERY_SERVICE_PORT: number;
+  TCP_DELIVERY_SERVICE_PORT: number;
 }
 
 export interface Igrpc_app {
@@ -44,9 +44,9 @@ export const validate_app = registerAs(CONFIG_APP, (): Igrpc_app => {
   const config: Igrpc_app = {
     env: configs.NODE_ENV,
     app: {
-      name: configs.TCP_DElIVERY_SERVICE_NAME,
-      host: configs.TCP_DElIVERY_SERVICE_HOST,
-      port: configs.TCP_DElIVERY_SERVICE_PORT,
+      name: configs.TCP_DELIVERY_SERVICE_NAME,
+      host: configs.TCP_DELIVERY_SERVICE_HOST,
+      port: configs.TCP_DELIVERY_SERVICE_PORT,
     },
   };
   return config;

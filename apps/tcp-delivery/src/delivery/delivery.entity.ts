@@ -42,7 +42,7 @@ export class DeliveryEntity extends BaseEntity implements Delivery.Delivery {
   @Column('varchar', { name: 'version' })
   deliverableVersion: number;
 
-  @Column('text', { name: 'file_url' })
+  @Column('text', { name: 'file_url', nullable: true })
   fileUrl: string;
 
   @Column('simple-array', { name: 'tags' })

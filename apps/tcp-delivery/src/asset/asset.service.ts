@@ -14,6 +14,7 @@ export class AssetService {
     createAssetDto: Asset.CreateAssetRequestDto,
   ): Promise<Asset.AssetResponseDto> {
     try {
+      const delivery = 
       const asset = this.assetRepo.create(createAssetDto);
       await this.assetRepo.save(asset);
       return {
@@ -41,9 +42,7 @@ export class AssetService {
   }: Asset.FindAllAssetsOfDeliveryRequestDto): Promise<Asset.AssetResponseDto> {
     const assets = await this.assetRepo.find({
       where: {
-        delivery: {
-          id: deliveryId,
-        },
+        deliveryId,
       },
     });
     return {

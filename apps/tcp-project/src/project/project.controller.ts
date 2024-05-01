@@ -62,10 +62,7 @@ export class ProjectController {
 
   @MessagePattern(Project.Message.update)
   update(@Payload() updateProjectRequestDto: Project.UpdateProjectRequestDto) {
-    return this.projectService.update(
-      updateProjectRequestDto.id,
-      updateProjectRequestDto,
-    );
+    return this.projectService.update(updateProjectRequestDto);
   }
 
   @MessagePattern(Project.Message.remove)
