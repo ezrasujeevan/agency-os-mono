@@ -17,7 +17,7 @@ export const loginApiSlice = rootApiSlice.injectEndpoints({
                 body: registerClientRequestDto
             })
         }),
-        ValudateUser: builder.mutation<User.ValidateUserResponseDto, User.ValidateUserRequestDto>({
+        ValidateUser: builder.mutation<User.ValidateUserResponseDto, User.ValidateUserRequestDto>({
             query: (validateClientRequestDto: User.ValidateUserRequestDto) => ({
                 url: 'auth/user/validate',
                 method: 'POST',

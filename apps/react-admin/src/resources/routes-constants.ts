@@ -1,5 +1,5 @@
 export const ROUTES = {
-    HOMEPAGE_ROUTE: '/',
-    LOGINPAGE_ROUTE: '/login',
-    DASHBOARD_ROUTE: '/dashboard',
+    HOME_PAGE: '/',
+    LOGIN_PAGE: '/login',
+    DASHBOARD_PAGE: '/dashboard',
 }

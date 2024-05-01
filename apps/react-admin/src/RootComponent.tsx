@@ -7,7 +7,7 @@ import Theme from './Theme'
 import { HomePage, LoginPage, NotFoundPage } from './pages'
 import { useAppSelector } from './store'
 import SnackBar from './components/SnackBar'
-import ProtecedRoute from './components/ProtecedRoute'
+import ProtectedRoute from './components/ProtectedRoute'
 import DashboardPage from './pages/DashboardPage'
 
 const RootComponent: React.FC = () => {
@@ -21,10 +21,10 @@ const RootComponent: React.FC = () => {
                     <Container fixed>
                         <Routes>
                             <Route path="*" element={<NotFoundPage />} />
-                            <Route path={ROUTES.HOMEPAGE_ROUTE} element={<HomePage />} />
-                            <Route path={ROUTES.LOGINPAGE_ROUTE} element={<LoginPage />} />
-                            <Route element={<ProtecedRoute />}>
-                                <Route path={ROUTES.DASHBOARD_ROUTE} element={<DashboardPage />} />
+                            <Route path={ROUTES.HOME_PAGE} element={<HomePage />} />
+                            <Route path={ROUTES.LOGIN_PAGE} element={<LoginPage />} />
+                            <Route element={<ProtectedRoute />}>
+                                <Route path={ROUTES.DASHBOARD_PAGE} element={<DashboardPage />} />
                             </Route>
                         </Routes>
                     </Container>

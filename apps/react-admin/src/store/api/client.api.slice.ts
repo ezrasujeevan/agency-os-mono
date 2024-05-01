@@ -3,7 +3,7 @@ import { rootApiSlice } from './root.api.slice'
 
 export const clientApiSlice = rootApiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        getClientbyId: builder.query<Client.Client, Client.FindOneClientByIdRequestDto>({
+        getClientById: builder.query<Client.Client, Client.FindOneClientByIdRequestDto>({
             query: (id: Client.FindOneClientByIdRequestDto) => ({
                 url: `client/${id}`,
                 method: 'GET'

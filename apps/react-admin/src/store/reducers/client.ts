@@ -22,7 +22,7 @@ export const clientSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder.addMatcher(
-            clientApiSlice.endpoints.getClientbyId.matchFulfilled,
+            clientApiSlice.endpoints.getClientById.matchFulfilled,
             (state, action: PayloadAction<Client.Client>) => {
                 state = { ...state, ...action.payload }
             }

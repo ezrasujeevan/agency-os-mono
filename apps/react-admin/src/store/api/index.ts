@@ -2,14 +2,26 @@ import { clientApiSlice } from './client.api.slice'
 import { companyApiSlice } from './company.api.slice'
 import { loginApiSlice } from './login.api.slice'
 import { userApiSlice } from './user.api.slice'
+import { projectApiSlice } from './project.api.slice'
+import { assetApiSlice } from './asset.api.slice'
+import { deliveryApiSlice } from './delivery.api.slice'
 import { rootApiSlice } from './root.api.slice'
 
-export { clientApiSlice, companyApiSlice, loginApiSlice, userApiSlice, rootApiSlice }
+export {
+    rootApiSlice,
+    clientApiSlice,
+    companyApiSlice,
+    loginApiSlice,
+    userApiSlice,
+    projectApiSlice,
+    assetApiSlice,
+    deliveryApiSlice,
+}
 
 export const {
     useDeleteClientMutation,
     useGetAllClientsQuery,
-    useGetClientbyIdQuery,
+    useGetClientByIdQuery,
     useGetClientByEmailQuery,
     useUpdateClientMutation
 } = clientApiSlice
@@ -21,15 +33,31 @@ export const {
     useUpdateCompanyMutation
 } = companyApiSlice
 
-export const { useLoginUserMutation, useRegisterUserMutation, useValudateUserMutation } =
-    loginApiSlice
+export const {
+    useLoginUserMutation,
+    useRegisterUserMutation,
+    useRefreshTokenUserMutation,
+    useValidateUserMutation
+} = loginApiSlice
 
 export const {
     useDeleteUserMutation,
     useGetAllUsersQuery,
     useGetUserByEmailQuery,
-    useGetUserbyIdQuery,
+    useGetUserByIdQuery,
     useUpdateUserMutation
 } = userApiSlice
+
+export const {
+    useCreateProjectMutation,
+    useDeleteProjectMutation,
+    useUpdateProjectMutation,
+    useGetProjectByIdQuery,
+    useGetProjectByTrialNameQuery,
+    useGetAllProjectsQuery,
+    useGetAllProjectsByClientIdQuery,
+    useGetAllProjectsByCompanyIdQuery,
+    useGetAllProjectsByUserIdQuery
+} = projectApiSlice
 
 export const {} = rootApiSlice

@@ -2,7 +2,7 @@ import React from 'react'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import RootComponent from './RootComponent'
-import { persistor, store } from './store'
+import { persister, store } from './store'
 import '@fontsource/roboto/300.css'
 import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
@@ -19,7 +19,7 @@ import '@fontsource/oswald/700.css'
 const App: React.FC = () => {
     return (
         <Provider store={store}>
-            <PersistGate loading={null} persistor={persistor}>
+            <PersistGate loading={null} persistor={persister}>
                 <RootComponent />
             </PersistGate>
         </Provider>
