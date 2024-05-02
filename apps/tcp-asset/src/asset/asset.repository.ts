@@ -1,112 +1,88 @@
 import { Asset } from '@agency-os/class';
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AssetEntity } from './asset.entity';
 
 @Injectable()
 export class AssetRepository {
+  private logger = new Logger(AssetRepository.name, { timestamp: true });
   constructor(
     @InjectRepository(AssetEntity) private assetRepo: Repository<AssetEntity>,
   ) {}
 
-  async create(
+  async createAsset(
     createAssetDto: Asset.CreateAssetRequestDto,
-  ): Promise<Asset.AssetResponseDto> {
+  ): Promise<AssetEntity> {
     try {
       const asset = this.assetRepo.create(createAssetDto);
-      await this.assetRepo.save(asset);
-      return {
-        status: HttpStatus.CREATED,
-        asset,
-      };
+      this.logger.verbose(`Asset Created: ${JSON.stringify(asset)}`);
+      return await this.assetRepo.save(asset);
     } catch (error) {
-      return {
-        status: HttpStatus.INTERNAL_SERVER_ERROR,
-        error: error.message,
-      };
+      this.logger.error(`Create Asset Error: ${error.message}`);
+      throw error;
     }
   }
 
-  async findAll(): Promise<Asset.AssetResponseDto> {
+  async findAllAssets(): Promise<AssetEntity[]> {
     const assets = await this.assetRepo.find();
-    return {
-      status: HttpStatus.OK,
-      asset: assets,
-    };
+    this.logger.verbose(`Assets Found: ${JSON.stringify(assets)}`);
+    return assets;
   }
 
-  async findAllByDelivery({
+  async findAllAssetsByDelivery({
     deliveryId,
-  }: Asset.FindAllAssetsOfDeliveryRequestDto): Promise<Asset.AssetResponseDto> {
+  }: Asset.FindAllAssetsOfDeliveryRequestDto): Promise<AssetEntity[]> {
     const assets = await this.assetRepo.find({
       where: {
         deliveryId,
       },
     });
-    return {
-      status: HttpStatus.OK,
-      asset: assets,
-    };
+    this.logger.verbose(`Assets Found: ${JSON.stringify(assets)}`);
+    return assets;
   }
 
-  async findOne({
+  async findOneAsset({
     id,
-  }: Asset.FindOneAssetRequestDto): Promise<Asset.AssetResponseDto> {
+  }: Asset.FindOneAssetRequestDto): Promise<AssetEntity | null> {
     const asset = await this.assetRepo.findOne({ where: { id } });
-    if (asset) {
-      return {
-        status: HttpStatus.OK,
-        asset,
-      };
-    }
-    return {
-      status: HttpStatus.BAD_REQUEST,
-      error: 'Asset not found',
-    };
+    this.logger.verbose(`Asset Found: ${JSON.stringify(asset)}`);
+    return asset;
   }
 
-  async update(
-    id: string,
+  async updateAsset(
     updateAssetDto: Asset.UpdateAssetRequestDto,
-  ): Promise<Asset.AssetResponseDto> {
+  ): Promise<AssetEntity | Error> {
     try {
-      const asset = await this.assetRepo.findOne({
-        where: { id },
-      });
+      const asset = await this.findOneAsset({ id: updateAssetDto.id });
       if (asset) {
+        this.logger.verbose(`Asset Found: ${JSON.stringify(asset)}`);
         const updateAsset = await this.assetRepo.merge(asset, updateAssetDto);
-        await this.assetRepo.save(updateAsset);
-        return {
-          status: HttpStatus.OK,
-          asset: updateAsset,
-        };
+        this.logger.verbose(`Asset Updated: ${JSON.stringify(updateAsset)}`);
+        return await this.assetRepo.save(updateAsset);
       }
-      return {
-        status: HttpStatus.BAD_REQUEST,
-        error: 'Asset not found',
-      };
+      throw new NotFoundException(
+        `Asset not found by id: ${updateAssetDto.id}`,
+      );
     } catch (error) {
-      return {
-        status: HttpStatus.INTERNAL_SERVER_ERROR,
-        error: error.message,
-      };
+      this.logger.error(`Update Asset Error: ${error.message}`);
+      return error;
     }
   }
 
-  async remove({
+  async removeAsset({
     id,
-  }: Asset.FindOneAssetRequestDto): Promise<Asset.AssetResponseDto> {
-    const asset = await this.assetRepo.findOne({ where: { id } });
-    if (asset) {
-      await this.assetRepo.softDelete(id);
-      return {
-        status: HttpStatus.NO_CONTENT,
-      };
+  }: Asset.FindOneAssetRequestDto): Promise<AssetEntity | Error> {
+    try {
+      const user = await this.findOneAsset({ id });
+      if (user) {
+        this.logger.verbose(`Asset Found: ${JSON.stringify(user)}`);
+        return await this.assetRepo.softRemove(user);
+      }
+      throw new NotFoundException(`Asset not found by id: ${id}`);
+    } catch (error) {
+      this.logger.error(`Remove Asset Error: ${error.message}`);
+      return error;
     }
-    return {
-      status: HttpStatus.BAD_REQUEST,
-      error: 'Asset not found',
-    };
   }
 }

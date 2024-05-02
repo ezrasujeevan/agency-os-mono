@@ -10,18 +10,18 @@ export class DeliveryService {
   ) {}
   async createDelivery(
     createDeliveryRequestDto: Delivery.CreateDeliveryRequestDto,
-  ): Promise<Delivery.DeliveryResponse> {
+  ): Promise<Delivery.DeliveryResponseDto> {
     return await firstValueFrom(
       this.deliveryService.send<
-        Delivery.DeliveryResponse,
+        Delivery.DeliveryResponseDto,
         Delivery.CreateDeliveryRequestDto
       >(Delivery.Message.create, createDeliveryRequestDto),
     );
   }
 
-  async findAllDelivery(): Promise<Delivery.DeliveryResponse> {
+  async findAllDelivery(): Promise<Delivery.DeliveryResponseDto> {
     return await firstValueFrom(
-      this.deliveryService.send<Delivery.DeliveryResponse, object>(
+      this.deliveryService.send<Delivery.DeliveryResponseDto, object>(
         Delivery.Message.findAll,
         {},
       ),
@@ -30,10 +30,10 @@ export class DeliveryService {
 
   async findAllDeliveryByProject(
     projectId: Delivery.FindAllDeliveryByProjectRequestDto,
-  ): Promise<Delivery.DeliveryResponse> {
+  ): Promise<Delivery.DeliveryResponseDto> {
     return await firstValueFrom(
       this.deliveryService.send<
-        Delivery.DeliveryResponse,
+        Delivery.DeliveryResponseDto,
         Delivery.FindAllDeliveryByProjectRequestDto
       >(Delivery.Message.findAllByProject, projectId),
     );
@@ -41,10 +41,10 @@ export class DeliveryService {
 
   async findOneDelivery(
     id: Delivery.FindOneDeliveryRequestDto,
-  ): Promise<Delivery.DeliveryResponse> {
+  ): Promise<Delivery.DeliveryResponseDto> {
     return await firstValueFrom(
       this.deliveryService.send<
-        Delivery.DeliveryResponse,
+        Delivery.DeliveryResponseDto,
         Delivery.FindOneDeliveryRequestDto
       >(Delivery.Message.findOne, id),
     );
@@ -52,10 +52,10 @@ export class DeliveryService {
 
   async updateDelivery(
     updateDeliveryRequestDto: Delivery.UpdateDeliveryRequestDto,
-  ): Promise<Delivery.DeliveryResponse> {
+  ): Promise<Delivery.DeliveryResponseDto> {
     return await firstValueFrom(
       this.deliveryService.send<
-        Delivery.DeliveryResponse,
+        Delivery.DeliveryResponseDto,
         Delivery.UpdateDeliveryRequestDto
       >(Delivery.Message.update, updateDeliveryRequestDto),
     );
@@ -63,10 +63,10 @@ export class DeliveryService {
 
   async removeDelivery(
     id: Delivery.FindOneDeliveryRequestDto,
-  ): Promise<Delivery.DeliveryResponse> {
+  ): Promise<Delivery.DeliveryResponseDto> {
     return await firstValueFrom(
       this.deliveryService.send<
-        Delivery.DeliveryResponse,
+        Delivery.DeliveryResponseDto,
         Delivery.FindOneDeliveryRequestDto
       >(Delivery.Message.delete, id),
     );

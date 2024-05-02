@@ -9,12 +9,12 @@ export class AssetController {
 
   @MessagePattern(Asset.Message.create)
   create(@Payload() createAssetDto: Asset.CreateAssetRequestDto) {
-    return this.assetService.create(createAssetDto);
+    return this.assetService.createAsset(createAssetDto);
   }
 
   @MessagePattern(Asset.Message.findAll)
   findAll() {
-    return this.assetService.findAll();
+    return this.assetService.findAllAsset();
   }
 
   @MessagePattern(Asset.Message.findAllByDelivery)
@@ -22,23 +22,23 @@ export class AssetController {
     @Payload()
     findAllAssetsOfDeliveryRequestDto: Asset.FindAllAssetsOfDeliveryRequestDto,
   ) {
-    return this.assetService.findAllByDelivery(
+    return this.assetService.findAllAssetByDelivery(
       findAllAssetsOfDeliveryRequestDto,
     );
   }
 
   @MessagePattern(Asset.Message.findOne)
   findOne(@Payload() id: Asset.FindOneAssetRequestDto) {
-    return this.assetService.findOne(id);
+    return this.assetService.findOneAsset(id);
   }
 
   @MessagePattern(Asset.Message.update)
   update(@Payload() updateAssetDto: Asset.UpdateAssetRequestDto) {
-    return this.assetService.update(updateAssetDto.id, updateAssetDto);
+    return this.assetService.updateAsset(updateAssetDto);
   }
 
   @MessagePattern(Asset.Message.delete)
   delete(@Payload() id: Asset.FindOneAssetRequestDto) {
-    return this.assetService.remove(id);
+    return this.assetService.removeAsset(id);
   }
 }

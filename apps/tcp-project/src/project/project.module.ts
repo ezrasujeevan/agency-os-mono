@@ -5,7 +5,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProjectEntity } from './project.entity';
 import { ProjectRepository } from './project.repository';
 import { Client, User, Company } from '@agency-os/class';
-import { ProjectHelperService } from './project.helper.service';
 import { TcpModule } from '@agency-os/tcp-service';
 
 @Module({
@@ -16,6 +15,6 @@ import { TcpModule } from '@agency-os/tcp-service';
     TcpModule.register({ name: Company.SERVICE_NAME }),
   ],
   controllers: [ProjectController],
-  providers: [ProjectService, ProjectRepository, ProjectHelperService],
+  providers: [ProjectService, ProjectRepository],
 })
 export class ProjectModule {}

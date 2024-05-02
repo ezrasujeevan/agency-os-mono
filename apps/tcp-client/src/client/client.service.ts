@@ -1,187 +1,245 @@
-import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { ClientEntity } from './client.entity';
-import { Repository } from 'typeorm';
-import { Client } from '@agency-os/class';
-import * as bcrypt from 'bcrypt';
+import { HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
+import { Client, Company } from '@agency-os/class';
 import { JwtService } from '@nestjs/jwt';
+import { ClientRepository } from './client.repository';
+import { ClientTCP } from '@nestjs/microservices';
+import { ClientEntity } from './client.entity';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class ClientService {
+  private readonly logger: Logger = new Logger(ClientService.name);
   constructor(
-    @InjectRepository(ClientEntity)
-    private readonly clientRepo: Repository<ClientEntity>,
+    @Inject(Company.SERVICE_NAME) private readonly companyService: ClientTCP,
+    private readonly clientRepo: ClientRepository,
     private readonly jwtService: JwtService,
   ) {}
 
   async create(
-    CreateClientRequestDto: Client.CreateClientRequestDto,
-  ): Promise<Client.Client> {
-    const { password, ...rest } = CreateClientRequestDto;
-    const encryptedPassword = await bcrypt.hash(password, 10);
-    const client = this.clientRepo.create({
-      password: encryptedPassword,
-      ...rest,
-    });
-    return this.clientRepo.save(client);
-  }
-
-  async findAll() {
-    const clients = this.clientRepo.find();
-    return { clients };
-  }
-
-  async findOneByEmail(
-    findOneClientByEmailRequestDto: Client.FindOneClientByEmailRequestDto,
-  ) {
-    const { email } = findOneClientByEmailRequestDto;
-    const client = this.clientRepo.findOne({ where: { email } });
-    if (client && client !== undefined) {
-      return client;
-    }
-    throw new NotFoundException(`Client not found by email: ${email}`);
-  }
-
-  async findOneById(
-    findOneClientByIdRequestDto: Client.FindOneClientByIdRequestDto,
-  ) {
-    const { id } = findOneClientByIdRequestDto;
-    const client = this.clientRepo.findOne({ where: { id } });
-    if (client && client !== undefined) {
-      return client;
-    }
-    throw new NotFoundException(`Client not found by email: ${id}`);
-  }
-
-  async update(
-    id: string,
-    UpdateClientRequestDto: Client.UpdateClientRequestDto,
-  ): Promise<Client.Client> {
-    const client = await this.findOneById({ id });
-    if (client && client !== undefined) {
-      return await this.clientRepo.save(client, {
-        data: UpdateClientRequestDto,
-      });
-    }
-    throw new NotFoundException(`Client not found by email: ${id}`);
-  }
-
-  async remove(
-    findOneClientByIdRequestDto: Client.FindOneClientByIdRequestDto,
-  ) {
-    const client = await this.findOneById(findOneClientByIdRequestDto);
-    if (client && client !== undefined) {
-      return await this.clientRepo.remove(client);
-    }
-    throw new NotFoundException(
-      `user not found by id ${findOneClientByIdRequestDto.id}`,
-    );
-  }
-
-  async register(
     createClientRequestDto: Client.CreateClientRequestDto,
-  ): Promise<Client.RegisterClientResponseDto> {
-    const { email } = createClientRequestDto;
-    const client = await this.findOneByEmail({ email });
-    if (client && client !== undefined) {
+  ): Promise<Client.ClientResponseDto> {
+    if (!(await this.isValidCompany(createClientRequestDto.companyId))) {
       return {
-        error: ['user already exists'],
+        error: 'Company not found',
+        status: HttpStatus.NOT_FOUND,
+      };
+    }
+    const client = await this.clientRepo.createClient(createClientRequestDto);
+    if (client instanceof ClientEntity) {
+      return {
+        client,
+        status: HttpStatus.CREATED,
+      };
+    } else if (client instanceof Error) {
+      return {
+        error: client.message,
+        status: HttpStatus.BAD_REQUEST,
+      };
+    }
+    return { status: HttpStatus.CONFLICT };
+  }
+
+  async findAllClient(): Promise<Client.ClientResponseDto> {
+    const client = await this.clientRepo.findAllClient();
+    if (
+      Array.isArray(client) &&
+      client.every((u) => u instanceof ClientEntity)
+    ) {
+      return { client, status: HttpStatus.OK };
+    } else {
+      return { error: 'Client not found', status: HttpStatus.NOT_FOUND };
+    }
+  }
+  async findAllClientByCompany({
+    companyId,
+  }: Client.findAllOfCompanyRequestDto): Promise<Client.ClientResponseDto> {
+    if (!(await this.isValidCompany(companyId))) {
+      return {
+        error: 'Company not found',
+        status: HttpStatus.NOT_FOUND,
+      };
+    }
+    const client = await this.clientRepo.findAllClientByCompany({ companyId });
+    if (
+      Array.isArray(client) &&
+      client.every((u) => u instanceof ClientEntity)
+    ) {
+      return { client, status: HttpStatus.OK };
+    } else {
+      return { error: 'Client not found', status: HttpStatus.NOT_FOUND };
+    }
+  }
+
+  async findOneClientById(
+    findOneClientByIdRequestDto: Client.FindOneClientByIdRequestDto,
+  ): Promise<Client.ClientResponseDto> {
+    const client = await this.clientRepo.findOneClientById(
+      findOneClientByIdRequestDto,
+    );
+    if (client instanceof ClientEntity) {
+      return { client, status: HttpStatus.OK };
+    } else {
+      return { error: 'Client not found', status: HttpStatus.NOT_FOUND };
+    }
+  }
+
+  async findOneClientByEmail(
+    findOneClientByEmailRequestDto: Client.FindOneClientByEmailRequestDto,
+  ): Promise<Client.ClientResponseDto> {
+    const client = await this.clientRepo.findOneClientByEmail(
+      findOneClientByEmailRequestDto,
+    );
+    if (client instanceof ClientEntity) {
+      return { client, status: HttpStatus.OK };
+    } else if (client === null) {
+      return { error: 'Client not found', status: HttpStatus.NOT_FOUND };
+    }
+    return { status: HttpStatus.CONFLICT };
+  }
+
+  async updateClient(
+    updateClientRequestDto: Client.UpdateClientRequestDto,
+  ): Promise<Client.ClientResponseDto> {
+    const { companyId } = updateClientRequestDto;
+    if (companyId) {
+      if (!(await this.isValidCompany(companyId))) {
+        return {
+          error: 'Company not found',
+          status: HttpStatus.NOT_FOUND,
+        };
+      }
+    }
+    const client = this.clientRepo.updateClient(updateClientRequestDto);
+    if (client instanceof ClientEntity) {
+      return {
+        client,
+        status: HttpStatus.OK,
+      };
+    } else if (client instanceof Error) {
+      return {
+        error: client.message,
+        status: HttpStatus.BAD_REQUEST,
+      };
+    }
+    return { status: HttpStatus.CONFLICT };
+  }
+
+  async removeClient(
+    findOneClientDto: Client.FindOneClientByIdRequestDto,
+  ): Promise<Client.ClientResponseDto> {
+    const client = this.clientRepo.removeClient(findOneClientDto);
+    if (client instanceof ClientEntity) {
+      return {
+        status: HttpStatus.NO_CONTENT,
+      };
+    } else if (client instanceof Error) {
+      return {
+        error: client.message,
+        status: HttpStatus.BAD_REQUEST,
+      };
+    }
+    return { status: HttpStatus.CONFLICT };
+  }
+
+  async registerClient(
+    createClientRequestDto: Client.CreateClientRequestDto,
+  ): Promise<Client.ClientResponseDto> {
+    const { email, companyId } = createClientRequestDto;
+    const client = await this.clientRepo.findOneClientByEmail({ email });
+    if (client) {
+      return {
+        error: ['client already exists'],
         status: HttpStatus.BAD_REQUEST,
       };
     } else {
-      await this.create(createClientRequestDto);
-      return { error: [], status: HttpStatus.CREATED };
-    }
-  }
-
-  async login(
-    loginClientRequestDto: Client.LoginClientRequestDto,
-  ): Promise<Client.LoginClientResponceDto> {
-    const { email, password } = loginClientRequestDto;
-    const user = await this.clientRepo.findOne({
-      where: { email },
-      select: ['password', 'id'],
-    });
-    if (user && user !== undefined) {
-      const passwordMatch = await bcrypt.compare(password, user.password);
-      if (passwordMatch) {
-        const token = await this.jwtService.signAsync({ id: user.id, email });
-        const refreshToken = await this.jwtService.signAsync(
-          { id: user.id, email },
-          { expiresIn: '7d' },
-        );
+      if (!(await this.isValidCompany(companyId))) {
         return {
-          token,
-          error: [],
-          status: HttpStatus.OK,
-          clientId: user.id,
-          refreshToken,
+          error: 'Company not found',
+          status: HttpStatus.NOT_FOUND,
+        };
+      }
+      const newClient = await this.clientRepo.createClient(
+        createClientRequestDto,
+      );
+
+      if (newClient instanceof ClientEntity) {
+        return { status: HttpStatus.CREATED };
+      } else {
+        return {
+          error: newClient.message,
+          status: HttpStatus.BAD_REQUEST,
         };
       }
     }
-    return {
-      token: '',
-      error: ['invalid email or password'],
-      status: HttpStatus.UNAUTHORIZED,
-      clientId: '',
-      refreshToken: '',
-    };
   }
 
-  async validate(
-    validateClientRequestDto: Client.ValidateClientRequestDto,
-  ): Promise<Client.ValidateClientResponseDto> {
-    try {
-      const { token } = validateClientRequestDto;
+  async loginClient(
+    loginClientRequestDto: Client.LoginClientRequestDto,
+  ): Promise<Client.LoginClientResponseDto> {
+    const client = await this.clientRepo.loginClient(loginClientRequestDto);
+    if (client instanceof ClientEntity) {
+      const { id, email } = client;
+      const token = await this.jwtService.signAsync({ id, email });
+      const refreshToken = await this.jwtService.signAsync(
+        { id, email },
+        { expiresIn: '7d' },
+      );
+      return {
+        token,
+        status: HttpStatus.OK,
+        clientId: client.id,
+        refreshToken,
+      };
+    } else if (client instanceof Error) {
+      return {
+        error: client.message,
+        status: HttpStatus.UNAUTHORIZED,
+      };
+    }
+    return { status: HttpStatus.CONFLICT };
+  }
 
+  async validateClient({
+    token,
+  }: Client.ValidateClientRequestDto): Promise<Client.ValidateClientResponseDto> {
+    try {
       const payload = await this.jwtService.verifyAsync(token);
-      const client = await this.findOneById({ id: payload['id'] });
-      if (payload && payload !== undefined && client && client !== undefined) {
+      const client = await this.clientRepo.findOneClientById({
+        id: payload['id'],
+      });
+      if (payload && client) {
         return {
-          error: [],
           status: HttpStatus.OK,
           clientId: client.id,
-          compnayId: '', // Add the missing property 'compnayId'
         };
       }
     } catch (error) {
-      return {
-        error: error,
-        status: HttpStatus.UNAUTHORIZED,
-        clientId: '',
-        compnayId: '',
-      };
+      return { error: error, status: HttpStatus.UNAUTHORIZED };
     }
     return {
       error: ['invalid token'],
       status: HttpStatus.UNAUTHORIZED,
-      clientId: '',
-      compnayId: '',
     };
   }
 
-  async refreshToken(
-    RefreshTokenClientRequestDto: Client.RefreshTokenClientRequestDto,
-  ): Promise<Client.LoginClientResponceDto> {
+  async refreshClient(
+    refreshTokenClientRequestDto: Client.RefreshTokenClientRequestDto,
+  ): Promise<Client.LoginClientResponseDto> {
     try {
-      const { refreshToken } = RefreshTokenClientRequestDto;
+      const { refreshToken } = refreshTokenClientRequestDto;
 
       const payload = await this.jwtService.verifyAsync(refreshToken);
-      const client = await this.findOneById({ id: payload['id'] });
-      if (payload && payload !== undefined && client && client !== undefined) {
-        const token = await this.jwtService.signAsync({
-          id: client.id,
-          email: client.email,
-        });
+      const client = await this.clientRepo.findOneClientById({
+        id: payload['id'],
+      });
+      if (payload && client) {
+        const { id, email } = client;
+        const token = await this.jwtService.signAsync({ id, email });
         const refreshToken = await this.jwtService.signAsync(
-          {
-            id: client.id,
-            email: client.email,
-          },
+          { id, email },
           { expiresIn: '7d' },
         );
         return {
-          error: [],
           status: HttpStatus.OK,
           clientId: client.id,
           refreshToken,
@@ -192,17 +250,25 @@ export class ClientService {
       return {
         error: error,
         status: HttpStatus.UNAUTHORIZED,
-        clientId: '',
-        refreshToken: '',
-        token: '',
       };
     }
     return {
-      error: ['invalid token'],
+      error: 'invalid token',
       status: HttpStatus.BAD_REQUEST,
-      clientId: '',
-      refreshToken: '',
-      token: '',
     };
+  }
+
+  private async isValidCompany(id: string): Promise<boolean> {
+    const companyResponse = await firstValueFrom(
+      this.companyService.send<
+        Company.companyResponseDto,
+        Company.FindOneCompanyByIdRequestDto
+      >(Company.Message.findOneById, { id }),
+    );
+    const { status, company } = companyResponse;
+    if (status === HttpStatus.OK && company) {
+      return true;
+    }
+    return false;
   }
 }

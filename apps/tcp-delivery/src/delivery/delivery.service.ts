@@ -13,7 +13,7 @@ export class DeliveryService {
   ) {}
   async createDelivery(
     createDeliveryRequestDto: Delivery.CreateDeliveryRequestDto,
-  ): Promise<Delivery.DeliveryResponse> {
+  ): Promise<Delivery.DeliveryResponseDto> {
     if (!(await this.checkProject(createDeliveryRequestDto.projectId))) {
       return {
         status: HttpStatus.BAD_REQUEST,
@@ -34,7 +34,7 @@ export class DeliveryService {
     }
   }
 
-  async findAllDelivery(): Promise<Delivery.DeliveryResponse> {
+  async findAllDelivery(): Promise<Delivery.DeliveryResponseDto> {
     const delivery = await this.deliveryRepo.findAll();
     if (delivery) {
       return {
@@ -50,7 +50,7 @@ export class DeliveryService {
 
   async findAllDeliveryByProject({
     projectId,
-  }: Delivery.FindAllDeliveryByProjectRequestDto): Promise<Delivery.DeliveryResponse> {
+  }: Delivery.FindAllDeliveryByProjectRequestDto): Promise<Delivery.DeliveryResponseDto> {
     if (!(await this.checkProject(projectId))) {
       return {
         status: HttpStatus.BAD_REQUEST,
@@ -74,7 +74,7 @@ export class DeliveryService {
 
   async findOneDelivery({
     id,
-  }: Delivery.FindOneDeliveryRequestDto): Promise<Delivery.DeliveryResponse> {
+  }: Delivery.FindOneDeliveryRequestDto): Promise<Delivery.DeliveryResponseDto> {
     const delivery = await this.deliveryRepo.findOneById({ id });
     if (delivery) {
       return {
@@ -91,7 +91,7 @@ export class DeliveryService {
 
   async updateDelivery(
     updateDeliveryRequestDto: Delivery.UpdateDeliveryRequestDto,
-  ): Promise<Delivery.DeliveryResponse> {
+  ): Promise<Delivery.DeliveryResponseDto> {
     if (
       updateDeliveryRequestDto.projectId &&
       !(await this.checkProject(updateDeliveryRequestDto.projectId))
@@ -115,7 +115,9 @@ export class DeliveryService {
     }
   }
 
-  async removeDelivery({ id }: Delivery.FindOneDeliveryRequestDto) {
+  async removeDelivery({
+    id,
+  }: Delivery.FindOneDeliveryRequestDto): Promise<Delivery.DeliveryResponseDto> {
     const delivery = await this.deliveryRepo.remove({ id });
     if (delivery instanceof DeliveryEntity) {
       return {

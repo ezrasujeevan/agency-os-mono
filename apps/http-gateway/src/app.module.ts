@@ -3,7 +3,7 @@ import { DevtoolsModule } from '@nestjs/devtools-integration';
 import { AppController } from './app.controller';
 import { UserModule } from './user/user.module';
 import { ClientModule as ClientGrpcModule } from './grpc-client/client.module';
-import { AuthModule } from '@agency-os/auth';
+import { AuthModule as AuthGrpcModule } from '@agency-os/auth';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CONFIG_APP, Ihttp_app, validate_app } from './app.validation';
 import { validate_user } from './grpc.users.validations';
@@ -16,6 +16,7 @@ import { AssetModule } from './asset/asset.module';
 import { DeliveryModule } from './delivery/delivery.module';
 import { ClientModule } from './client/client.module';
 import { CompanyModule } from './company/company.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -30,15 +31,16 @@ import { CompanyModule } from './company/company.module';
     ConfigModule.forFeature(validate_client),
     UserGrpcModule,
     ClientGrpcModule,
-    AuthModule.register({ user: 'user', client: 'client' }),
+    AuthGrpcModule.register({ user: 'user', client: 'client' }),
     UserModule,
     ClientModule,
     ProjectModule,
     AssetModule,
     DeliveryModule,
     CompanyModule,
+    AuthModule,
   ],
-  controllers: [AppController, AuthClientController, AuthUserController],
+  // controllers: [AppController, AuthClientController, AuthUserController],
 })
 export class AppModule implements OnModuleInit {
   private logger: Logger;

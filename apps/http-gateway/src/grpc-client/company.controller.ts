@@ -14,12 +14,10 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { ClientAuthGuard } from '@agency-os/auth';
 import { CompanyService } from './company.service';
 
 @ApiTags('company', 'grpc')
 @ApiBearerAuth()
-@UseGuards(ClientAuthGuard)
 @Controller('grpc/company')
 export class CompanyController {
   constructor(private readonly companyService: CompanyService) {}

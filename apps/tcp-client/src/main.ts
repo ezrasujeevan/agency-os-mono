@@ -4,11 +4,13 @@ import { TcpOptions } from '@nestjs/microservices';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { env } from 'process';
 import { TcpService } from '@agency-os/tcp-service';
+import { log } from 'console';
 
 async function bootstrap() {
-  const host = env.GRPC_CLIENT_HOST!;
-  const port = env.GRPC_CLIENT_PORT!;
-  const name = env.GRPC_CLIENT_NAME!;
+  const host = env.TCP_CLIENT_HOST!;
+  const port = env.TCP_CLIENT_PORT!;
+  const name = env.TCP_CLIENT_SERVICE_NAME!;
+  log(name);
 
   const app = await NestFactory.create(AppModule);
   const service = app.get<TcpService>(TcpService);

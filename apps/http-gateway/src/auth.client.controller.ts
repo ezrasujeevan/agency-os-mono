@@ -3,8 +3,8 @@ import { Client } from '@agency-os/class';
 import { AuthService } from '@agency-os/auth';
 import { ApiTags } from '@nestjs/swagger';
 
-@ApiTags('auth', 'client', 'auth/client')
-@Controller('auth/client')
+@ApiTags('auth', 'client', 'auth/client', 'grpc/auth', 'grpc/auth/client')
+@Controller('grpc/auth/client')
 export class AuthClientController {
   constructor(private readonly authService: AuthService) {}
 

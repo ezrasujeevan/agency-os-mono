@@ -177,7 +177,7 @@ export class LoginClientResponseDto {
   })
   @IsString()
   @IsOptional()
-  error: string[];
+  error?: string[] | string;
 
   @ApiProperty({
     description: 'JWT Token ',
@@ -186,7 +186,7 @@ export class LoginClientResponseDto {
   })
   @IsString()
   @IsOptional()
-  token: string;
+  token?: string;
 
   @ApiProperty({
     description: 'JWT Refesh Token ',
@@ -195,7 +195,7 @@ export class LoginClientResponseDto {
   })
   @IsString()
   @IsOptional()
-  refreshToken: string;
+  refreshToken?: string;
 
   @ApiProperty({
     description: 'Client ID ',
@@ -204,7 +204,7 @@ export class LoginClientResponseDto {
   })
   @IsString()
   @IsOptional()
-  clientId: string;
+  clientId?: string;
 }
 export class ValidateClientRequestDto {
   @ApiProperty({
@@ -223,7 +223,7 @@ export class ValidateClientResponseDto {
     title: 'Company ID',
   })
   @IsString()
-  compnayId: string;
+  compnayId?: string;
 
   @ApiProperty({
     description: 'Client ID of token ',
@@ -231,7 +231,7 @@ export class ValidateClientResponseDto {
     title: 'Client ID',
   })
   @IsString()
-  clientId: string;
+  clientId?: string;
 
   @ApiProperty({
     description: 'HTTP Status ',
@@ -249,7 +249,7 @@ export class ValidateClientResponseDto {
   })
   @IsString()
   @IsOptional()
-  error: string[];
+  error?: string[] | string;
 }
 
 export class RefreshTokenClientRequestDto {

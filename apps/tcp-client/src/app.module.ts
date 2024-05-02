@@ -1,6 +1,5 @@
 import { Inject, Logger, Module, OnModuleInit } from '@nestjs/common';
 import { ClientModule } from './client/client.module';
-import { CompanyModule } from './company/company.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { CONFIG_APP, Igrpc_app, validateApp } from './app.validation';
@@ -43,7 +42,6 @@ import { TcpModule } from '@agency-os/tcp-service';
       inject: [ConfigService],
     }),
     ClientModule,
-    CompanyModule,
     TcpModule,
   ],
 })

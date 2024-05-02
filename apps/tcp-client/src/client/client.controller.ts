@@ -2,63 +2,92 @@ import { Controller } from '@nestjs/common';
 import { ClientService } from './client.service';
 
 import { Client } from '@agency-os/class';
-import { ClientProto } from '@agency-os/proto';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 
 @Controller()
-@ClientProto.ClientServiceControllerMethods()
 export class ClientController {
   constructor(private readonly clientService: ClientService) {}
 
-  createClient(createClientRequestDto: Client.CreateClientRequestDto) {
-    return this.clientService.create(createClientRequestDto);
+  @MessagePattern(Client.Message.create)
+  async createClient(
+    @Payload() createClientRequestDto: Client.CreateClientRequestDto,
+  ): Promise<Client.ClientResponseDto> {
+    return await this.clientService.create(createClientRequestDto);
   }
 
-  findAllClient({}) {
-    return this.clientService.findAll();
+  @MessagePattern(Client.Message.findAll)
+  async findAllClient(): Promise<Client.ClientResponseDto> {
+    return await this.clientService.findAllClient();
   }
 
-  findOneClientbyId(
-    findOneClientByIdRequestDto: Client.FindOneClientByIdRequestDto,
-  ) {
-    return this.clientService.findOneById(findOneClientByIdRequestDto);
-  }
-  findOneClientByEmail(
-    findOneClientByEmailRequestDto: Client.FindOneClientByEmailRequestDto,
-  ) {
-    return this.clientService.findOneByEmail(findOneClientByEmailRequestDto);
-  }
-
-  updateClient(updateClientRequestDto: Client.UpdateClientRequestDto) {
-    return this.clientService.update(
-      updateClientRequestDto.id,
-      updateClientRequestDto,
+  @MessagePattern(Client.Message.findAllOfCompany)
+  async findAllClientByCompany(
+    @Payload() findAllOfCompanyRequestDto: Client.findAllOfCompanyRequestDto,
+  ): Promise<Client.ClientResponseDto> {
+    return await this.clientService.findAllClientByCompany(
+      findAllOfCompanyRequestDto,
     );
   }
 
-  removeClient(
-    findOneClientByIdRequestDto: Client.FindOneClientByIdRequestDto,
-  ) {
-    return this.clientService.remove(findOneClientByIdRequestDto);
+  @MessagePattern(Client.Message.findOneById)
+  async findOneClientById(
+    @Payload() findOneClientByIdRequestDto: Client.FindOneClientByIdRequestDto,
+  ): Promise<Client.ClientResponseDto> {
+    return await this.clientService.findOneClientById(
+      findOneClientByIdRequestDto,
+    );
   }
 
+  @MessagePattern(Client.Message.findOneByEmail)
+  async findOneClientByEmail(
+    @Payload()
+    findOneClientByEmailRequestDto: Client.FindOneClientByEmailRequestDto,
+  ): Promise<Client.ClientResponseDto> {
+    return await this.clientService.findOneClientByEmail(
+      findOneClientByEmailRequestDto,
+    );
+  }
+
+  @MessagePattern(Client.Message.create)
+  async updateClient(
+    @Payload() updateClientRequestDto: Client.UpdateClientRequestDto,
+  ): Promise<Client.ClientResponseDto> {
+    return await this.clientService.updateClient(updateClientRequestDto);
+  }
+
+  @MessagePattern(Client.Message.delete)
+  async removeClient(
+    @Payload() findOneClientByIdRequestDto: Client.FindOneClientByIdRequestDto,
+  ): Promise<Client.ClientResponseDto> {
+    return await this.clientService.removeClient(findOneClientByIdRequestDto);
+  }
+
+  @MessagePattern(Client.Message.register)
   async registerClient(
-    createClientRequestDto: Client.CreateClientRequestDto,
-  ): Promise<Client.RegisterClientResponseDto> {
-    return await this.clientService.register(createClientRequestDto);
+    @Payload() createClientRequestDto: Client.CreateClientRequestDto,
+  ): Promise<Client.ClientResponseDto> {
+    return await this.clientService.registerClient(createClientRequestDto);
   }
+
+  @MessagePattern(Client.Message.login)
   async loginClient(
-    loginClientRequestDto: Client.LoginClientRequestDto,
-  ): Promise<Client.LoginClientResponceDto> {
-    return await this.clientService.login(loginClientRequestDto);
+    @Payload() loginClientRequestDto: Client.LoginClientRequestDto,
+  ): Promise<Client.LoginClientResponseDto> {
+    return await this.clientService.loginClient(loginClientRequestDto);
   }
+
+  @MessagePattern(Client.Message.validate)
   async validateClient(
-    validateClientRequestDto: Client.ValidateClientRequestDto,
+    @Payload() validateClientRequestDto: Client.ValidateClientRequestDto,
   ): Promise<Client.ValidateClientResponseDto> {
-    return await this.clientService.validate(validateClientRequestDto);
+    return await this.clientService.validateClient(validateClientRequestDto);
   }
+
+  @MessagePattern(Client.Message.refresh)
   async refreshTokenClient(
-    RefreshTokenClientRequestDto: Client.RefreshTokenClientRequestDto,
-  ): Promise<Client.LoginClientResponceDto> {
-    return await this.clientService.refreshToken(RefreshTokenClientRequestDto);
+    @Payload()
+    refreshTokenClientRequestDto: Client.RefreshTokenClientRequestDto,
+  ): Promise<Client.LoginClientResponseDto> {
+    return await this.clientService.refreshClient(refreshTokenClientRequestDto);
   }
 }

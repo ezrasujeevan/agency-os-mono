@@ -7,6 +7,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { CONFIG_JWT, Igrpc_jwt, validate_jwt } from './client.vaidation';
 import { ClientRepository } from './client.repository';
+import { Company } from '@agency-os/class';
+import { TcpModule } from '@agency-os/tcp-service';
 
 @Module({
   imports: [
@@ -29,6 +31,7 @@ import { ClientRepository } from './client.repository';
         return options;
       },
     }),
+    TcpModule.register({ name: Company.SERVICE_NAME }),
   ],
   controllers: [ClientController],
   providers: [ClientService, ClientRepository],

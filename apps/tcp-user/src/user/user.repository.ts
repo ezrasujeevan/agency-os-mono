@@ -102,7 +102,7 @@ export class UserRepository {
     const { email, password } = LoginUserRequestDto;
     const user = await this.userRepo.findOne({
       where: { email },
-      select: ['password', 'id'],
+      select: ['password', 'id', 'email'],
     });
     if (user && user !== undefined) {
       const passwordMatch = await bcrypt.compare(password, user.password);

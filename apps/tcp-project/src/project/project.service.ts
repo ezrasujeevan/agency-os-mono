@@ -1,8 +1,9 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { ProjectEntity } from './project.entity';
 import { ProjectRepository } from './project.repository';
-import { ProjectHelperService } from './project.helper.service';
-import { Project } from '@agency-os/class';
+import { Client, Company, Project, User } from '@agency-os/class';
+import { firstValueFrom } from 'rxjs';
+import { ClientTCP } from '@nestjs/microservices';
 
 /**
  * Service class for managing projects.
@@ -11,7 +12,9 @@ import { Project } from '@agency-os/class';
 export class ProjectService {
   constructor(
     private readonly projectRepo: ProjectRepository,
-    private readonly projectHelperService: ProjectHelperService,
+    @Inject(User.SERVICE_NAME) private readonly userService: ClientTCP,
+    @Inject(Client.SERVICE_NAME) private readonly clientService: ClientTCP,
+    @Inject(Company.SERVICE_NAME) private readonly companyService: ClientTCP,
   ) {}
 
   async create(
@@ -25,19 +28,19 @@ export class ProjectService {
         error: 'Project - Trail Name already exists',
       };
     } else {
-      if (!(await this.projectHelperService.isValidClient(clientId))) {
+      if (!(await this.isValidClient(clientId))) {
         return {
           status: HttpStatus.BAD_REQUEST,
           error: 'incorrect Client ID',
         };
       }
-      if (!(await this.projectHelperService.isValidUser(userId))) {
+      if (!(await this.isValidUser(userId))) {
         return {
           status: HttpStatus.BAD_REQUEST,
           error: 'incorrect User ID',
         };
       }
-      if (!(await this.projectHelperService.isValidCompany(companyId))) {
+      if (!(await this.isValidCompany(companyId))) {
         return {
           status: HttpStatus.BAD_REQUEST,
           error: 'incorrect Company ID',
@@ -106,7 +109,7 @@ export class ProjectService {
   async findAllByCompany({
     companyId,
   }: Project.FindAllProjectByCompanyRequestDto): Promise<Project.ProjectResponse> {
-    if (!(await this.projectHelperService.isValidCompany(companyId))) {
+    if (!(await this.isValidCompany(companyId))) {
       return {
         status: HttpStatus.BAD_REQUEST,
         error: 'incorrect Company ID',
@@ -127,7 +130,7 @@ export class ProjectService {
   async findAllByUser({
     userId,
   }: Project.FindAllProjectByUserRequestDto): Promise<Project.ProjectResponse> {
-    if (!(await this.projectHelperService.isValidClient(userId))) {
+    if (!(await this.isValidClient(userId))) {
       return {
         status: HttpStatus.BAD_REQUEST,
         error: 'incorrect User ID',
@@ -149,7 +152,7 @@ export class ProjectService {
   async findAllByClient({
     clientId,
   }: Project.FindAllProjectByClientRequestDto): Promise<Project.ProjectResponse> {
-    if (await this.projectHelperService.isValidClient(clientId)) {
+    if (!(await this.isValidClient(clientId))) {
       return {
         status: HttpStatus.BAD_REQUEST,
         error: 'incorrect Client ID',
@@ -175,7 +178,7 @@ export class ProjectService {
     const project = await this.projectRepo.findOneById({ id });
     if (project) {
       if (clientId) {
-        if (!(await this.projectHelperService.isValidClient(clientId))) {
+        if (!(await this.isValidClient(clientId))) {
           return {
             status: HttpStatus.BAD_REQUEST,
             error: 'incorrect Client ID',
@@ -183,7 +186,7 @@ export class ProjectService {
         }
       }
       if (userId) {
-        if (!(await this.projectHelperService.isValidUser(userId))) {
+        if (!(await this.isValidUser(userId))) {
           return {
             status: HttpStatus.BAD_REQUEST,
             error: 'incorrect User ID',
@@ -191,7 +194,7 @@ export class ProjectService {
         }
       }
       if (companyId) {
-        if (!(await this.projectHelperService.isValidCompany(companyId))) {
+        if (await this.isValidCompany(companyId)) {
           return {
             status: HttpStatus.BAD_REQUEST,
             error: 'incorrect Company ID',
@@ -235,5 +238,45 @@ export class ProjectService {
       status: HttpStatus.BAD_REQUEST,
       error: 'incorrect Project ID',
     };
+  }
+
+  private async isValidUser(id: string): Promise<boolean> {
+    const userResponse = await firstValueFrom(
+      await this.userService.send<
+        User.UserResponseDto,
+        User.FindOneUserByIdRequestDto
+      >(User.Message.findOneById, { id }),
+    );
+
+    if (userResponse.status === HttpStatus.OK) {
+      return true;
+    }
+    return false;
+  }
+
+  private async isValidClient(id: string): Promise<boolean> {
+    const ClientResponse = await firstValueFrom(
+      await this.clientService.send<
+        Client.ClientResponseDto,
+        Client.FindOneClientByIdRequestDto
+      >(Client.Message.findOneById, { id }),
+    );
+    if (ClientResponse.status === HttpStatus.OK) {
+      return true;
+    }
+    return false;
+  }
+
+  private async isValidCompany(id: string): Promise<boolean> {
+    const companyResponse = await firstValueFrom(
+      await this.companyService.send<
+        Company.companyResponseDto,
+        Company.FindOneCompanyByIdRequestDto
+      >(Company.Message.findOneById, { id }),
+    );
+    if (companyResponse.status === HttpStatus.OK) {
+      return true;
+    }
+    return false;
   }
 }

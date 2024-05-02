@@ -49,10 +49,9 @@ export class UserService {
     const user = await this.userRepo.findOneById(findOneUserByIdRequestDto);
     if (user instanceof UserEntity) {
       return { user, status: HttpStatus.OK };
-    } else if (user === null) {
+    } else {
       return { error: 'User not found', status: HttpStatus.NOT_FOUND };
     }
-    return { status: HttpStatus.CONFLICT };
   }
 
   async findOneByEmail(
@@ -131,7 +130,7 @@ export class UserService {
   async login(
     loginUserRequestDto: User.LoginUserRequestDto,
   ): Promise<User.LoginUserResponseDto> {
-    const user = this.userRepo.login(loginUserRequestDto);
+    const user = await this.userRepo.login(loginUserRequestDto);
     if (user instanceof UserEntity) {
       const { id, email } = user;
       const token = await this.jwtService.signAsync({ id, email });

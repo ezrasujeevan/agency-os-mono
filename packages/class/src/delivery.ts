@@ -82,9 +82,7 @@ export class CreateDeliveryRequestDto {
   createdBy: string;
 }
 
-export class UpdateDeliveryRequestDto extends PartialType(
-  CreateDeliveryRequestDto,
-) {
+export class UpdateDeliveryRequestDto extends PartialType(CreateDeliveryRequestDto) {
   id: string;
 }
 
@@ -106,7 +104,7 @@ export const Message = {
 };
 
 export type delivery = Delivery | Delivery[];
-export interface DeliveryResponse {
+export interface DeliveryResponseDto {
   status: HttpStatus;
   error?: string | string[];
   delivery?: delivery;

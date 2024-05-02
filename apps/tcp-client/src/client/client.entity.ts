@@ -1,21 +1,17 @@
 import { Client } from '@agency-os/class';
-import { CompanyEntity } from 'src/company/company.entity';
 import {
   BaseEntity,
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  JoinColumn,
-  ManyToMany,
-  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   VersionColumn,
 } from 'typeorm';
 
 @Entity('client')
-export class ClientEntity extends BaseEntity {
+export class ClientEntity extends BaseEntity implements Client.Client {
   @PrimaryGeneratedColumn('uuid', { name: '_id' })
   id: string;
 
@@ -43,7 +39,6 @@ export class ClientEntity extends BaseEntity {
   @Column({ nullable: true })
   lastName?: string;
 
-  @ManyToOne(() => CompanyEntity, (company) => company.clients, { eager: true })
-  @JoinColumn({ name: 'company_id' })
-  company: CompanyEntity;
+  @Column('uuid', { name: 'company_id' })
+  companyId: string;
 }

@@ -49,9 +49,7 @@ export class ProjectRepository {
 
   async findAllByCompany({
     companyId,
-  }: Project.FindAllProjectByCompanyRequestDto): Promise<
-    ProjectEntity[] | null
-  > {
+  }: Project.FindAllProjectByCompanyRequestDto): Promise<ProjectEntity[]> {
     const projects = await this.projectRepo.find({ where: { companyId } });
     this.logger.verbose('All projects found by Company', projects);
     return projects;
