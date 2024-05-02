@@ -23,6 +23,7 @@ export const clientSlice = createSlice({
                 if (status === 200 && client && !Array.isArray(client)) {
                     state = client
                 }
+                state
             }
         )
         builder.addMatcher(

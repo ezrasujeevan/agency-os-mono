@@ -2,14 +2,7 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 import { userApiSlice } from '../api'
 import { User } from '@agency-os/class'
 
-interface userState {
-    id: string
-    email: string
-    firstName?: string
-    lastName?: string
-}
-
-const initialState: userState = {
+const initialState: Partial<User.User> = {
     id: '',
     email: '',
     firstName: '',
