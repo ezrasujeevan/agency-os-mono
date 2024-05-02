@@ -9,6 +9,8 @@ import { useAppSelector } from './store'
 import SnackBar from './components/SnackBar'
 import ProtectedRoute from './components/ProtectedRoute'
 import DashboardPage from './pages/DashboardPage'
+import { LocalizationProvider } from '@mui/x-date-pickers'
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 
 const RootComponent: React.FC = () => {
     const { mode } = useAppSelector((state) => state.theme)
@@ -16,20 +18,25 @@ const RootComponent: React.FC = () => {
         <Box>
             <ThemeProvider theme={createTheme(Theme(mode))}>
                 <CssBaseline />
-                <Router>
-                    <Header />
-                    <Container fixed>
-                        <Routes>
-                            <Route path="*" element={<NotFoundPage />} />
-                            <Route path={ROUTES.HOME_PAGE} element={<HomePage />} />
-                            <Route path={ROUTES.LOGIN_PAGE} element={<LoginPage />} />
-                            <Route element={<ProtectedRoute />}>
-                                <Route path={ROUTES.DASHBOARD_PAGE} element={<DashboardPage />} />
-                            </Route>
-                        </Routes>
-                    </Container>
-                </Router>
-                <SnackBar />
+                <LocalizationProvider dateAdapter={AdapterMoment}>
+                    <Router>
+                        <Header />
+                        <Container fixed>
+                            <Routes>
+                                <Route path="*" element={<NotFoundPage />} />
+                                <Route path={ROUTES.HOME_PAGE} element={<HomePage />} />
+                                <Route path={ROUTES.LOGIN_PAGE} element={<LoginPage />} />
+                                <Route element={<ProtectedRoute />}>
+                                    <Route
+                                        path={ROUTES.DASHBOARD_PAGE}
+                                        element={<DashboardPage />}
+                                    />
+                                </Route>
+                            </Routes>
+                        </Container>
+                    </Router>
+                    <SnackBar />
+                </LocalizationProvider>
             </ThemeProvider>
         </Box>
     )
