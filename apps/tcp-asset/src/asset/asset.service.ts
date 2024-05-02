@@ -14,7 +14,7 @@ export class AssetService {
     createAssetDto: Asset.CreateAssetRequestDto,
   ): Promise<Asset.AssetResponseDto> {
     try {
-      const delivery = 
+      // const delivery = 
       const asset = this.assetRepo.create(createAssetDto);
       await this.assetRepo.save(asset);
       return {

@@ -41,9 +41,7 @@ export class AssetRepository {
   }: Asset.FindAllAssetsOfDeliveryRequestDto): Promise<Asset.AssetResponseDto> {
     const assets = await this.assetRepo.find({
       where: {
-        delivery: {
-          id: deliveryId,
-        },
+        deliveryId,
       },
     });
     return {

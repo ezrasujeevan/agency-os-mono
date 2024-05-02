@@ -12,7 +12,7 @@ import {
   VersionColumn,
 } from 'typeorm';
 import { Asset } from '@agency-os/class';
-import { DeliveryEntity } from '../delivery/delivery.entity';
+
 //asset.repository.ts
 @Entity('assets')
 export class AssetEntity extends BaseEntity implements Asset.Asset {

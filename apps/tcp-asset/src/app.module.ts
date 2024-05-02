@@ -2,7 +2,6 @@ import { Inject, Logger, Module, OnModuleInit } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { validate_app, Igrpc_app, CONFIG_APP } from './app.validation';
 import { TcpModule } from '@agency-os/tcp-service';
-import { DeliveryModule } from './delivery/delivery.module';
 import { AssetModule } from './asset/asset.module';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { CONFIG_DB, Igrpc_db, validate_db } from './db.validation';
@@ -45,7 +44,6 @@ import { CONFIG_DB, Igrpc_db, validate_db } from './db.validation';
       inject: [ConfigService],
     }),
     TcpModule,
-    DeliveryModule,
     AssetModule,
   ],
   controllers: [],
