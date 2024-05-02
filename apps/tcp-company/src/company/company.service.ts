@@ -1,54 +1,121 @@
 import { Company } from '@agency-os/class';
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { HttpStatus, Injectable } from '@nestjs/common';
+import { CompanyRepository } from './company.repositrory';
 import { CompanyEntity } from './company.entity';
-import { Repository } from 'typeorm';
 
 @Injectable()
 export class CompanyService {
-  constructor(
-    @InjectRepository(CompanyEntity)
-    private readonly companyRepo: Repository<CompanyEntity>,
-  ) {}
+  constructor(private readonly companyRepo: CompanyRepository) {}
 
-  async create(createCompanyRequestDto: Company.CreateCompanyRequestDto) {
-    const company = this.companyRepo.create(createCompanyRequestDto);
-    return await this.companyRepo.save(company);
-  }
-
-  async findAll() {
-    const companys = await this.companyRepo.find();
-    return { companys };
-  }
-
-  async findOne(findOneCompanyRequestDto: Company.FindOneCompanyRequestDto) {
-    const { id } = findOneCompanyRequestDto;
-    const company = await this.companyRepo.findOne({ where: { id } });
-    if (company && company !== undefined) {
-      return company;
+  async findAllCompany(): Promise<Company.companyResponseDto> {
+    const company = await this.companyRepo.findAllCompany();
+    if (
+      Array.isArray(company) &&
+      company.every((c) => c instanceof CompanyEntity)
+    ) {
+      return {
+        status: HttpStatus.OK,
+        company,
+      };
+    } else {
+      return {
+        status: HttpStatus.NOT_FOUND,
+        error: 'Companies Not Found',
+      };
     }
-    throw new NotFoundException(`company not found for id ${id}`);
   }
 
-  async update(
-    id: string,
-    updateCompanyRequestDto: Company.UpdateCompanyRequestDto,
-  ) {
-    const company = await this.findOne({ id });
-    if (company && company !== undefined) {
-      return await this.companyRepo.save(company, {
-        data: updateCompanyRequestDto,
-      });
+  async findOneCompanyById(
+    id: Company.FindOneCompanyByIdRequestDto,
+  ): Promise<Company.companyResponseDto> {
+    const company = await this.companyRepo.findOneCompanyById(id);
+    if (company) {
+      return {
+        status: HttpStatus.OK,
+        company,
+      };
     }
-    throw new NotFoundException(`company not found for id ${id}`);
+    return {
+      status: HttpStatus.NOT_FOUND,
+      error: `No Company Found with Id ${JSON.stringify(id)}`,
+    };
   }
 
-  async remove(findOneCompanyRequestDto: Company.FindOneCompanyRequestDto) {
-    const { id } = findOneCompanyRequestDto;
-    const company = await this.findOne({ id });
-    if (company && company !== undefined) {
-      return await this.companyRepo.remove(company);
+  async findOneCompanyByCode(
+    code: Company.findOneCompanyByCodeRequestDto,
+  ): Promise<Company.companyResponseDto> {
+    const company = await this.companyRepo.findOneCompanyByCode(code);
+    if (company) {
+      return {
+        status: HttpStatus.OK,
+        company,
+      };
     }
-    throw new NotFoundException(`company not found for id ${id}`);
+    return {
+      status: HttpStatus.NOT_FOUND,
+      error: `No Company found with code ${JSON.stringify(code)}`,
+    };
+  }
+
+  async createCompany(
+    create: Company.CreateCompanyRequestDto,
+  ): Promise<Company.companyResponseDto> {
+    const companyCode = await this.findOneCompanyByCode({ code: create.code });
+    if (companyCode) {
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        error: 'Company Code Already Exits',
+      };
+    }
+    const company = await this.companyRepo.createCompany(create);
+    if (company instanceof CompanyEntity) {
+      return {
+        status: HttpStatus.CREATED,
+        company,
+      };
+    }
+    return {
+      status: HttpStatus.BAD_REQUEST,
+      error: company.message,
+    };
+  }
+
+  async updateCompany(
+    update: Company.UpdateCompanyRequestDto,
+  ): Promise<Company.companyResponseDto> {
+    const { code } = update;
+    if (code) {
+      const companyCode = await this.findOneCompanyByCode({ code });
+      if (companyCode) {
+        return {
+          status: HttpStatus.BAD_REQUEST,
+          error: 'Company Code already exist ',
+        };
+      }
+    }
+    const company = await this.companyRepo.updateCompany(update);
+    if (company instanceof CompanyEntity) {
+      return {
+        status: HttpStatus.OK,
+        company,
+      };
+    }
+    return {
+      status: HttpStatus.BAD_REQUEST,
+      error: company.message,
+    };
+  }
+
+  async removeCompany(id: Company.FindOneCompanyByIdRequestDto) {
+    const company = await this.companyRepo.removeCompany(id);
+    if (company instanceof CompanyEntity) {
+      return {
+        status: HttpStatus.NO_CONTENT,
+      };
+    }
+    return {
+      status: HttpStatus.BAD_REQUEST,
+      error: company.message,
+    };
   }
 }

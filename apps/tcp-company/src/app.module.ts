@@ -1,11 +1,10 @@
 import { Inject, Logger, Module, OnModuleInit } from '@nestjs/common';
-import { ClientModule } from './client/client.module';
 import { CompanyModule } from './company/company.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { CONFIG_APP, Igrpc_app, validateApp } from './app.validation';
 import { Igrpc_db, CONFIG_DB, validateDB } from './db.validation';
-import { GrpcModule } from '@agency-os/grpc-service';
+import { TcpModule } from '@agency-os/tcp-service';
 
 @Module({
   imports: [
@@ -42,9 +41,8 @@ import { GrpcModule } from '@agency-os/grpc-service';
       },
       inject: [ConfigService],
     }),
-    ClientModule,
     CompanyModule,
-    GrpcModule,
+    TcpModule,
   ],
 })
 export class AppModule implements OnModuleInit {

@@ -20,8 +20,6 @@ export abstract class Company extends CommonEntity {
     title: 'CODE',
   })
   code: string;
-
-  clients: ClientProto.Client[];
 }
 
 export const SERVICE_NAME = 'COMPANY_SERVICE';

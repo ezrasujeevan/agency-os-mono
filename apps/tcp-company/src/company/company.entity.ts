@@ -1,13 +1,10 @@
 import { Company } from '@agency-os/class';
-import { ClientEntity } from '../client/client.entity';
-
 import {
   BaseEntity,
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   VersionColumn,
@@ -35,7 +32,4 @@ export class CompanyEntity extends BaseEntity implements Company.Company {
 
   @Column({ unique: true, nullable: false })
   code: string;
-
-  @OneToMany(() => ClientEntity, (client) => client.company, { lazy: true })
-  clients: ClientEntity[];
 }
