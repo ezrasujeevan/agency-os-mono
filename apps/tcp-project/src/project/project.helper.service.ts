@@ -1,56 +1,44 @@
-import { UserProto, ClientProto } from '@agency-os/proto';
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
-import { ClientGrpc } from '@nestjs/microservices';
+import { User, Client, Company } from '@agency-os/class';
+import { HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { ClientTCP } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable()
-export class ProjectHelperService implements OnModuleInit {
-  private userService: UserProto.UserServiceClient;
-  private clientService: ClientProto.ClientServiceClient;
-  private companyService: ClientProto.CompanyServiceClient;
+export class ProjectHelperService {
   constructor(
-    @Inject(ClientProto.CLIENT_PACKAGE_NAME) private clientGrpc: ClientGrpc,
-    @Inject(UserProto.USER_PACKAGE_NAME) private userGrpc: ClientGrpc,
+    @Inject(User.SERVICE_NAME) private readonly userService: ClientTCP,
+    @Inject(Client.SERVICE_NAME) private readonly clientService: ClientTCP,
+    @Inject(Company.SERVICE_NAME) private readonly companyService: ClientTCP,
   ) {}
 
-  onModuleInit() {
-    this.userService = this.userGrpc.getService<UserProto.UserServiceClient>(
-      UserProto.USER_SERVICE_NAME,
+  async isValidUser(id: string): Promise<boolean> {
+    const userResponse = await firstValueFrom(
+      await this.userService.send<
+        User.UserResponseDto,
+        User.FindOneUserByIdRequestDto
+      >(User.Message.findOneById, { id }),
     );
-    this.clientService =
-      this.clientGrpc.getService<ClientProto.ClientServiceClient>(
-        ClientProto.CLIENT_SERVICE_NAME,
-      );
-    this.companyService =
-      this.clientGrpc.getService<ClientProto.CompanyServiceClient>(
-        ClientProto.COMPANY_SERVICE_NAME,
-      );
+
+    if (userResponse.status === HttpStatus.OK) return true;
   }
 
-  async isValidUser(userId: string): Promise<boolean> {
-    const user = await firstValueFrom(
-      await this.userService.findOneUserbyId({
-        id: userId,
-      }),
+  async isValidClient(id: string): Promise<boolean> {
+    const ClientResponse = await firstValueFrom(
+      await this.clientService.send<
+        Client.ClientResponseDto,
+        Client.FindOneClientByIdRequestDto
+      >(Client.Message.findOneById, { id }),
     );
-    return !!user;
+    if (ClientResponse.status === HttpStatus.OK) return true;
   }
 
-  async isValidClient(clientId: string): Promise<boolean> {
-    const client = await firstValueFrom(
-      await this.clientService.findOneClientbyId({
-        id: clientId,
-      }),
+  async isValidCompany(id: string): Promise<boolean> {
+    const companyResponse = await firstValueFrom(
+      await this.companyService.send<
+        Company.companyResponseDto,
+        Company.FindOneCompanyByIdRequestDto
+      >(Company.Message.findOneById, { id }),
     );
-    return !!client;
-  }
-
-  async isValidCompany(companyId: string): Promise<boolean> {
-    const company = await firstValueFrom(
-      await this.companyService.findOneCompany({
-        id: companyId,
-      }),
-    );
-    return !!company;
+    if (companyResponse.status === HttpStatus.OK) return true;
   }
 }

@@ -10,7 +10,7 @@ export class ProjectRepository {
   constructor(
     @InjectRepository(ProjectEntity)
     private projectRepo: Repository<ProjectEntity>,
-  1) {}
+  ) {}
 
   async create(
     createProjectRequestDto: Project.CreateProjectRequestDto,

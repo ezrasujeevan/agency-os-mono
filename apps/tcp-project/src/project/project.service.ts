@@ -24,11 +24,26 @@ export class ProjectService {
         status: HttpStatus.BAD_REQUEST,
         error: 'Project - Trail Name already exists',
       };
-    } else if (
-      (await this.projectHelperService.isValidClient(clientId)) &&
-      (await this.projectHelperService.isValidUser(userId)) &&
-      (await this.projectHelperService.isValidCompany(companyId))
-    ) {
+    } else {
+      if (!(await this.projectHelperService.isValidClient(clientId))) {
+        return {
+          status: HttpStatus.BAD_REQUEST,
+          error: 'incorrect Client ID',
+        };
+      }
+      if (!(await this.projectHelperService.isValidUser(userId))) {
+        return {
+          status: HttpStatus.BAD_REQUEST,
+          error: 'incorrect User ID',
+        };
+      }
+      if (!(await this.projectHelperService.isValidCompany(companyId))) {
+        return {
+          status: HttpStatus.BAD_REQUEST,
+          error: 'incorrect Company ID',
+        };
+      }
+
       const newProject = await this.projectRepo.create(createProjectRequestDto);
       if (newProject instanceof ProjectEntity) {
         return {
@@ -41,11 +56,6 @@ export class ProjectService {
           error: newProject.name + '-' + newProject.message,
         };
       }
-    } else {
-      return {
-        status: HttpStatus.BAD_REQUEST,
-        error: 'Invalid User, Client or Company',
-      };
     }
   }
 
@@ -96,44 +106,42 @@ export class ProjectService {
   async findAllByCompany({
     companyId,
   }: Project.FindAllProjectByCompanyRequestDto): Promise<Project.ProjectResponse> {
-    if (await this.projectHelperService.isValidCompany(companyId)) {
-      const project = await this.projectRepo.findAllByCompany({ companyId });
-      if (project) {
-        return {
-          project,
-          status: HttpStatus.OK,
-        };
-      } else {
-        return {
-          status: HttpStatus.NO_CONTENT,
-        };
-      }
-    } else {
+    if (!(await this.projectHelperService.isValidCompany(companyId))) {
       return {
         status: HttpStatus.BAD_REQUEST,
         error: 'incorrect Company ID',
+      };
+    }
+    const project = await this.projectRepo.findAllByCompany({ companyId });
+    if (project) {
+      return {
+        project,
+        status: HttpStatus.OK,
+      };
+    } else {
+      return {
+        status: HttpStatus.NO_CONTENT,
       };
     }
   }
   async findAllByUser({
     userId,
   }: Project.FindAllProjectByUserRequestDto): Promise<Project.ProjectResponse> {
-    if (await this.projectHelperService.isValidClient(userId)) {
-      const project = await this.projectRepo.findAllByUser({ userId });
-      if (project) {
-        return {
-          project,
-          status: HttpStatus.OK,
-        };
-      } else {
-        return {
-          status: HttpStatus.NO_CONTENT,
-        };
-      }
-    } else {
+    if (!(await this.projectHelperService.isValidClient(userId))) {
       return {
         status: HttpStatus.BAD_REQUEST,
         error: 'incorrect User ID',
+      };
+    }
+    const project = await this.projectRepo.findAllByUser({ userId });
+    if (project) {
+      return {
+        project,
+        status: HttpStatus.OK,
+      };
+    } else {
+      return {
+        status: HttpStatus.NO_CONTENT,
       };
     }
   }
@@ -142,21 +150,20 @@ export class ProjectService {
     clientId,
   }: Project.FindAllProjectByClientRequestDto): Promise<Project.ProjectResponse> {
     if (await this.projectHelperService.isValidClient(clientId)) {
-      const project = await this.projectRepo.findAllByClient({ clientId });
-      if (project) {
-        return {
-          project,
-          status: HttpStatus.OK,
-        };
-      } else {
-        return {
-          status: HttpStatus.NO_CONTENT,
-        };
-      }
-    } else {
       return {
         status: HttpStatus.BAD_REQUEST,
         error: 'incorrect Client ID',
+      };
+    }
+    const project = await this.projectRepo.findAllByClient({ clientId });
+    if (project) {
+      return {
+        project,
+        status: HttpStatus.OK,
+      };
+    } else {
+      return {
+        status: HttpStatus.NO_CONTENT,
       };
     }
   }
@@ -167,16 +174,30 @@ export class ProjectService {
     const { id, clientId, companyId, userId } = updateProjectRequestDto;
     const project = await this.projectRepo.findOneById({ id });
     if (project) {
-      // const client = clientId ? await this.projectHelperService.isValidClient(clientId): true;
-      // //todo
-      // if (
-      //   clientId &&
-      //   () &&
-      //   userId &&
-      //   (await this.projectHelperService.isValidUser(userId)) &&
-      //   companyId &&
-      //   (await this.projectHelperService.isValidCompany(companyId))
-      // ) {
+      if (clientId) {
+        if (!(await this.projectHelperService.isValidClient(clientId))) {
+          return {
+            status: HttpStatus.BAD_REQUEST,
+            error: 'incorrect Client ID',
+          };
+        }
+      }
+      if (userId) {
+        if (!(await this.projectHelperService.isValidUser(userId))) {
+          return {
+            status: HttpStatus.BAD_REQUEST,
+            error: 'incorrect User ID',
+          };
+        }
+      }
+      if (companyId) {
+        if (!(await this.projectHelperService.isValidCompany(companyId))) {
+          return {
+            status: HttpStatus.BAD_REQUEST,
+            error: 'incorrect Company ID',
+          };
+        }
+      }
       const updatedProject = await this.projectRepo.update(
         id,
         updateProjectRequestDto,

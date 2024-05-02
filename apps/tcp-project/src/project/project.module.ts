@@ -4,15 +4,16 @@ import { ProjectController } from './project.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProjectEntity } from './project.entity';
 import { ProjectRepository } from './project.repository';
-import { GrpcModule } from '@agency-os/grpc-service';
-import { Client, User } from '@agency-os/class';
+import { Client, User, Company } from '@agency-os/class';
 import { ProjectHelperService } from './project.helper.service';
+import { TcpModule } from '@agency-os/tcp-service';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([ProjectEntity]),
-    GrpcModule.register({ name: User.SERVICE_NAME }),
-    GrpcModule.register({ name: Client.SERVICE_NAME }),
+    TcpModule.register({ name: User.SERVICE_NAME }),
+    TcpModule.register({ name: Client.SERVICE_NAME }),
+    TcpModule.register({ name: Company.SERVICE_NAME }),
   ],
   controllers: [ProjectController],
   providers: [ProjectService, ProjectRepository, ProjectHelperService],
