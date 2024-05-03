@@ -12,7 +12,7 @@ import { CompanyService } from './company.service';
 import { Company } from '@agency-os/class';
 import { ApiQuery, ApiTags } from '@nestjs/swagger';
 
-@ApiTags('company')
+@ApiTags('company', 'tcp', 'tcp/company')
 @Controller('company')
 export class CompanyController {
   constructor(private readonly companyService: CompanyService) {}

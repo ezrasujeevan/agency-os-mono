@@ -19,6 +19,20 @@ export class ClientService {
     );
   }
 
+  async createBulk(createBulk: Client.CreateClientRequestDto[]) {
+    let res = [];
+    for (const create of createBulk) {
+      const response = await firstValueFrom(
+        this.clientService.send<
+          Client.ClientResponseDto,
+          Client.CreateClientRequestDto
+        >(Client.Message.create, create),
+      );
+      res.push(response);
+    }
+    return res;
+  }
+
   async findAllClient(): Promise<Client.ClientResponseDto> {
     return await firstValueFrom(
       this.clientService.send<Client.ClientResponseDto, object>(

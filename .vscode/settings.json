@@ -40,9 +40,53 @@
       "server": "localhost",
       "port": 5432,
       "driver": "PostgreSQL",
+      "name": "tcp_user",
+      "group": "agencyOs-psql",
+      "database": "tcp_user",
+      "username": "postgres",
+      "password": "password"
+    },
+    {
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "name": "tcp_client",
+      "group": "agencyOs-psql",
+      "database": "tcp_client",
+      "username": "postgres",
+      "password": "password"
+    },
+    {
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "name": "tcp_company",
+      "group": "agencyOs-psql",
+      "database": "tcp_company",
+      "username": "postgres",
+      "password": "password"
+    },
+    {
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5432,
+      "driver": "PostgreSQL",
       "name": "tcp_project",
       "group": "agencyOs-psql",
       "database": "tcp_project",
+      "username": "postgres",
+      "password": "password"
+    },
+    {
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "name": "tcp_asset",
+      "group": "agencyOs-psql",
+      "database": "tcp_asset",
       "username": "postgres",
       "password": "password"
     },

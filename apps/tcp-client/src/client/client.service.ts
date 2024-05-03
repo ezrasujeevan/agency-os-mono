@@ -43,6 +43,7 @@ export class ClientService {
     const client = await this.clientRepo.findAllClient();
     if (
       Array.isArray(client) &&
+      client.length > 0 &&
       client.every((u) => u instanceof ClientEntity)
     ) {
       return { client, status: HttpStatus.OK };
@@ -62,6 +63,7 @@ export class ClientService {
     const client = await this.clientRepo.findAllClientByCompany({ companyId });
     if (
       Array.isArray(client) &&
+      client.length > 0 &&
       client.every((u) => u instanceof ClientEntity)
     ) {
       return { client, status: HttpStatus.OK };

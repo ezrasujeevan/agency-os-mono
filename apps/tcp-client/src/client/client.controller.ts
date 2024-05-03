@@ -48,7 +48,7 @@ export class ClientController {
     );
   }
 
-  @MessagePattern(Client.Message.create)
+  @MessagePattern(Client.Message.update)
   async updateClient(
     @Payload() updateClientRequestDto: Client.UpdateClientRequestDto,
   ): Promise<Client.ClientResponseDto> {

@@ -11,7 +11,8 @@ export class CompanyService {
     const company = await this.companyRepo.findAllCompany();
     if (
       Array.isArray(company) &&
-      company.every((c) => c instanceof CompanyEntity)
+      company.every((c) => c instanceof CompanyEntity) &&
+      company.length > 0
     ) {
       return {
         status: HttpStatus.OK,
@@ -60,7 +61,9 @@ export class CompanyService {
   async createCompany(
     create: Company.CreateCompanyRequestDto,
   ): Promise<Company.companyResponseDto> {
-    const companyCode = await this.findOneCompanyByCode({ code: create.code });
+    const companyCode = await this.companyRepo.findOneCompanyByCode({
+      code: create.code,
+    });
     if (companyCode) {
       return {
         status: HttpStatus.BAD_REQUEST,

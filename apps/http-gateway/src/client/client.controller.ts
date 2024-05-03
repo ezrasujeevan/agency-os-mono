@@ -21,6 +21,11 @@ export class ClientController {
     return this.clientService.createClient(create);
   }
 
+  @Post('/bulk')
+  createBulk(@Body() create: Client.CreateClientRequestDto[]) {
+    return this.clientService.createBulk(create);
+  }
+
   @ApiQuery({ name: 'company', required: false })
   @ApiQuery({ name: 'email', required: false })
   @Get()
