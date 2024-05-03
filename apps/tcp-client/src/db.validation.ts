@@ -1,7 +1,6 @@
 import { EnvironmentVariables, validateUtil } from '@agency-os/common';
 import { registerAs } from '@nestjs/config';
 import { IsNumber, IsOptional, IsString, Max, Min } from 'class-validator';
-import { env } from 'process';
 
 export const CONFIG_DB = 'agency-os-db-grpc-client';
 
@@ -38,7 +37,7 @@ class MS_GRPC_ENV extends EnvironmentVariables {
   DB_HOST: string;
 
   @IsString()
-  DB_NAME: string;
+  TCP_CLIENT_SERVICE_DB: string;
 
   @IsString()
   DB_SCHEMA: string;
@@ -53,7 +52,7 @@ export const validateDB = registerAs(CONFIG_DB, (): Igrpc_db => {
       port: configs.DB_PORT,
       username: configs.DB_USERNAME,
       password: configs.DB_PASSWORD,
-      name: configs.DB_NAME,
+      name: configs.TCP_CLIENT_SERVICE_DB,
       schema: configs.DB_SCHEMA,
     },
   };

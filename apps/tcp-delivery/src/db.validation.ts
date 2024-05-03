@@ -37,7 +37,7 @@ class MS_GRPC_DB extends EnvironmentVariables {
   DB_HOST: string;
 
   @IsString()
-  DB_NAME: string;
+  TCP_DELIVERY_SERVICE_DB: string;
 
   @IsString()
   DB_SCHEMA: string;
@@ -52,7 +52,7 @@ export const validate_db = registerAs(CONFIG_DB, (): Igrpc_db => {
       port: configs.DB_PORT,
       username: configs.DB_USERNAME,
       password: configs.DB_PASSWORD,
-      name: configs.DB_NAME,
+      name: configs.TCP_DELIVERY_SERVICE_DB,
       schema: configs.DB_SCHEMA,
     },
   };
