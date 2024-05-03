@@ -18,11 +18,17 @@ export const clientApiSlice = rootApiSlice.injectEndpoints({
                 method: 'GET'
             })
         }),
-        getAllClients: builder.query<Client.ClientResponseDto, void>({
-            query: () => ({
-                url: `client`,
-                method: 'GET'
-            })
+        getAllClients: builder.query<
+            Client.ClientResponseDto,
+            void | Client.findAllOfCompanyRequestDto
+        >({
+            query: ({ companyId }: Client.findAllOfCompanyRequestDto) => {
+                if (companyId) {
+                    return { url: `client?company=${companyId}`, method: 'GET' }
+                } else {
+                    return { url: `client`, method: 'GET' }
+                }
+            }
         }),
         getAllClientsByCompany: builder.query<
             Client.ClientResponseDto,
