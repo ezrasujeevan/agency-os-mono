@@ -52,6 +52,15 @@ export class UserController {
     return this.userService.findOneUserById({ id });
   }
 
+  @Post('/bulk')
+  async bulkCreate(@Body() createUserDto: User.CreateUserRequestDto[]) {
+    const resp = [];
+    for (const user of createUserDto) {
+      resp.push(this.userService.create(user));
+    }
+    return resp;
+  }
+
   @Patch(':id')
   update(
     @Param('id') id: string,

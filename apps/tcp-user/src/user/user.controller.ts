@@ -32,7 +32,7 @@ export class UserController {
     return await this.userService.findOneByEmail(findOneUserByEmailRequestDto);
   }
 
-  @MessagePattern(User.Message.create)
+  @MessagePattern(User.Message.update)
   async updateUser(
     @Payload() updateUserRequestDto: User.UpdateUserRequestDto,
   ): Promise<User.UserResponseDto> {

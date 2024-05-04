@@ -62,13 +62,16 @@ export class UserRepository {
     try {
       const user = await this.findOneById({ id: updateUserDto.id });
       if (user) {
+        if (updateUserDto.password) {
+          updateUserDto.password = await bcrypt.hash(
+            updateUserDto.password,
+            10,
+          );
+        }
         this.logger.verbose(`User found ${JSON.stringify(user)}`);
-        const updatedUser = await this.userRepo.save({
-          ...user,
-          ...updateUserDto,
-        });
+        const updatedUser = await this.userRepo.merge(user, updateUserDto);
         this.logger.verbose(`User updated ${JSON.stringify(updatedUser)}`);
-        return updatedUser;
+        return await this.userRepo.save(updatedUser);
       }
       throw new NotFoundException(`User not found by id ${updateUserDto.id}`);
     } catch (error: Error | any) {
