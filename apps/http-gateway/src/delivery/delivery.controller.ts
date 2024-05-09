@@ -62,6 +62,6 @@ export class DeliveryController {
   }
   @Get(':id/file')
   findAllFile(@Param('id') id: string) {
-    return this.deliveryService.getAllFilesForDelivery({ deliveryId: id });
+    return this.deliveryService.getAllFilesForDelivery({ id });
   }
 }
