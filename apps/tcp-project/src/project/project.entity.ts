@@ -29,7 +29,7 @@ export class ProjectEntity extends BaseEntity implements Project.Project {
   startDate: Date;
 
   @Column({ name: 'end_date', nullable: true, type: 'date' })
-  endDate?: Date | null | undefined;
+  endDate?: Date | null;
 
   @Column({ name: 'project_value' })
   projectValue: number;
@@ -42,6 +42,14 @@ export class ProjectEntity extends BaseEntity implements Project.Project {
 
   @Column({ name: 'company_id' })
   companyId: string;
+
+  @Column({
+    name: 'status',
+    type: 'enum',
+    enum: Project.ProjectStatus,
+    default: Project.ProjectStatus.INACTIVE,
+  })
+  status: Project.ProjectStatus;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

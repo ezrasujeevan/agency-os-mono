@@ -3,6 +3,14 @@ import { ApiProperty } from '@nestjs/swagger';
 import { PartialType } from '@nestjs/mapped-types';
 import { HttpStatus } from '@nestjs/common';
 
+export enum ProjectStatus {
+  INACTIVE = 'inactive',
+  ACTIVE = 'active',
+  PENDING = 'pending',
+  BlOCKED = 'blocked',
+  COMPLETED = 'completed',
+  DROPPED = 'dropped',
+}
 export abstract class Project extends CommonEntity {
   @ApiProperty({
     description: 'this is the name of project ',
@@ -45,7 +53,7 @@ export abstract class Project extends CommonEntity {
     title: 'Start Date',
     required: false,
   })
-  endDate?: Date | null | undefined;
+  endDate?: Date | null;
 
   @ApiProperty({
     description: 'Value of the project (e.g., budget, revenue)',
@@ -74,6 +82,8 @@ export abstract class Project extends CommonEntity {
     title: 'Organization',
   })
   companyId: string;
+
+  status: ProjectStatus;
 }
 
 export const SERVICE_NAME = 'PROJECT_SERVICE';
@@ -102,7 +112,7 @@ export class CreateProjectRequestDto {
   name: string;
   opportunityDate: Date;
   startDate: Date;
-  endDate: Date;
+  endDate?: Date;
   projectValue: number;
   clientId: string;
   userId: string;
@@ -111,6 +121,7 @@ export class CreateProjectRequestDto {
 
 export class UpdateProjectRequestDto extends PartialType(CreateProjectRequestDto) {
   id: string;
+  status?: ProjectStatus;
 }
 
 export class FindOneProjectRequestByIdDto {
