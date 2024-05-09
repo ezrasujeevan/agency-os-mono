@@ -9,37 +9,60 @@ import {
     Paper,
     Typography
 } from '@mui/material'
-interface ProjectCardComponentProps {}
+import { Project } from '@agency-os/class'
+import moment from 'moment'
+import { ProjectStatus } from '~/resources/project-constans'
+interface ProjectCardComponentProps {
+    project: Project.Project
+}
 
-const ProjectCardComponent: React.FC<
-    ProjectCardComponentProps
-> = ({}: ProjectCardComponentProps) => {
+const ProjectCardComponent: React.FC<ProjectCardComponentProps> = ({
+    project
+}: ProjectCardComponentProps) => {
+    const { companyId, startDate, endDate, name, trialName, status } = project
+    const projectStatus: ProjectStatus = status
+    const statusColor = () => {
+        switch (projectStatus) {
+            case ProjectStatus.ACTIVE:
+                return 'success.main'
+            case ProjectStatus.INACTIVE:
+                return 'info.main'
+            case ProjectStatus.PENDING:
+                return 'warning.main'
+            case ProjectStatus.BlOCKED:
+                return 'error.main'
+            case ProjectStatus.DROPPED:
+                return 'secondary.main'
+            case ProjectStatus.COMPLETED:
+                return 'primary.main'
+        }
+    }
     return (
         <Grid>
             <Paper elevation={1} sx={{ p: 1 }}>
                 <Typography variant="h4" color={'primary'}>
-                    Project Name
+                    {name}
                 </Typography>
                 <Typography variant="h5" color={'secondary'}>
-                    Company Name
+                    {companyId}
                 </Typography>
-                <Typography variant="subtitle1">Project Trial Name</Typography>
+                <Typography variant="subtitle1">{trialName}</Typography>
 
                 <Paper>
                     <Grid display={'flex'} flexDirection={'row'}>
                         <Grid m={1}>
                             <Typography>Start Date:</Typography>
-                            <Typography>19/05/2024</Typography>
+                            <Typography>{moment(startDate).format('DD/MM/yy')}</Typography>
                         </Grid>
                         <Grid m={1}>
                             <Typography>End Date:</Typography>
-                            <Typography>19/05/2024</Typography>
+                            <Typography>{moment(endDate).format('DD/MM/yy')}</Typography>
                         </Grid>
                     </Grid>
                 </Paper>
 
-                <Typography variant="caption" sx={{ color: 'success.main' }}>
-                    STATUS
+                <Typography variant="caption" sx={{ color: statusColor }}>
+                    {status.toUpperCase()}
                 </Typography>
             </Paper>
         </Grid>
