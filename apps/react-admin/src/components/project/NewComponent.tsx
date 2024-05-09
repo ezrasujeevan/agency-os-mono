@@ -95,6 +95,7 @@ const NewProjectComponent: React.FC = ({ projectId }: NewProjectComponentProps) 
             projectValue &&
             opportunityDate &&
             startDate &&
+            endDate &&
             user &&
             client &&
             company
@@ -104,6 +105,7 @@ const NewProjectComponent: React.FC = ({ projectId }: NewProjectComponentProps) 
                     id: id
                 }
             } else {
+                //TODO : make end Date Optional
                 const newProject: Project.CreateProjectRequestDto = {
                     trialName,
                     name,
@@ -302,7 +304,7 @@ const NewProjectComponent: React.FC = ({ projectId }: NewProjectComponentProps) 
                     type="number"
                     value={projectValue}
                     onChange={(e) => {
-                        const value: number = parseFloat(e.target.value).toFixed(2)
+                        const value: number = parseFloat(parseFloat(e.target.value).toFixed(2))
                         setProjectValue(value)
                     }}
                     // sx={{ m: 1, width: '25ch' }}

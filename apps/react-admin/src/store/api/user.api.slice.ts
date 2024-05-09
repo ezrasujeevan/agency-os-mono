@@ -4,13 +4,13 @@ import { rootApiSlice } from './root.api.slice'
 export const userApiSlice = rootApiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getUserById: builder.query<User.UserResponseDto, User.FindOneUserByIdRequestDto>({
-            query: (id: User.FindOneUserByIdRequestDto) => ({
+            query: ({id}: User.FindOneUserByIdRequestDto) => ({
                 url: `user/${id}`,
                 method: 'GET'
             })
         }),
         getUserByEmail: builder.query<User.UserResponseDto, User.FindOneUserByEmailRequestDto>({
-            query: (email: User.FindOneUserByEmailRequestDto) => ({
+            query: ({email}: User.FindOneUserByEmailRequestDto) => ({
                 url: `user/${email}`,
                 method: 'GET'
             })

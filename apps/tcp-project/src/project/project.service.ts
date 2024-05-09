@@ -72,7 +72,8 @@ export class ProjectService {
       return { project, status: HttpStatus.OK };
     } else {
       return {
-        status: HttpStatus.NO_CONTENT,
+        status: HttpStatus.BAD_REQUEST,
+        error: 'incorrect Project ID',
       };
     }
   }

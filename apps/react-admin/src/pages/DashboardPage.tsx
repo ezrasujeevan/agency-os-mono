@@ -1,14 +1,24 @@
 import { Project } from '@agency-os/class'
-import { Unstable_Grid2 as Grid } from '@mui/material'
+import { Box, Unstable_Grid2 as Grid, } from '@mui/material'
 import React from 'react'
-import { ProjectComponent } from '~/components'
+import { ProjectCollection, DeliveryCollection } from '~/components'
 
 const DashboardPage: React.FC = () => {
     return (
-        <Grid>
+        <Box>
             <div>DashboardPage</div>
-            <ProjectComponent.NewProjectComponent />
-        </Grid>
+            <DeliveryCollection.TableComponent/>
+            {/* <ProjectCollection.NewComponent /> */}
+
+            {/* <DeliveryCollection.NewComponent /> */}
+            <Grid container>
+                {Array.from({ length: 10 }).map((_, index) => (
+                    <Grid xs={4} p={1} key={index}>
+                        <ProjectCollection.CardComponent key={index} />
+                    </Grid>
+                ))}
+            </Grid>
+        </Box>
     )
 }
 

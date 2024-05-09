@@ -6,8 +6,6 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards,
-  Req,
   Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
@@ -20,9 +18,6 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { User } from '@agency-os/class';
-import { Request } from 'express';
-import { Metadata } from '@grpc/grpc-js';
-
 @ApiTags('user')
 @Controller('user')
 @ApiBearerAuth()

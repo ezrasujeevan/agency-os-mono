@@ -1,3 +1,4 @@
-import NewProjectComponent from "./NewProjectComponent";
+import NewComponent from "./NewComponent";
+import CardComponent from "./CardComponent";
 
-export { NewProjectComponent }
+export { NewComponent,CardComponent }

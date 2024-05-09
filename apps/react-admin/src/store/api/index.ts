@@ -15,7 +15,7 @@ export {
     userApiSlice,
     projectApiSlice,
     assetApiSlice,
-    deliveryApiSlice,
+    deliveryApiSlice
 }
 
 export const {
@@ -59,5 +59,23 @@ export const {
     useGetAllProjectsByCompanyIdQuery,
     useGetAllProjectsByUserIdQuery
 } = projectApiSlice
+
+export const {
+    useCreateDeliveryMutation,
+    useDeleteDeliveryMutation,
+    useUpdateDeliveryMutation,
+    useGetAllDeliveriesQuery,
+    useGetAllDeliveryByProjectIdQuery,
+    useGetDeliveryByIdQuery
+} = deliveryApiSlice
+
+export const {
+    useCreateAssetMutation,
+    useDeleteAssetMutation,
+    useUpdateAssetMutation,
+    useGetAllAssetsOfDeliveryQuery,
+    useGetAllAssetsQuery,
+    useGetAssetByIdQuery
+} = assetApiSlice
 
 export const {} = rootApiSlice

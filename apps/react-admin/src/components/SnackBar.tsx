@@ -10,11 +10,11 @@ const SnackBar = () => {
         type
     } = useAppSelector((state: RootState) => state.snack)
 
-    const dispactch = useAppDispatch()
+    const dispatch = useAppDispatch()
 
     const closeSnackAlert = () => {
-        dispactch(setSnackClose())
-        dispactch(setSnackDefault())
+        dispatch(setSnackClose())
+        dispatch(setSnackDefault())
     }
     const Alertessage = () => {
         if (Array.isArray(message)) {

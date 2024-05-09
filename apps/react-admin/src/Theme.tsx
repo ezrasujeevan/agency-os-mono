@@ -6,7 +6,7 @@ const Theme = (paletteMode: PaletteMode): ThemeOptions => {
         palette: {
             mode: paletteMode,
             primary: deepPurple,
-            secondary: lime
+            secondary: lime,
         },
         components: {
             MuiLink: {
