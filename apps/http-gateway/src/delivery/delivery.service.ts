@@ -71,4 +71,26 @@ export class DeliveryService {
       >(Delivery.Message.delete, id),
     );
   }
+
+  async createNewDeliveryFile(
+    createDeliveryFileRequestDto: Delivery.createDeliveryFileRequestDto,
+  ): Promise<Delivery.DeliveryResponseDto> {
+    return await firstValueFrom(
+      this.deliveryService.send<
+        Delivery.DeliveryResponseDto,
+        Delivery.createDeliveryFileRequestDto
+      >(Delivery.Message.createFile, createDeliveryFileRequestDto),
+    );
+  }
+
+  async getAllFilesForDelivery(
+    id: Delivery.FindOneDeliveryRequestDto,
+  ): Promise<Delivery.DeliveryResponseDto> {
+    return await firstValueFrom(
+      this.deliveryService.send<
+        Delivery.DeliveryResponseDto,
+        Delivery.FindOneDeliveryRequestDto
+      >(Delivery.Message.getAllFiles, id),
+    );
+  }
 }

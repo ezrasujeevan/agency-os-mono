@@ -49,4 +49,19 @@ export class DeliveryController {
   remove(@Param('id') id: string) {
     return this.deliveryService.removeDelivery({ id });
   }
+
+  @Post(':id/file')
+  createFile(
+    @Param('id') id: string,
+    @Body() createDeliveryFileRequestDto: Delivery.createDeliveryFileRequestDto,
+  ) {
+    createDeliveryFileRequestDto.deliveryId = id;
+    return this.deliveryService.createNewDeliveryFile(
+      createDeliveryFileRequestDto,
+    );
+  }
+  @Get(':id/file')
+  findAllFile(@Param('id') id: string) {
+    return this.deliveryService.getAllFilesForDelivery({ deliveryId: id });
+  }
 }
