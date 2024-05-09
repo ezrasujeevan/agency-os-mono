@@ -1,20 +1,15 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeliveryEntity } from './delivery.entity';
 import { EntityNotFoundError, Repository } from 'typeorm';
 import { Delivery } from '@agency-os/class';
-
 @Injectable()
-export class DeliveryRepository implements OnModuleInit {
+export class DeliveryRepository {
   private logger: Logger = new Logger(DeliveryRepository.name);
   constructor(
     @InjectRepository(DeliveryEntity)
     private readonly deliveryRepo: Repository<DeliveryEntity>,
   ) {}
-
-  onModuleInit() {
-    console.log('DeliveryRepository has been initialized.');
-  }
 
   async create(
     createDeliveryRequestDto: Delivery.CreateDeliveryRequestDto,
@@ -32,7 +27,9 @@ export class DeliveryRepository implements OnModuleInit {
   async findOneById({
     id,
   }: Delivery.FindOneDeliveryRequestDto): Promise<DeliveryEntity | null> {
-    const delivery = await this.deliveryRepo.findOne({ where: { id } });
+    const delivery = await this.deliveryRepo.findOne({
+      where: { id },
+    });
     this.logger.verbose('Delivery found', delivery);
     return delivery;
   }

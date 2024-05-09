@@ -5,6 +5,12 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export const SERVICE_NAME = 'DELIVERY_SERVICE';
 
+export abstract class DeliveryFile extends CommonEntity {
+  delivery: Delivery;
+  fileVersion: string;
+  fileUrl: string;
+}
+
 export abstract class Delivery extends CommonEntity {
   @ApiProperty({
     description: 'The ID of the project',
@@ -35,20 +41,6 @@ export abstract class Delivery extends CommonEntity {
   description: string;
 
   @ApiProperty({
-    description: 'The version of the deliverable',
-    example: 1,
-    title: 'Deliverable Version',
-  })
-  deliverableVersion: number;
-
-  @ApiProperty({
-    description: 'The URL of the deliverable file',
-    example: 'https://example.com/file.pdf',
-    title: 'File URL',
-  })
-  fileUrl: string;
-
-  @ApiProperty({
     description: 'The tags associated with the deliverable',
     example: ['tag1', 'tag2'],
     title: 'Tags',
@@ -68,6 +60,8 @@ export abstract class Delivery extends CommonEntity {
     title: 'Created By',
   })
   createdBy: string;
+
+  deliveryFiles: DeliveryFile[];
 }
 
 export class CreateDeliveryRequestDto {
@@ -75,11 +69,15 @@ export class CreateDeliveryRequestDto {
   deliverableName: string;
   deliverableType: string;
   description: string;
-  deliverableVersion: number;
-  fileUrl: string;
   tags: string[];
   access: boolean;
   createdBy: string;
+}
+
+export class createDeliveryFileRequestDto {
+  deliveryId: string;
+  fileVersion: string;
+  fileUrl: string;
 }
 
 export class UpdateDeliveryRequestDto extends PartialType(CreateDeliveryRequestDto) {
@@ -101,6 +99,8 @@ export const Message = {
   findOne: 'FindOneDelivery',
   findAll: 'FindAllDelivery',
   findAllByProject: 'FindAllDeliveryByProject',
+  createFile: 'CreateDeliveryFile',
+  getAllFiles: 'getAllFilesForDelivery',
 };
 
 export type delivery = Delivery | Delivery[];

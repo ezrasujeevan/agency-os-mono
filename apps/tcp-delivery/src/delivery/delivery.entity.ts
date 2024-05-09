@@ -4,11 +4,13 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   VersionColumn,
 } from 'typeorm';
 import { Delivery } from '@agency-os/class';
+import { DeliveryFileEntity } from './delivery.file.entity';
 
 @Entity('delivery')
 export class DeliveryEntity extends BaseEntity implements Delivery.Delivery {
@@ -39,12 +41,6 @@ export class DeliveryEntity extends BaseEntity implements Delivery.Delivery {
   @Column('text', { name: 'description' })
   description: string;
 
-  @Column('varchar', { name: 'version' })
-  deliverableVersion: number;
-
-  @Column('text', { name: 'file_url', nullable: true })
-  fileUrl: string;
-
   @Column('simple-array', { name: 'tags' })
   tags: string[];
 
@@ -53,4 +49,11 @@ export class DeliveryEntity extends BaseEntity implements Delivery.Delivery {
 
   @Column('uuid', { name: 'created_by' })
   createdBy: string;
+
+  @OneToMany(
+    () => DeliveryFileEntity,
+    (deliveryFile) => deliveryFile.delivery,
+    { eager: true },
+  )
+  deliveryFiles: Delivery.DeliveryFile[];
 }

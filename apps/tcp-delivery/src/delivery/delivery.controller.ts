@@ -18,7 +18,7 @@ export class DeliveryController {
   findAll() {
     return this.deliveryService.findAllDelivery();
   }
-  
+
   @MessagePattern(Delivery.Message.findAllByProject)
   findAllByProject(
     @Payload()
@@ -48,5 +48,24 @@ export class DeliveryController {
     @Payload() findOneDeliveryRequestDto: Delivery.FindOneDeliveryRequestDto,
   ) {
     return this.deliveryService.removeDelivery(findOneDeliveryRequestDto);
+  }
+
+  @MessagePattern(Delivery.Message.createFile)
+  createFile(
+    @Payload()
+    createDeliveryFileRequestDto: Delivery.createDeliveryFileRequestDto,
+  ) {
+    return this.deliveryService.createNewDeliveryFile(
+      createDeliveryFileRequestDto,
+    );
+  }
+
+  @MessagePattern(Delivery.Message.getAllFiles)
+  getAllFiles(
+    @Payload() findOneDeliveryRequestDto: Delivery.FindOneDeliveryRequestDto,
+  ) {
+    return this.deliveryService.getAllFilesForDelivery(
+      findOneDeliveryRequestDto,
+    );
   }
 }

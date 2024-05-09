@@ -4,11 +4,14 @@ import { DeliveryRepository } from './delivery.repository';
 import { DeliveryEntity } from './delivery.entity';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
+import { DeliveryFileRepository } from './delivery.file.repository';
+import { DeliveryFileEntity } from './delivery.file.entity';
 
 @Injectable()
 export class DeliveryService {
   constructor(
     private readonly deliveryRepo: DeliveryRepository,
+    private readonly fileRepo: DeliveryFileRepository,
     @Inject(Project.SERVICE_NAME) private readonly projectClient: ClientProxy,
   ) {}
   async createDelivery(
@@ -37,6 +40,9 @@ export class DeliveryService {
   async findAllDelivery(): Promise<Delivery.DeliveryResponseDto> {
     const delivery = await this.deliveryRepo.findAll();
     if (delivery) {
+      for (const del of delivery) {
+        del.deliveryFiles = await this.getLatestDeliveryFile(del.id);
+      }
       return {
         status: HttpStatus.OK,
         delivery,
@@ -60,7 +66,11 @@ export class DeliveryService {
     const delivery = await this.deliveryRepo.findAllByProject({
       projectId,
     });
+
     if (delivery) {
+      for (const del of delivery) {
+        del.deliveryFiles = await this.getLatestDeliveryFile(del.id);
+      }
       return {
         status: HttpStatus.OK,
         delivery,
@@ -77,6 +87,7 @@ export class DeliveryService {
   }: Delivery.FindOneDeliveryRequestDto): Promise<Delivery.DeliveryResponseDto> {
     const delivery = await this.deliveryRepo.findOneById({ id });
     if (delivery) {
+      delivery.deliveryFiles = await this.getLatestDeliveryFile(delivery.id);
       return {
         status: HttpStatus.OK,
         delivery,
@@ -103,6 +114,7 @@ export class DeliveryService {
     }
     const delivery = await this.deliveryRepo.update(updateDeliveryRequestDto);
     if (delivery instanceof DeliveryEntity) {
+      delivery.deliveryFiles = await this.getLatestDeliveryFile(delivery.id);
       return {
         status: HttpStatus.OK,
         delivery,
@@ -130,6 +142,47 @@ export class DeliveryService {
         error: delivery.name + ' - ' + delivery.message,
       };
     }
+  }
+
+  async getAllFilesForDelivery({
+    id,
+  }: Delivery.FindOneDeliveryRequestDto): Promise<Delivery.DeliveryResponseDto> {
+    const delivery = await this.deliveryRepo.findOneById({ id });
+    if (delivery) {
+      const files = await this.fileRepo.getAllFilesForDelivery({ id });
+      delivery.deliveryFiles = files;
+      return {
+        status: HttpStatus.OK,
+        delivery,
+      };
+    }
+    return {
+      status: HttpStatus.BAD_REQUEST,
+      error: 'No Delivery with Id: ' + id,
+    };
+  }
+
+  async createNewDeliveryFile(create: Delivery.createDeliveryFileRequestDto) {
+    const file = await this.fileRepo.createFile(create);
+    if (file instanceof DeliveryFileEntity) {
+      return {
+        status: HttpStatus.CREATED,
+      };
+    } else {
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        error: file.name + ' - ' + file.message,
+      };
+    }
+  }
+  private async getLatestDeliveryFile(
+    deliveryId: string,
+  ): Promise<DeliveryFileEntity[]> {
+    const deliveryFiles = await this.fileRepo.getLatestFileForDelivery({
+      id: deliveryId,
+    });
+    if (deliveryFiles) return [deliveryFiles];
+    return [];
   }
 
   private async checkProject(projectId: string): Promise<boolean> {
