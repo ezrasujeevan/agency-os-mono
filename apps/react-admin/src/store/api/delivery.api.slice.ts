@@ -3,20 +3,23 @@ import { rootApiSlice } from './root.api.slice'
 
 export const deliveryApiSlice = rootApiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        getAllDeliveries: builder.query<Delivery.DeliveryResponse, void>({
-            query: () => ({
-                url: `delivery`,
-                method: 'GET'
-            })
-        }),
         getAllDeliveryByProjectId: builder.query<
             Delivery.DeliveryResponse,
-            Delivery.FindAllDeliveryByProjectRequestDto
+            Delivery.FindAllDeliveryByProjectRequestDto | void
         >({
-            query: ({ projectId }: Delivery.FindAllDeliveryByProjectRequestDto) => ({
-                url: `delivery?project=${projectId}`,
-                method: 'GET'
-            })
+            query: ({ projectId }: Delivery.FindAllDeliveryByProjectRequestDto) => {
+                if (projectId) {
+                    return {
+                        url: `delivery?project=${projectId}`,
+                        method: 'GET'
+                    }
+                } else {
+                    return {
+                        url: `delivery`,
+                        method: 'GET'
+                    }
+                }
+            }
         }),
         getDeliveryById: builder.query<
             Delivery.DeliveryResponse,
@@ -47,7 +50,10 @@ export const deliveryApiSlice = rootApiSlice.injectEndpoints({
                 body: data
             })
         }),
-        deleteDelivery: builder.mutation<Delivery.DeliveryResponse, Delivery.FindOneDeliveryRequestDto>({
+        deleteDelivery: builder.mutation<
+            Delivery.DeliveryResponse,
+            Delivery.FindOneDeliveryRequestDto
+        >({
             query: ({ id }: Delivery.FindOneDeliveryRequestDto) => ({
                 url: `delivery/${id}`,
                 method: 'DELETE'

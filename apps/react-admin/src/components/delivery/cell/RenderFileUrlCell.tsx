@@ -9,8 +9,9 @@ const DeliveryRenderFileUrlCell: React.FC<
     const handleOnClick = () => {
         window.open(row.deliveryFiles[0].fileUrl)
     }
+    const disabled = row.deliveryFiles.length === 0
     return (
-        <Button variant="outlined" color="primary" onClick={handleOnClick}>
+        <Button variant="outlined" color="primary" onClick={handleOnClick} disabled={disabled}>
             Open File Url
         </Button>
     )

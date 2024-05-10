@@ -7,11 +7,13 @@ import {
     InputAdornment,
     TextField,
     Paper,
-    Typography
+    Typography,
+    Skeleton
 } from '@mui/material'
-import { Project } from '@agency-os/class'
+import { Company, Project } from '@agency-os/class'
 import moment from 'moment'
 import { ProjectStatus } from '~/resources/project-constans'
+import { useGetCompanyByIdQuery } from '~/store/api'
 interface ProjectCardComponentProps {
     project: Project.Project
 }
@@ -20,9 +22,25 @@ const ProjectCardComponent: React.FC<ProjectCardComponentProps> = ({
     project
 }: ProjectCardComponentProps) => {
     const { companyId, startDate, endDate, name, trialName, status } = project
-    const projectStatus: ProjectStatus = status
+    const {
+        data: companyRes,
+        isFetching: isFetchingCompany,
+        isSuccess: isSuccessCompany,
+        isError: isErrorCompany
+    } = useGetCompanyByIdQuery({ id: companyId })
+
+    const [company, setCompany] = useState<Company.Company>()
+    useEffect(() => {
+        if (isSuccessCompany) {
+            const { status, company }: Company.companyResponseDto = companyRes
+            if (status === 200 && company ) {
+                setCompany(company)
+            }
+        }
+    }, [companyRes])
+
     const statusColor = () => {
-        switch (projectStatus) {
+        switch (status) {
             case ProjectStatus.ACTIVE:
                 return 'success.main'
             case ProjectStatus.INACTIVE:
@@ -40,11 +58,11 @@ const ProjectCardComponent: React.FC<ProjectCardComponentProps> = ({
     return (
         <Grid>
             <Paper elevation={1} sx={{ p: 1 }}>
-                <Typography variant="h4" color={'primary'}>
+                <Typography variant="h5" color={'primary'}>
                     {name}
                 </Typography>
-                <Typography variant="h5" color={'secondary'}>
-                    {companyId}
+                <Typography variant="h6" color={'secondary'}>
+                    {isFetchingCompany ? <Skeleton /> : company?.name}
                 </Typography>
                 <Typography variant="subtitle1">{trialName}</Typography>
 

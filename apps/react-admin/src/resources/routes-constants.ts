@@ -9,7 +9,6 @@ export const ROUTES = {
     PROJECT_PAGE: '/project/:projectId',
     PROJECT_EDIT_PAGE: '/project/:projectId/edit',
 
-    DELIVERY_BASE_PATH: '/delivery',
     DELIVERY_PAGE: '/project/:projectId/delivery/:deliveryId',
     DELIVERY_NEW_PAGE: '/project/:projectId/delivery',
     DELIVERY_EDIT_PAGE: '/project/:projectId/delivery/:deliveryId/edit',

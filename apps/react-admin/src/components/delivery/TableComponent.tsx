@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Unstable_Grid2 as Grid } from '@mui/material'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import {
@@ -10,6 +10,7 @@ import {
 
 import { dummyDelivery } from './dummy'
 import { Delivery } from '@agency-os/class'
+import { useGetAllDeliveryByProjectIdQuery } from '~/store/api'
 
 const deliveryColumns: GridColDef<Delivery.Delivery>[] = [
     { field: 'deliverableName', headerName: 'Name' },
@@ -18,10 +19,7 @@ const deliveryColumns: GridColDef<Delivery.Delivery>[] = [
     {
         field: 'deliveryFilesVersion',
         headerName: 'Version',
-        valueGetter: (value, { deliveryFiles }) => deliveryFiles[0].fileVersion,
-        valueFormatter: (value) => {
-            ;`V ${value}`
-        }
+        valueGetter: (value, { deliveryFiles }) => deliveryFiles.length>0 ? deliveryFiles[0].version : 'N/A',
     },
     {
         field: 'deliveryFilesUrl',
@@ -45,21 +43,33 @@ const deliveryColumns: GridColDef<Delivery.Delivery>[] = [
     }
 ]
 
-interface DeliveryTableComponentProps {}
+interface DeliveryTableComponentProps {
+    projectId: string
+}
 
-const DeliveryTableComponent: React.FC<
-    DeliveryTableComponentProps
-> = ({}: DeliveryTableComponentProps) => {
-    const dummy = dummyDelivery
-    console.log(dummy)
+const DeliveryTableComponent: React.FC<DeliveryTableComponentProps> = ({
+    projectId
+}: DeliveryTableComponentProps) => {
+    const [rows, setRows] = React.useState<Delivery.Delivery[]>([])
+    const { data, isSuccess, isFetching } = useGetAllDeliveryByProjectIdQuery({projectId})
+    React.useEffect(() => {
+        if (isSuccess) {
+            const { status, delivery }: Delivery.DeliveryResponse = data
+            if (status === 200 && delivery && Array.isArray(delivery)) {
+                setRows(delivery)
+            }
+        }
+    }, [data])
+
     return (
         <Grid container>
             <Grid xs={12}>
                 <DataGrid
                     columns={deliveryColumns}
-                    rows={dummyDelivery}
+                    rows={rows}
                     initialState={{ pagination: { paginationModel: { page: 0, pageSize: 5 } } }}
                     pageSizeOptions={[5]}
+                    loading={isFetching}
                 />
             </Grid>
         </Grid>
