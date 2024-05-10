@@ -5,6 +5,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 
 interface TcpModuleOptions {
   name: string;
+  global?: boolean;
 }
 
 @Module({
@@ -13,9 +14,11 @@ interface TcpModuleOptions {
 })
 export class TcpModule {
   private static readonly logger = new Logger(TcpModule.name);
-  static register({ name }: TcpModuleOptions): DynamicModule {
-    this.logger.log(`Registering TCP Module for ${name}`);
+  static register({ name, global }: TcpModuleOptions): DynamicModule {
+    global = global || false;
+    this.logger.log(`Registering TCP Module for ${name} isGlobal: ${global}`);
     return {
+      global,
       module: TcpModule,
       exports: [ClientsModule],
       imports: [
