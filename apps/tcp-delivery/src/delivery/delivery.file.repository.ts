@@ -1,8 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeliveryFileEntity } from './delivery.file.entity';
+
 import { Repository } from 'typeorm';
 import { Delivery } from '@agency-os/class';
+import { DeliveryFileEntity } from './delivery.entity';
 
 @Injectable()
 export class DeliveryFileRepository {
