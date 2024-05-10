@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DeliveryFileEntity } from './delivery.file.entity';
 import { Repository } from 'typeorm';
 import { Delivery } from '@agency-os/class';
-import { log } from 'console';
 
 @Injectable()
 export class DeliveryFileRepository {
@@ -33,7 +32,7 @@ export class DeliveryFileRepository {
       where: { delivery: { id } },
       order: { createdAt: 'DESC' },
     });
-    log(`files found: ${JSON.stringify(file)}`);
+    this.logger.verbose(`files found: ${JSON.stringify(file)}`);
     return file;
   }
 
@@ -44,7 +43,7 @@ export class DeliveryFileRepository {
       where: { delivery: { id } },
       order: { createdAt: 'DESC' },
     });
-    log(`latest file found: ${JSON.stringify(file)}`);
+    this.logger.verbose(`latest file found: ${JSON.stringify(file)}`);
     return file;
   }
 }
