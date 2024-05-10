@@ -42,7 +42,7 @@ export class AssetRepository {
     return assets;
   }
 
-  async findOneAsset({
+  async findOneById({
     id,
   }: Asset.FindOneAssetRequestDto): Promise<AssetEntity | null> {
     const asset = await this.assetRepo.findOne({ where: { id } });

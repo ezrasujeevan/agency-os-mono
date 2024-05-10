@@ -3,7 +3,8 @@ import { Asset, Delivery, User } from '@agency-os/class';
 import { ClientTCP } from '@nestjs/microservices';
 import { AssetRepository } from './asset.repository';
 import { firstValueFrom } from 'rxjs';
-import { AssetEntity } from './asset.entity';
+import { AssetEntity, AssetFileEntity } from './asset.entity';
+import { AssetFileRepository } from './asset.file.repository';
 
 @Injectable()
 export class AssetService {
@@ -11,6 +12,7 @@ export class AssetService {
     @Inject(User.SERVICE_NAME) private readonly userService: ClientTCP,
     @Inject(Delivery.SERVICE_NAME) private readonly deliveryService: ClientTCP,
     private assetRepo: AssetRepository,
+    private fileRepo: AssetFileRepository,
   ) {}
 
   async createAsset(
@@ -47,6 +49,7 @@ export class AssetService {
     const assets = await this.assetRepo.findAllAssets();
     if (
       Array.isArray(assets) &&
+      assets.length > 0 &&
       assets.every((a) => a instanceof AssetEntity)
     ) {
       return {
@@ -72,8 +75,12 @@ export class AssetService {
     });
     if (
       Array.isArray(assets) &&
+      assets.length > 0 &&
       assets.every((a) => a instanceof AssetEntity)
     ) {
+      for (const asset of assets) {
+        asset.assetFile = await this.getLatestAssetFile({ id: asset.id });
+      }
       return {
         status: HttpStatus.OK,
         asset: assets,
@@ -86,11 +93,12 @@ export class AssetService {
     }
   }
 
-  async findOneAsset({
-    id,
-  }: Asset.FindOneAssetRequestDto): Promise<Asset.AssetResponseDto> {
-    const asset = await this.assetRepo.findOneAsset({ id });
+  async findOneAsset(
+    id: Asset.FindOneAssetRequestDto,
+  ): Promise<Asset.AssetResponseDto> {
+    const asset = await this.assetRepo.findOneById(id);
     if (asset instanceof AssetEntity) {
+      asset.assetFile = await this.getLatestAssetFile(id);
       return {
         status: HttpStatus.OK,
         asset,
@@ -129,6 +137,7 @@ export class AssetService {
         error: asset.message,
       };
     } else if (asset instanceof AssetEntity) {
+      asset.assetFile = await this.getLatestAssetFile({ id: asset.id });
       return {
         status: HttpStatus.OK,
         asset,
@@ -153,6 +162,45 @@ export class AssetService {
       };
     }
     return { status: HttpStatus.CONFLICT };
+  }
+
+  async getAllFilesForAsset(
+    id: Asset.FindOneAssetRequestDto,
+  ): Promise<Asset.AssetResponseDto> {
+    const asset = await this.assetRepo.findOneById(id);
+    if (asset) {
+      const files = await this.fileRepo.getAllFilesForAsset(id);
+      asset.assetFile = files;
+      return {
+        status: HttpStatus.OK,
+        asset,
+      };
+    }
+    return {
+      status: HttpStatus.BAD_REQUEST,
+      error: 'No Asset with Id: ' + id,
+    };
+  }
+
+  async createNewAssetFile(create: Asset.createAssetFileRequestDto) {
+    const file = await this.fileRepo.createFile(create);
+    if (file instanceof AssetFileEntity) {
+      return {
+        status: HttpStatus.CREATED,
+      };
+    } else {
+      return {
+        status: HttpStatus.BAD_REQUEST,
+        error: file.name + ' - ' + file.message,
+      };
+    }
+  }
+  private async getLatestAssetFile(
+    id: Asset.FindOneAssetRequestDto,
+  ): Promise<AssetFileEntity[]> {
+    const assetFiles = await this.fileRepo.getLatestFileForAsset(id);
+    if (assetFiles) return [assetFiles];
+    return [];
   }
 
   private async isValidUser(id: string): Promise<boolean> {

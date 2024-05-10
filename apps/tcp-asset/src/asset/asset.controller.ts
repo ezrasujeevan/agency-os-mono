@@ -41,4 +41,14 @@ export class AssetController {
   delete(@Payload() id: Asset.FindOneAssetRequestDto) {
     return this.assetService.removeAsset(id);
   }
+
+  @MessagePattern(Asset.Message.createFile)
+  createFile(@Payload() create: Asset.createAssetFileRequestDto) {
+    return this.assetService.createNewAssetFile(create);
+  }
+
+  @MessagePattern(Asset.Message.getAllFiles)
+  getAllFiles(@Payload() id: Asset.FindOneAssetRequestDto) {
+    return this.assetService.getAllFilesForAsset(id);
+  }
 }
