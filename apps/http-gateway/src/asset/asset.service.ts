@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Asset } from '@agency-os/class';
 import { ClientTCP } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
+import { getAsset } from 'node:sea';
 
 @Injectable()
 export class AssetService {
@@ -70,6 +71,28 @@ export class AssetService {
         Asset.AssetResponseDto,
         Asset.FindOneAssetRequestDto
       >(Asset.Message.delete, id),
+    );
+  }
+
+  async createNewAssetFile(
+    createAssetFileRequestDto: Asset.createAssetFileRequestDto,
+  ): Promise<Asset.AssetResponseDto> {
+    return await firstValueFrom(
+      this.assetService.send<
+        Asset.AssetResponseDto,
+        Asset.createAssetFileRequestDto
+      >(Asset.Message.createFile, createAssetFileRequestDto),
+    );
+  }
+
+  async getAllFilesForAsset(
+    id: Asset.FindOneAssetRequestDto,
+  ): Promise<Asset.AssetResponseDto> {
+    return await firstValueFrom(
+      this.assetService.send<
+        Asset.AssetResponseDto,
+        Asset.FindOneAssetRequestDto
+      >(Asset.Message.getAllFiles, id),
     );
   }
 }

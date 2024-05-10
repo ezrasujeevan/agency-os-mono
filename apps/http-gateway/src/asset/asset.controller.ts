@@ -54,4 +54,17 @@ export class AssetController {
   remove(@Param('id') id: string) {
     return this.assetService.removeAsset({ id });
   }
+
+  @Post(':id/file')
+  createFile(
+    @Param('id') id: string,
+    @Body() create: Asset.createAssetFileRequestDto,
+  ) {
+    create.assetId = id;
+    return this.assetService.createNewAssetFile(create);
+  }
+  @Get(':id/file')
+  findAllFile(@Param('id') id: string) {
+    return this.assetService.getAllFilesForAsset({ id });
+  }
 }
