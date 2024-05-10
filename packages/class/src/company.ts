@@ -1,10 +1,9 @@
-import { ClientProto } from '@agency-os/proto';
-import { CommonEntity } from '@agency-os/common';
 import { PartialType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsString, MinLength, IsOptional } from 'class-validator';
 import { HttpStatus } from '@nestjs/common';
+import { CommonEntity } from './common.entity';
 
 export abstract class Company extends CommonEntity {
   @ApiProperty({

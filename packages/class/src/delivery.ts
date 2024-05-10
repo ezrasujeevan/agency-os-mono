@@ -1,9 +1,26 @@
-import { CommonEntity } from '@agency-os/common';
 import { HttpStatus } from '@nestjs/common';
 import { PartialType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
+import { CommonEntity } from './common.entity';
 
 export const SERVICE_NAME = 'DELIVERY_SERVICE';
+export const Message = {
+  create: 'CreateDelivery',
+  update: 'UpdateDelivery',
+  delete: 'DeleteDelivery',
+  findOne: 'FindOneDelivery',
+  findAll: 'FindAllDelivery',
+  findAllByProject: 'FindAllDeliveryByProject',
+  createFile: 'CreateDeliveryFile',
+  getAllFiles: 'getAllFilesForDelivery',
+};
+
+export type delivery = Delivery | Delivery[];
+export interface DeliveryResponseDto {
+  status: HttpStatus;
+  error?: string | string[];
+  delivery?: delivery;
+}
 
 export abstract class DeliveryFile extends CommonEntity {
   delivery: Delivery;
@@ -90,22 +107,4 @@ export class FindOneDeliveryRequestDto {
 
 export class FindAllDeliveryByProjectRequestDto {
   projectId: string;
-}
-
-export const Message = {
-  create: 'CreateDelivery',
-  update: 'UpdateDelivery',
-  delete: 'DeleteDelivery',
-  findOne: 'FindOneDelivery',
-  findAll: 'FindAllDelivery',
-  findAllByProject: 'FindAllDeliveryByProject',
-  createFile: 'CreateDeliveryFile',
-  getAllFiles: 'getAllFilesForDelivery',
-};
-
-export type delivery = Delivery | Delivery[];
-export interface DeliveryResponseDto {
-  status: HttpStatus;
-  error?: string | string[];
-  delivery?: delivery;
 }

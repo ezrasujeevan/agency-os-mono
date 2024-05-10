@@ -2,8 +2,8 @@ import { PartialType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Type } from 'class-transformer';
 import { IsEmail, IsNumber, IsOptional, IsString, MinLength } from 'class-validator';
-import { CommonEntity } from '@agency-os/common';
 import { HttpStatus } from '@nestjs/common';
+import { CommonEntity } from './common.entity';
 
 export abstract class User extends CommonEntity {
   @ApiProperty({

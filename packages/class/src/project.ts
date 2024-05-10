@@ -1,7 +1,7 @@
-import { CommonEntity } from '@agency-os/common';
 import { ApiProperty } from '@nestjs/swagger';
 import { PartialType } from '@nestjs/mapped-types';
 import { HttpStatus } from '@nestjs/common';
+import { CommonEntity } from './common.entity';
 
 export enum ProjectStatus {
   INACTIVE = 'inactive',

@@ -17,10 +17,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "@agency-os/proto": "workspace:^",
-    "@agency-os/common": "workspace:^"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.2.0",

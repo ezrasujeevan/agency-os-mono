@@ -1,8 +1,13 @@
-import { CommonEntity } from '@agency-os/common';
 import { ApiProperty } from '@nestjs/swagger';
 import { PartialType } from '@nestjs/mapped-types';
 import { HttpStatus } from '@nestjs/common';
+import { CommonEntity } from './common.entity';
 
+export abstract class AssetFile extends CommonEntity {
+  asset: Asset;
+  fileVersion: string;
+  fileUrl: string;
+}
 export abstract class Asset extends CommonEntity {
   @ApiProperty({
     description: 'The ID of the delivery',
@@ -33,13 +38,6 @@ export abstract class Asset extends CommonEntity {
   description: string;
 
   @ApiProperty({
-    description: 'The URL of the asset',
-    example: 'https://www.google.com',
-    title: 'File URL',
-  })
-  fileURL: string;
-
-  @ApiProperty({
     description: 'IF accessible by Client',
     example: 'true',
     title: 'Access',
@@ -52,6 +50,8 @@ export abstract class Asset extends CommonEntity {
     title: 'Created By',
   })
   createdBy: string;
+
+  assetFile: AssetFile[];
 }
 
 export const SERVICE_NAME = 'ASSET_SERVICE';
@@ -62,6 +62,8 @@ export const Message = {
   findAll: 'findAllAssets',
   findAllByDelivery: 'findAllAssetsByDelivery',
   findOne: 'findOneAsset',
+  createFile: 'createAssetFile',
+  getAllFiles: 'getAllAssetFiles',
 };
 
 export type asset = Asset | Asset[];
@@ -100,13 +102,6 @@ export class CreateAssetRequestDto {
     title: 'Description',
   })
   description: string;
-
-  @ApiProperty({
-    description: 'The URL of the asset',
-    example: 'https://www.google.com',
-    title: 'File URL',
-  })
-  fileURL: string;
 
   @ApiProperty({
     description: 'IF accessible by Client',
