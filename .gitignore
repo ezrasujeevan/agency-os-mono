@@ -128,7 +128,7 @@ dist
 node_modules
 /.idea
 /.fleet
-/.vscode
+
 dist
 /build
 /coverage
@@ -182,3 +182,8 @@ out
 .npm/
 .profile
 .rustup/
+dummy.client.json
+dummy.company.json
+dummy.project.json
+dummy.user.json
+pnpm-lock.yaml
