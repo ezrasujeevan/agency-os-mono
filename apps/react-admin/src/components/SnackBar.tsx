@@ -3,7 +3,7 @@ import React from 'react'
 import { RootState, useAppDispatch, useAppSelector } from '~/store'
 import { setSnackClose, setSnackDefault } from '~/store/reducers'
 
-const SnackBar = () => {
+const SnackBar:React.FC = () => {
     const {
         content: { title, message },
         open,
