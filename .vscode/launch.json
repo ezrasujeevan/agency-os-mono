@@ -1,0 +1,49 @@
+{
+  "configurations": [
+  {
+    "type": "vscode-edge-devtools.debug",
+    "request": "launch",
+    "name": "Launch Microsoft Edge and open the Edge DevTools",
+    "url": "http://localhost:8080",
+    "webRoot": "${workspaceFolder}"
+  },
+
+    {
+      "type": "node-terminal",
+      "name": "React -admin",
+      "request": "launch",
+      "command": "nx run @agency-os/react-admin:start",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "preLaunchTask": "nx:http-gateway:build",
+      "type": "node-terminal",
+      "name": "Api Gateway",
+      "request": "launch",
+      "command": "pnpm http start:dev",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "preLaunchTask": "nx:grpc-user:build",
+      "type": "node-terminal",
+      "name": "Grpc User",
+      "request": "launch",
+      "command": "pnpm grpc:user start:dev",
+      "cwd": "${workspaceFolder}"
+    }
+    {
+      "preLaunchTask": "nx:grpc-client:build",
+      "type": "node-terminal",
+      "name": "Grpc Client",
+      "request": "launch",
+      "command": "pnpm grpc:client start:dev",
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "node-terminal",
+      "name":"tcp-client",
+      "command": "pnpm tcp:client start:dev",
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}

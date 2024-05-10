@@ -1,14 +1,10 @@
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
-import { UserProto } from '@agency-os/proto';
-import { ClientGrpc, ClientProxy } from '@nestjs/microservices';
+import { Inject, Injectable } from '@nestjs/common';
+import { ClientTCP } from '@nestjs/microservices';
 import { User } from '@agency-os/class';
 import { firstValueFrom } from 'rxjs';
-import { Metadata } from '@grpc/grpc-js';
-import { FindOneClientByEmailRequestDto } from '@agency-os/class/dist/client';
 @Injectable()
 export class UserService {
-  private userService: UserProto.UserServiceClient;
-  constructor(@Inject(User.SERVICE_NAME) private userClient: ClientProxy) {}
+  constructor(@Inject(User.SERVICE_NAME) private userClient: ClientTCP) {}
 
   async create(createUserDto: User.CreateUserRequestDto) {
     return await firstValueFrom(

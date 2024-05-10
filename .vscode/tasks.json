@@ -1,0 +1,94 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "strart-all",
+      "type": "shell",
+      "command": "echo starting all",
+      "problemMatcher": [],
+      "dependsOn": [
+        "nx:http-gateway:start",
+        "nx:tcp-user:start",
+        "nx:tcp-client:start",
+        "nx:tcp-company:start",
+        "nx:tcp-project:start",
+        "nx:tcp-deliverystart",
+        "nx:tcp-asset:start",
+        "nx:react-admin:start"
+      ],
+      "dependsOrder": "parallel"
+    },
+    {
+      "type": "nx",
+      "project": "",
+      "command": "run",
+      "positional": "@agency-os/http-gateway:start",
+      "flags": [],
+      "problemMatcher": [],
+      "label": "nx:http-gateway:start"
+    },
+    {
+      "type": "nx",
+      "project": "",
+      "command": "run",
+      "positional": "@agency-os/tcp-user:start",
+      "flags": [],
+      "problemMatcher": [],
+      "label": "nx:tcp-user:start"
+    },
+    {
+      "type": "nx",
+      "project": "",
+      "command": "run",
+      "positional": "@agency-os/tcp-client:start",
+      "flags": [],
+      "problemMatcher": [],
+      "label": "nx:tcp-client:start"
+    },
+    {
+      "type": "nx",
+      "project": "",
+      "command": "run",
+      "positional": "@agency-os/tcp-company:start",
+      "flags": [],
+      "problemMatcher": [],
+      "label": "nx:tcp-company:start"
+    },
+    {
+      "type": "nx",
+      "project": "",
+      "command": "run",
+      "positional": "@agency-os/tcp-project:start",
+      "flags": [],
+      "problemMatcher": [],
+      "label": "nx:tcp-project:start"
+    },
+    {
+      "type": "nx",
+      "project": "",
+      "command": "run",
+      "positional": "@agency-os/tcp-delivery:start",
+      "flags": [],
+      "problemMatcher": [],
+      "label": "nx:tcp-deliverystart"
+    },
+    {
+      "type": "nx",
+      "project": "",
+      "command": "run",
+      "positional": "@agency-os/tcp-asset:start",
+      "flags": [],
+      "problemMatcher": [],
+      "label": "nx:tcp-asset:start"
+    },
+    {
+      "type": "nx",
+      "project": "",
+      "command": "run",
+      "positional": "@agency-os/react-admin:start:dev",
+      "flags": [],
+      "problemMatcher": [],
+      "label": "nx:react-admin:start"
+    }
+  ]
+}

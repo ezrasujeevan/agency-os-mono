@@ -31,7 +31,7 @@ export class ProjectEntity extends BaseEntity implements Project.Project {
   @Column({ name: 'end_date', nullable: true, type: 'date' })
   endDate?: Date | null;
 
-  @Column({ name: 'project_value' })
+  @Column('double precision', { name: 'project_value' })
   projectValue: number;
 
   @Column({ name: 'client_id' })
