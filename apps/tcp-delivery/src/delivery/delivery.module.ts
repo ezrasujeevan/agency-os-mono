@@ -2,10 +2,9 @@ import { Module } from '@nestjs/common';
 import { DeliveryService } from './delivery.service';
 import { DeliveryController } from './delivery.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { DeliveryEntity } from './delivery.entity';
+import { DeliveryEntity, DeliveryFileEntity } from './delivery.entity';
 import { DeliveryRepository } from './delivery.repository';
 import { TcpModule } from '@agency-os/tcp-service';
-import { DeliveryFileEntity } from './delivery.file.entity';
 import { DeliveryFileRepository } from './delivery.file.repository';
 import { Project } from '@agency-os/class';
 

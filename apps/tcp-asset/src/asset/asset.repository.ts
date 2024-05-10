@@ -54,7 +54,7 @@ export class AssetRepository {
     updateAssetDto: Asset.UpdateAssetRequestDto,
   ): Promise<AssetEntity | Error> {
     try {
-      const asset = await this.findOneAsset({ id: updateAssetDto.id });
+      const asset = await this.findOneById({ id: updateAssetDto.id });
       if (asset) {
         this.logger.verbose(`Asset Found: ${JSON.stringify(asset)}`);
         const updateAsset = await this.assetRepo.merge(asset, updateAssetDto);
@@ -74,7 +74,7 @@ export class AssetRepository {
     id,
   }: Asset.FindOneAssetRequestDto): Promise<AssetEntity | Error> {
     try {
-      const user = await this.findOneAsset({ id });
+      const user = await this.findOneById({ id });
       if (user) {
         this.logger.verbose(`Asset Found: ${JSON.stringify(user)}`);
         return await this.assetRepo.softRemove(user);

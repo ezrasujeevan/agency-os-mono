@@ -1,11 +1,10 @@
 import { Delivery, Project } from '@agency-os/class';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { DeliveryRepository } from './delivery.repository';
-import { DeliveryEntity } from './delivery.entity';
+import { DeliveryEntity, DeliveryFileEntity } from './delivery.entity';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { DeliveryFileRepository } from './delivery.file.repository';
-import { DeliveryFileEntity } from './delivery.file.entity';
 
 @Injectable()
 export class DeliveryService {
@@ -171,7 +170,7 @@ export class DeliveryService {
     } else {
       return {
         status: HttpStatus.BAD_REQUEST,
-        error: file.name + ' - ' + file.message,
+        error: file,
       };
     }
   }
