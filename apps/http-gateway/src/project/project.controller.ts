@@ -58,7 +58,7 @@ export class ProjectController {
     throw new BadRequestException('need at least one query of id or trialName');
   }
 
-  @Get('id')
+  @Get(':id')
   findOne(@Param('id') id: string) {
     return this.projectService.findOneProjectById({ id });
   }
