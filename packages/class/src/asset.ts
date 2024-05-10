@@ -73,7 +73,11 @@ export interface AssetResponseDto {
   error?: string | string[];
   asset?: asset;
 }
-
+export class createAssetFileRequestDto {
+  assetId: string;
+  fileVersion: string;
+  fileUrl: string;
+}
 export class CreateAssetRequestDto {
   @ApiProperty({
     description: 'The ID of the delivery',
