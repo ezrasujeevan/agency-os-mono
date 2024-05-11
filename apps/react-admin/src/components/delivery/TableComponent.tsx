@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
-import { Unstable_Grid2 as Grid } from '@mui/material'
-import { DataGrid, GridColDef } from '@mui/x-data-grid'
+import React, { useEffect, useRef, useState } from 'react'
+import { Unstable_Grid2 as Grid, Skeleton } from '@mui/material'
+import { DataGrid, GridColDef, useGridApiRef } from '@mui/x-data-grid'
 import {
     DeliveryRenderAccessCell,
     DeliveryRenderActionCell,
@@ -11,6 +11,8 @@ import {
 import { dummyDelivery } from './dummy'
 import { Delivery } from '@agency-os/class'
 import { useGetAllDeliveryByProjectIdQuery } from '~/store/api'
+import { setTimeout } from 'timers/promises'
+import { flushSync } from 'react-dom'
 
 const deliveryColumns: GridColDef<Delivery.Delivery>[] = [
     { field: 'deliverableName', headerName: 'Name' },
@@ -19,7 +21,8 @@ const deliveryColumns: GridColDef<Delivery.Delivery>[] = [
     {
         field: 'deliveryFilesVersion',
         headerName: 'Version',
-        valueGetter: (value, { deliveryFiles }) => deliveryFiles.length>0 ? deliveryFiles[0].version : 'N/A',
+        valueGetter: (value, { deliveryFiles }) =>
+            deliveryFiles.length > 0 ? deliveryFiles[0].version : 'N/A'
     },
     {
         field: 'deliveryFilesUrl',
@@ -32,13 +35,13 @@ const deliveryColumns: GridColDef<Delivery.Delivery>[] = [
         headerName: 'Access',
         description: 'Given access to Client.',
         type: 'boolean',
+        editable: true,
         renderCell: DeliveryRenderAccessCell
     },
     {
         field: 'id',
         headerName: 'Action',
         renderCell: DeliveryRenderActionCell,
-        width: 1,
         disableColumnMenu: true
     }
 ]
@@ -50,13 +53,16 @@ interface DeliveryTableComponentProps {
 const DeliveryTableComponent: React.FC<DeliveryTableComponentProps> = ({
     projectId
 }: DeliveryTableComponentProps) => {
-    const [rows, setRows] = React.useState<Delivery.Delivery[]>([])
-    const { data, isSuccess, isFetching } = useGetAllDeliveryByProjectIdQuery({projectId})
-    React.useEffect(() => {
+    const apiRef = useGridApiRef()
+
+    const [rows, setRows] = useState<Delivery.Delivery[]>([])
+    const { data, isSuccess, isFetching } = useGetAllDeliveryByProjectIdQuery({ projectId })
+    useEffect(() => {
         if (isSuccess) {
-            const { status, delivery }: Delivery.DeliveryResponse = data
+            const { status, delivery }: Delivery.DeliveryResponseDto = data
             if (status === 200 && delivery && Array.isArray(delivery)) {
                 setRows(delivery)
+                apiRef.current.autosizeColumns({ includeOutliers: true })
             }
         }
     }, [data])
@@ -65,11 +71,16 @@ const DeliveryTableComponent: React.FC<DeliveryTableComponentProps> = ({
         <Grid container>
             <Grid xs={12}>
                 <DataGrid
+                    apiRef={apiRef}
                     columns={deliveryColumns}
                     rows={rows}
                     initialState={{ pagination: { paginationModel: { page: 0, pageSize: 5 } } }}
                     pageSizeOptions={[5]}
                     loading={isFetching}
+                    autosizeOptions={{ includeOutliers: true }}
+                    onResize={() => {
+                        apiRef.current.autosizeColumns({ includeOutliers: true })
+                    }}
                 />
             </Grid>
         </Grid>
