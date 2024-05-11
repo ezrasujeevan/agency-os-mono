@@ -28,6 +28,8 @@ import {
     AssetPage,
     AssetFileUpdatePage
 } from './pages'
+import DeliveryFileHistoryPage from './pages/delivery/DeliveryFileHistoryPage'
+import DeliveryFileNewPage from './pages/delivery/DeliveryFileNewPage'
 
 const RootComponent: React.FC = () => {
     const { mode } = useAppSelector((state) => state.theme)
@@ -35,8 +37,8 @@ const RootComponent: React.FC = () => {
     const { PROJECT_PAGE, PROJECT_EDIT_PAGE, PROJECT_NEW_PAGE } = ROUTES
     const {
         DELIVERY_EDIT_PAGE,
-        DELIVERY_FILE_PAGE,
-        DELIVERY_FILE_UPDATE_PAGE,
+        DELIVERY_FILE_NEW_PAGE,
+        DELIVERY_FILE_HISTORY_PAGE,
         DELIVERY_NEW_PAGE,
         DELIVERY_PAGE
     } = ROUTES
@@ -68,12 +70,12 @@ const RootComponent: React.FC = () => {
                                         element={<DeliveryEditPage />}
                                     />
                                     <Route
-                                        path={DELIVERY_FILE_PAGE}
-                                        element={<DeliveryFilePage />}
+                                        path={DELIVERY_FILE_HISTORY_PAGE}
+                                        element={<DeliveryFileHistoryPage />}
                                     />
                                     <Route
-                                        path={DELIVERY_FILE_UPDATE_PAGE}
-                                        element={<DeliveryFileUpdatePage />}
+                                        path={DELIVERY_FILE_NEW_PAGE}
+                                        element={<DeliveryFileNewPage />}
                                     />
 
                                     <Route path={ASSET_PAGE} element={<AssetPage />} />

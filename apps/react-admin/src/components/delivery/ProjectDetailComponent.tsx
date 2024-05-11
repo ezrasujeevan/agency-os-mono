@@ -3,37 +3,32 @@ import { Unstable_Grid2 as Grid, Skeleton, Typography } from '@mui/material'
 import { Project, User, Client, Company } from '@agency-os/class'
 import { skipToken } from '@reduxjs/toolkit/query'
 import moment from 'moment'
-import {
-    useGetProjectByIdQuery,
-    useGetUserByIdQuery,
-    useGetClientByIdQuery,
-    useGetCompanyByIdQuery
-} from '~/store/api'
-import { clientType, companyType, projectType, userType } from '~/types/class'
-import { useAppDispatch } from '~/store'
-import { setSnackAlertError } from '~/store/reducers'
 import { useNavigate } from 'react-router-dom'
-import DeliveryTableComponent from './DeliveryTableComponent'
+import { useAppDispatch } from '~/store'
+import { useGetProjectByIdQuery, useGetUserByIdQuery, useGetClientByIdQuery, useGetCompanyByIdQuery } from '~/store/api'
+import { setSnackAlertError } from '~/store/reducers'
+import { projectType, userType, clientType, companyType } from '~/types/class'
 
-interface ProjectViewComponentProps {
+interface ProjectDetailComponentProps {
     projectId: string
 }
 
-const ProjectViewComponent: React.FC<ProjectViewComponentProps> = ({
+const ProjectDetailComponent: React.FC<ProjectDetailComponentProps> = ({
     projectId
-}: ProjectViewComponentProps) => {
+}: ProjectDetailComponentProps) => {
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
+    const [project, setProject] = useState<projectType>()
+    const [User, setUser] = useState<userType>()
+    const [Client, setClient] = useState<clientType>()
+    const [Company, setCompany] = useState<companyType>()
+    
     const {
         data: projectRes,
         isSuccess: isSuccessProject,
         isFetching: isFetchingProject
     } = useGetProjectByIdQuery(projectId ? { id: projectId } : skipToken)
 
-    const [project, setProject] = useState<projectType>()
-    const [User, setUser] = useState<userType>()
-    const [Client, setClient] = useState<clientType>()
-    const [Company, setCompany] = useState<companyType>()
     const {
         data: userRes,
         isSuccess: isSuccessUser,
@@ -85,7 +80,6 @@ const ProjectViewComponent: React.FC<ProjectViewComponentProps> = ({
             }
         }
     }, [projectRes, userRes, ClientRes, CompanyRes])
-
     return (
         <Grid container>
             <Grid xs={12} alignContent={'center'}>
@@ -168,11 +162,8 @@ const ProjectViewComponent: React.FC<ProjectViewComponentProps> = ({
                     )}
                 </Typography>
             </Grid>
-            <Grid xs={12}>
-                <DeliveryTableComponent projectId={projectId} />
-            </Grid>
         </Grid>
     )
 }
 
-export default ProjectViewComponent
+export default ProjectDetailComponent

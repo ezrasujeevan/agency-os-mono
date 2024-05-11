@@ -65,7 +65,9 @@ export const {
     useDeleteDeliveryMutation,
     useUpdateDeliveryMutation,
     useGetAllDeliveryByProjectIdQuery,
-    useGetDeliveryByIdQuery
+    useGetDeliveryByIdQuery,
+    useGetAllFilesOfDeliveryQuery,
+    useCreateFileOfDeliveryMutation
 } = deliveryApiSlice
 
 export const {

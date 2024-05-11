@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { skipToken } from '@reduxjs/toolkit/query'
-import { Project, User } from '@agency-os/class'
+import { Delivery, Project, User } from '@agency-os/class'
 import {
     Autocomplete,
     Button,
@@ -13,73 +13,91 @@ import {
     TextField,
     FormControlLabel
 } from '@mui/material'
-import { useCreateDeliveryMutation, useGetProjectByIdQuery, useGetUserByIdQuery } from '~/store/api'
+import {
+    useCreateDeliveryMutation,
+    useGetDeliveryByIdQuery,
+    useGetProjectByIdQuery,
+    useGetUserByIdQuery
+} from '~/store/api'
 import { RootState, useAppDispatch, useAppSelector } from '~/store'
 import { setSnackAlertError, setSnackAlertWarning } from '~/store/reducers'
+import { Cancel, Save, Upgrade } from '@mui/icons-material'
+import { useNavigate } from 'react-router-dom'
 
 interface NewDeliveryComponentProps {
-    id?: string
-    projectId?: string
+    DeliveryId?: string
+    projectId: string
 }
 
 const NewDeliveryComponent: React.FC<NewDeliveryComponentProps> = ({
-    id,
+    DeliveryId,
     projectId
 }: NewDeliveryComponentProps) => {
     const dispatch = useAppDispatch()
+    const navigate = useNavigate()
     const { user } = useAppSelector((state: RootState) => state.auth)
-
+    const [delivery, setDelivery] = useState<Delivery.Delivery>()
     const [project, setProject] = useState<Project.Project>()
-    const [name, setName] = useState<string>('')
+    const [creator, setCreator] = useState<User.User>()
+
     const [nameError, setNameError] = useState<boolean>(false)
-    const [type, setType] = useState<string>('')
     const [typeError, setTypeError] = useState<boolean>(false)
-    const [description, setDescription] = useState<string>('')
     const [descriptionError, setDescriptionError] = useState<boolean>(false)
-    const [versionMajor, setVersionMajor] = useState<number>(0)
-    const [versionMinor, setVersionMinor] = useState<number>(0)
-    const [versionPatch, setVersionPatch] = useState<number>(0)
-    const [fileUrl, setFileUrl] = useState<string>('')
-    const [fileUrlError, setFileUrlError] = useState<boolean>(false)
     const [tags, setTags] = useState<string[]>([])
     const [tagsError, setTagsError] = useState<boolean>(false)
     const [access, setAccess] = useState<boolean>(true)
-    const [creator, setCreator] = useState<User.User>()
-    const { data: userRes, isSuccess: userSuccess } = useGetUserByIdQuery(
+
+    const { data: dataUser, isSuccess: isSuccessUser } = useGetUserByIdQuery(
         user ? { id: user } : skipToken
     )
-
+    const { data: dataProject, isSuccess: isSuccessProject } = useGetProjectByIdQuery(
+        projectId ? { id: projectId } : skipToken
+    )
+    const { data: dataDelivery, isSuccess: isSuccessDelivery } = useGetDeliveryByIdQuery(
+        DeliveryId ? { id: DeliveryId } : skipToken
+    )
     const [CreateDeliveryMutation, { data: deliverRes, isSuccess: deliveryIsSuccess }] =
         useCreateDeliveryMutation()
 
     useEffect(() => {
-        if (user) {
-            if (userSuccess) {
-                const { status, user } = userRes
-                if (status === 200 && user && !Array.isArray(user)) {
-                    setCreator(user)
-                }
+        if (isSuccessUser) {
+            const { status, user } = dataUser
+            if (status === 200 && user && !Array.isArray(user)) {
+                setCreator(user)
             }
         }
-    }, [user])
+        if (isSuccessProject) {
+            const { status, project, error } = dataProject
+            if (status === 200 && project && !Array.isArray(project)) {
+                setProject(project)
+            } else {
+                if (error) {
+                    //TODO Toastify
+                    dispatch(setSnackAlertError({ title: status.toString(), message: error }))
+                }
+                navigate(-1)
+            }
+        }
 
-    if (projectId) {
-        const { data: ProjectRes, isSuccess: ProjectSuccess } = useGetProjectByIdQuery({
-            id: projectId
-        })
-        if (ProjectSuccess) {
-            if (ProjectRes) {
-                const { status, project, error } = ProjectRes
-                if (status === 200 && project && !Array.isArray(project)) {
-                    setProject(project)
-                } else {
-                    if (error) {
-                        dispatch(setSnackAlertError({ title: status.toString(), message: error }))
-                    }
+        if (isSuccessDelivery) {
+            const { status, delivery, error } = dataDelivery
+            if (status === 200 && delivery && !Array.isArray(delivery)) {
+                setDelivery(delivery)
+            } else {
+                if (error) {
+                    //TODO Toastify
+                    dispatch(setSnackAlertError({ title: status.toString(), message: error }))
                 }
+                navigate(-1)
             }
         }
+    }, [dataUser, dataDelivery, dataProject])
+
+    const handleSaveOrUpdateDelivery = () => {
+        //TODO: Validate
+        //TODO: Save or Update
     }
+
     return (
         <Grid>
             <Grid>
@@ -99,8 +117,8 @@ const NewDeliveryComponent: React.FC<NewDeliveryComponentProps> = ({
                     fullWidth
                     required
                     label="Name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    value={delivery ? delivery.deliverableName : ''}
+                    onChange={(e) => setDelivery({ ...delivery, deliverableName: e.target.value })}
                     helperText=""
                     margin="dense"
                 />
@@ -111,8 +129,8 @@ const NewDeliveryComponent: React.FC<NewDeliveryComponentProps> = ({
                     fullWidth
                     required
                     label="Type"
-                    value={type}
-                    onChange={(e) => setType(e.target.value)}
+                    value={delivery ? delivery.deliverableType : ''}
+                    onChange={(e) => setDelivery({ ...delivery, deliverableType: e.target.value })}
                     helperText=""
                     margin="dense"
                 />
@@ -125,41 +143,13 @@ const NewDeliveryComponent: React.FC<NewDeliveryComponentProps> = ({
                     maxRows={2}
                     required
                     label="Description"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
+                    value={delivery ? delivery.description : ''}
+                    onChange={(e) => setDelivery({ ...delivery, description: e.target.value })}
                     helperText=""
                     margin="dense"
                 />
             </Grid>
             <Grid>
-                <FormLabel>Version</FormLabel>
-                <TextField
-                    required
-                    type="number"
-                    label="Major"
-                    value={versionMajor}
-                    onChange={(e) => setVersionMajor(parseInt(e.target.value))}
-                    margin="dense"
-                    inputProps={{ min: '0' }}
-                />
-                <TextField
-                    required
-                    type="number"
-                    label="Minor"
-                    value={versionMinor}
-                    onChange={(e) => setVersionMinor(parseInt(e.target.value))}
-                    margin="dense"
-                    inputProps={{ min: '0' }}
-                />
-                <TextField
-                    required
-                    type="number"
-                    label="Patch"
-                    value={versionPatch}
-                    onChange={(e) => setVersionPatch(parseInt(e.target.value))}
-                    margin="dense"
-                    inputProps={{ min: '0' }}
-                />
                 <Grid>
                     <Autocomplete
                         options={[]}
@@ -179,9 +169,9 @@ const NewDeliveryComponent: React.FC<NewDeliveryComponentProps> = ({
                             <TextField {...params} label="Tags" required margin="dense" />
                         )}
                         onChange={(e, value) => {
-                            setTags(value)
+                            setDelivery({ ...delivery, tags: value })
                         }}
-                        value={tags}
+                        value={delivery ? delivery.tags : []}
                     />
                 </Grid>
                 <Grid>
@@ -189,15 +179,29 @@ const NewDeliveryComponent: React.FC<NewDeliveryComponentProps> = ({
                         control={
                             <Switch
                                 color="primary"
-                                checked={access}
-                                onChange={(e) => setAccess(e.target.checked)}
+                                checked={delivery ? delivery.access : false}
+                                onChange={(e) =>
+                                    setDelivery({ ...delivery, access: e.target.checked })
+                                }
                             />
                         }
                         label="Allow Access To Client"
                         labelPlacement="start"
                     />
                 </Grid>
-                <Grid></Grid>
+                <Grid>
+                    <ButtonGroup variant="contained" aria-label="Basic button group">
+                        <Button color={'secondary'} startIcon={<Cancel />}>
+                            Cancel
+                        </Button>
+                        <Button
+                            startIcon={delivery?.id ? <Upgrade /> : <Save />}
+                            onClick={handleSaveOrUpdateDelivery}
+                        >
+                            {delivery?.id ? 'update' : 'save'}
+                        </Button>
+                    </ButtonGroup>
+                </Grid>
             </Grid>
         </Grid>
     )

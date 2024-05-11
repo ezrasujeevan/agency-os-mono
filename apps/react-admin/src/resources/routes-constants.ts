@@ -12,8 +12,8 @@ export const ROUTES = {
     DELIVERY_PAGE: '/project/:projectId/delivery/:deliveryId',
     DELIVERY_NEW_PAGE: '/project/:projectId/delivery',
     DELIVERY_EDIT_PAGE: '/project/:projectId/delivery/:deliveryId/edit',
-    DELIVERY_FILE_PAGE: '/project/:projectId/delivery/:deliveryId/file',
-    DELIVERY_FILE_UPDATE_PAGE: '/project/:projectId/delivery/:deliveryId/file/new',
+    DELIVERY_FILE_HISTORY_PAGE: '/project/:projectId/delivery/:deliveryId/file',
+    DELIVERY_FILE_NEW_PAGE: '/project/:projectId/delivery/:deliveryId/file/new',
 
     ASSET_BASE_PATH: '/asset',
     ASSET_PAGE: '/project/:projectId/delivery/:deliveryId/asset/:assetId',

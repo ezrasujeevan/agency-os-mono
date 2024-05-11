@@ -49,7 +49,6 @@ const NewProjectComponent: React.FC = ({ projectId }: NewProjectComponentProps) 
     const [errorProjectValue, setErrorProjectValue] = useState<boolean>(false)
     const [errorOpportunityDate, setErrorOpportunityDate] = useState<boolean>(false)
     const [errorStartDate, setErrorStartDate] = useState<boolean>(false)
-    const [errorEndDate, setErrorEndDate] = useState<boolean>(false)
     const [errorUser, setErrorUser] = useState<boolean>(false)
     const [errorClient, setErrorClient] = useState<boolean>(false)
     const [errorCompany, setErrorCompany] = useState<boolean>(false)
@@ -92,7 +91,10 @@ const NewProjectComponent: React.FC = ({ projectId }: NewProjectComponentProps) 
         projectId ? { id: projectId } : skipToken
     )
 
-    const handleSaveOrUpdateProject = () => {}
+    const handleSaveOrUpdateProject = () => {
+        //TODO: Validate
+        //TODO: Save or Update
+    }
 
     useEffect(() => {
         if (isSuccessClientList) {
@@ -152,6 +154,7 @@ const NewProjectComponent: React.FC = ({ projectId }: NewProjectComponentProps) 
                 setProject(project)
             } else {
                 dispatch(
+                    //TODO: Toastify
                     setSnackAlertError({
                         title: 'Error',
                         message: 'Failed to fetch project details'
