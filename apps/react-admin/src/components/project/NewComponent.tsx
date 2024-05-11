@@ -24,19 +24,22 @@ import { User, Company, Client, Project } from '@agency-os/class'
 import { useAppDispatch } from '~/store'
 import { setSnackAlertError } from '~/store/reducers'
 import { i } from 'vitest/dist/reporters-LqC_WI4d'
+import { useNavigate } from 'react-router-dom'
+import { skipToken } from '@reduxjs/toolkit/query'
 
 interface NewProjectComponentProps {
     projectId?: string
 }
 
 const NewProjectComponent: React.FC = ({ projectId }: NewProjectComponentProps) => {
-    const [id, setId] = useState<string>('')
-    const [trialName, setTrialName] = useState<string>('')
-    const [name, setName] = useState<string>('')
-    const [projectValue, setProjectValue] = useState<number>(0.0)
-    const [opportunityDate, setOpportunityDate] = useState<Moment | null>()
-    const [startDate, setStartDate] = useState<Moment | null>()
-    const [endDate, setEndDate] = useState<Moment | null>()
+    const [project, setProject] = useState<Project.Project>()
+    // const [id, setId] = useState<string>('')
+    // const [trialName, setTrialName] = useState<string>('')
+    // const [name, setName] = useState<string>('')
+    // const [projectValue, setProjectValue] = useState<number>(0.0)
+    // const [opportunityDate, setOpportunityDate] = useState<Moment | null>()
+    // const [startDate, setStartDate] = useState<Moment | null>()
+    // const [endDate, setEndDate] = useState<Moment | null>()
     const [user, setUser] = useState<User.User | null>(null)
     const [client, setClient] = useState<Client.Client | null>(null)
     const [company, setCompany] = useState<Company.Company | null>(null)
@@ -55,75 +58,45 @@ const NewProjectComponent: React.FC = ({ projectId }: NewProjectComponentProps) 
     const [companyList, setCompanyList] = useState<Company.Company[]>([])
     const [clientList, setClientList] = useState<Client.Client[]>([])
 
-    const { data: clientRes, isLoading: clientLoading } = useGetAllClientsQuery({
+    const {
+        data: dataClientList,
+        isSuccess: isSuccessClientList,
+        isLoading: isLoadingClientList
+    } = useGetAllClientsQuery({
         companyId: company ? company.id : ''
     })
-    const { data: companyRes, isLoading: companyLoading } = useGetAllCompaniesQuery()
-    const { data: usersRes, isLoading: userLoading } = useGetAllUsersQuery()
+    const {
+        data: dataCompanyList,
+        isSuccess: isSuccessCompanyList,
+        isLoading: isLoadingCompanyList
+    } = useGetAllCompaniesQuery()
+    const {
+        data: dataUserList,
+        isSuccess: isSuccessUserList,
+        isLoading: isLoadingUserList
+    } = useGetAllUsersQuery()
     const [updateProject, { data: projectRes }] = useUpdateProjectMutation()
     const dispatch = useAppDispatch()
+    const navigate = useNavigate()
+    const { data: dataUser, isSuccess: isSuccessUser } = useGetUserByIdQuery(
+        project?.userId ? { id: project.userId } : skipToken
+    )
+    const { data: dataClient, isSuccess: isSuccessClient } = useGetClientByIdQuery(
+        project?.clientId ? { id: project.clientId } : skipToken
+    )
+    const { data: dataCompany, isSuccess: isSuccessCompany } = useGetCompanyByIdQuery(
+        project?.companyId ? { id: project.companyId } : skipToken
+    )
 
-    const handleSaveOrUpdateProject = () => {
-        if (!trialName) {
-            setErrorTrialName(true)
-        }
-        if (!name) {
-            setErrorName(true)
-        }
-        if (!projectValue) {
-            setErrorProjectValue(true)
-        }
-        if (!opportunityDate) {
-            setErrorOpportunityDate(true)
-        }
-        if (!startDate) {
-            setErrorStartDate(true)
-        }
-        if (!user) {
-            setErrorUser(true)
-        }
-        if (!client) {
-            setErrorClient(true)
-        }
-        if (!company) {
-            setErrorCompany(true)
-        }
+    const { data: dataProject, isSuccess: isSuccessProject } = useGetProjectByIdQuery(
+        projectId ? { id: projectId } : skipToken
+    )
 
-        if (
-            trialName &&
-            name &&
-            projectValue &&
-            opportunityDate &&
-            startDate &&
-            endDate &&
-            user &&
-            client &&
-            company
-        ) {
-            if (id) {
-                const updateProject: Project.UpdateProjectRequestDto = {
-                    id: id
-                }
-            } else {
-                //TODO : make end Date Optional
-                const newProject: Project.CreateProjectRequestDto = {
-                    trialName,
-                    name,
-                    opportunityDate: opportunityDate.toDate(),
-                    startDate: startDate.toDate(),
-                    endDate: endDate.toDate(),
-                    projectValue,
-                    clientId: client.id,
-                    userId: user.id,
-                    companyId: company.id
-                }
-            }
-        }
-    }
+    const handleSaveOrUpdateProject = () => {}
 
     useEffect(() => {
-        if (clientRes) {
-            const { status, client, error } = clientRes
+        if (isSuccessClientList) {
+            const { status, client, error } = dataClientList
             if (status === 200 && client && Array.isArray(client)) {
                 setClientList(client)
             } else if (error) {
@@ -133,8 +106,8 @@ const NewProjectComponent: React.FC = ({ projectId }: NewProjectComponentProps) 
                 setClientList([])
             }
         }
-        if (usersRes) {
-            const { status, user, error } = usersRes
+        if (isSuccessUserList) {
+            const { status, user, error } = dataUserList
             if (status === 200 && user && Array.isArray(user)) {
                 setUserList(user)
             } else if (error) {
@@ -144,8 +117,8 @@ const NewProjectComponent: React.FC = ({ projectId }: NewProjectComponentProps) 
                 setUserList([])
             }
         }
-        if (companyRes) {
-            const { status, company, error } = companyRes
+        if (isSuccessCompanyList) {
+            const { status, company, error } = dataCompanyList
             if (status === 200 && company && Array.isArray(company)) {
                 setCompanyList(company)
             } else if (error) {
@@ -155,64 +128,47 @@ const NewProjectComponent: React.FC = ({ projectId }: NewProjectComponentProps) 
                 setCompanyList([])
             }
         }
-    }, [clientRes, usersRes, companyRes])
-
-    if (projectId) {
-        const { data: projectRes, isSuccess } = useGetProjectByIdQuery({ id: projectId })
-        if (isSuccess) {
-            const { status, project } = projectRes
-            if (status === 200 && project && !Array.isArray(project)) {
-                const {
-                    id,
-                    name,
-                    trialName,
-                    opportunityDate,
-                    projectValue,
-                    startDate,
-                    endDate,
-                    userId,
-                    clientId,
-                    companyId
-                } = project
-                setId(id)
-                setTrialName(trialName)
-                setName(name)
-                setProjectValue(projectValue)
-                setOpportunityDate(moment(opportunityDate))
-                setStartDate(moment(startDate))
-                if (endDate) {
-                    setEndDate(moment(endDate))
-                }
-                const { data: userRes, isSuccess: userIsSuccess } = useGetUserByIdQuery({
-                    id: userId
-                })
-                const { data: clientRes, isSuccess: clientIsSuccess } = useGetClientByIdQuery({
-                    id: clientId
-                })
-                const { data: companyRes, isSuccess: companyIsSuccess } = useGetCompanyByIdQuery({
-                    id: companyId
-                })
-                if (userIsSuccess) {
-                    const { status, user } = userRes
-                    if (status === 200 && user && !Array.isArray(user)) {
-                        setUser(user)
-                    }
-                }
-                if (clientIsSuccess) {
-                    const { status, client } = clientRes
-                    if (status === 200 && client && !Array.isArray(client)) {
-                        setClient(client)
-                    }
-                }
-                if (companyIsSuccess) {
-                    const { status, company } = companyRes
-                    if (status === 200 && company && !Array.isArray(company)) {
-                        setCompany(company)
-                    }
-                }
+        if (isSuccessUser) {
+            const { status, user } = dataUser
+            if (status === 200 && user && !Array.isArray(user)) {
+                setUser(user)
             }
         }
-    }
+        if (isSuccessClient) {
+            const { status, client } = dataClient
+            if (status === 200 && client && !Array.isArray(client)) {
+                setClient(client)
+            }
+        }
+        if (isSuccessCompany) {
+            const { status, company } = dataCompany
+            if (status === 200 && company && !Array.isArray(company)) {
+                setCompany(company)
+            }
+        }
+        if (isSuccessProject) {
+            const { status, project } = dataProject
+            if (status === 200 && project && !Array.isArray(project)) {
+                setProject(project)
+            } else {
+                dispatch(
+                    setSnackAlertError({
+                        title: 'Error',
+                        message: 'Failed to fetch project details'
+                    })
+                )
+                navigate(-1)
+            }
+        }
+    }, [
+        dataClientList,
+        dataUserList,
+        dataCompanyList,
+        dataCompany,
+        dataClient,
+        dataClient,
+        dataProject
+    ])
 
     return (
         <Grid>
@@ -221,10 +177,12 @@ const NewProjectComponent: React.FC = ({ projectId }: NewProjectComponentProps) 
                     fullWidth
                     required
                     label="ID"
-                    value={id}
-                    helperText={
-                        id ? 'Generated Project ID' : 'Project ID will be generated automatically'
-                    }
+                    value={project ? project.id : ''}
+                    // helperText={
+                    //     project?
+                    //         ? 'Generated Project ID'
+                    //         : 'Project ID will be generated automatically'
+                    // }
                     margin="dense"
                     disabled
                 />
@@ -235,8 +193,8 @@ const NewProjectComponent: React.FC = ({ projectId }: NewProjectComponentProps) 
                     fullWidth
                     required
                     label="Trial Name"
-                    value={trialName}
-                    onChange={(e) => setTrialName(e.target.value)}
+                    value={project ? project.trialName : ''}
+                    onChange={(e) => setProject({ ...project, trialName: e.target.value })}
                     helperText="Must Be Unique"
                     margin="dense"
                 />
@@ -247,16 +205,18 @@ const NewProjectComponent: React.FC = ({ projectId }: NewProjectComponentProps) 
                     fullWidth
                     required
                     label="Name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    value={project? project.name :''}
+                    onChange={(e) => setProject({ ...project, name: e.target.value })}
                     margin="dense"
                 />
             </Grid>
             <Grid>
                 <DatePicker
                     label="Opportunity Date"
-                    value={opportunityDate}
-                    onChange={(newDate) => setOpportunityDate(newDate)}
+                    value={moment(project?.opportunityDate)}
+                    onChange={(newDate) =>
+                        setProject({ ...project, opportunityDate: newDate.toDate() })
+                    }
                     format="DD-MM-YYYY"
                     slotProps={{
                         textField: {
@@ -272,8 +232,8 @@ const NewProjectComponent: React.FC = ({ projectId }: NewProjectComponentProps) 
             <Grid>
                 <DatePicker
                     label="Start Date"
-                    value={startDate}
-                    onChange={(newDate) => setStartDate(newDate)}
+                    value={moment(project?.startDate)}
+                    onChange={(newDate) => setProject({ ...project, startDate: newDate.toDate() })}
                     format="DD-MM-YYYY"
                     slotProps={{
                         textField: {
@@ -289,8 +249,8 @@ const NewProjectComponent: React.FC = ({ projectId }: NewProjectComponentProps) 
             <Grid>
                 <DatePicker
                     label="End Date"
-                    value={endDate}
-                    onChange={(newValue) => setEndDate(newValue)}
+                    value={moment(project?.endDate)}
+                    onChange={(newValue) => setProject({ ...project, endDate: newValue.toDate() })}
                     format="DD-MM-YYYY"
                     slotProps={{ textField: { fullWidth: true, margin: 'dense' } }}
                 />
@@ -302,10 +262,10 @@ const NewProjectComponent: React.FC = ({ projectId }: NewProjectComponentProps) 
                     required
                     label="Project Value"
                     type="number"
-                    value={projectValue}
+                    value={project?.projectValue}
                     onChange={(e) => {
                         const value: number = parseFloat(parseFloat(e.target.value).toFixed(2))
-                        setProjectValue(value)
+                        setProject({ ...project, projectValue: value })
                     }}
                     // sx={{ m: 1, width: '25ch' }}
                     InputProps={{
@@ -317,7 +277,7 @@ const NewProjectComponent: React.FC = ({ projectId }: NewProjectComponentProps) 
             </Grid>
             <Grid>
                 <Autocomplete
-                    disabled={userLoading}
+                    disabled={isLoadingUserList}
                     options={userList}
                     fullWidth
                     renderInput={(params: object) => (
@@ -345,7 +305,7 @@ const NewProjectComponent: React.FC = ({ projectId }: NewProjectComponentProps) 
             </Grid>
             <Grid>
                 <Autocomplete
-                    disabled={companyLoading}
+                    disabled={isLoadingCompanyList}
                     options={companyList}
                     fullWidth
                     renderInput={(params: object) => (
@@ -379,7 +339,7 @@ const NewProjectComponent: React.FC = ({ projectId }: NewProjectComponentProps) 
             </Grid>
             <Grid>
                 <Autocomplete
-                    disabled={clientLoading}
+                    disabled={isLoadingClientList}
                     options={clientList}
                     fullWidth
                     renderInput={(params: object) => (
@@ -416,10 +376,10 @@ const NewProjectComponent: React.FC = ({ projectId }: NewProjectComponentProps) 
                         Cancel
                     </Button>
                     <Button
-                        startIcon={id ? <Upgrade /> : <Save />}
+                        startIcon={project?.id ? <Upgrade /> : <Save />}
                         onClick={handleSaveOrUpdateProject}
                     >
-                        {id ? 'update' : 'save'}
+                        {project?.id ? 'update' : 'save'}
                     </Button>
                 </ButtonGroup>
             </Grid>
