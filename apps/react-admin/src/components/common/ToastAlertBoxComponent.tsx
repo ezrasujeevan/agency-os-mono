@@ -8,9 +8,12 @@ export interface ToastAlertBoxProps {
     closeToast: () => void
 }
 
-const ToastAlertBox = ({ type, title, message }: ToastAlertBoxProps) => {
-
-    const Alertessage = (message: string | string[]) => {
+const ToastAlertBoxComponent: React.FC<ToastAlertBoxProps> = ({
+    type,
+    title,
+    message
+}: ToastAlertBoxProps) => {
+    const AlertMessage = (message: string | string[]) => {
         if (Array.isArray(message)) {
             return message.map((msg, index) => (
                 <Typography key={index} variant="body1">
@@ -23,7 +26,9 @@ const ToastAlertBox = ({ type, title, message }: ToastAlertBoxProps) => {
     return (
         <Alert severity={type} variant="filled">
             <AlertTitle>{`${title.toUpperCase()}`}</AlertTitle>
-            {Alertessage(message)}
+            {AlertMessage(message)}
         </Alert>
     )
 }
+
+export default ToastAlertBoxComponent

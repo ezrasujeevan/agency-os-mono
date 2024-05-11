@@ -12,7 +12,7 @@ import { useAppDispatch } from '~/store'
 
 import { useLoginUserMutation } from '~/store/api'
 import { setSnackAlertError, setSnackAlertSuccess } from '~/store/reducers'
-import PasswordInput from '~/components/PasswordInput'
+import { PasswordInputComponent } from '~/components'
 import { useNavigate } from 'react-router-dom'
 
 const LoginPage: React.FC = () => {
@@ -77,7 +77,7 @@ const LoginPage: React.FC = () => {
                             onChange={handleEmailChange}
                         />
 
-                        <PasswordInput
+                        <PasswordInputComponent
                             password={password}
                             handlePasswordChange={handlePasswordChange}
                         />

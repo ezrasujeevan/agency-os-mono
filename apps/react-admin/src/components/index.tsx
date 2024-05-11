@@ -1,8 +1,21 @@
-import DateDisplay from './DateDisplay'
-import Header from './Header'
-import MaterialUISwitch from './MaterialUISwitch'
+import {
+    MaterialUISwitch,
+    HeaderComponent,
+    LoadingComponent,
+    PasswordInputComponent,
+    SnackBarComponent,
+    ToastAlertBoxComponent
+} from './common'
 import * as ProjectCollection from './project'
 import * as DeliveryCollection from './delivery'
-import SnackBar from './SnackBar'
 
-export { DateDisplay, Header, MaterialUISwitch, ProjectCollection, DeliveryCollection, SnackBar }
+export {
+    MaterialUISwitch,
+    ProjectCollection,
+    DeliveryCollection,
+    HeaderComponent,
+    LoadingComponent,
+    PasswordInputComponent,
+    SnackBarComponent,
+    ToastAlertBoxComponent
+}

@@ -5,7 +5,7 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 import { Box, Container, CssBaseline, ThemeProvider, createTheme } from '@mui/material'
 import Theme from './Theme'
 import { ROUTES } from './resources/routes-constants'
-import { SnackBar, Header } from './components'
+import { SnackBarComponent, HeaderComponent } from './components'
 import { useAppSelector } from './store'
 import {
     HomePage,
@@ -48,7 +48,7 @@ const RootComponent: React.FC = () => {
                 <CssBaseline />
                 <LocalizationProvider dateAdapter={AdapterMoment}>
                     <Router>
-                        <Header />
+                        <HeaderComponent />
                         <Container fixed>
                             <Routes>
                                 <Route path="*" element={<NotFoundPage />} />
@@ -88,7 +88,7 @@ const RootComponent: React.FC = () => {
                             </Routes>
                         </Container>
                     </Router>
-                    <SnackBar />
+                    <SnackBarComponent />
                 </LocalizationProvider>
             </ThemeProvider>
         </Box>

@@ -7,7 +7,7 @@ interface passwordInputProps {
     handlePasswordChange: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-const PasswordInput = ({ password, handlePasswordChange }:passwordInputProps) => {
+const PasswordInputComponent:React.FC<passwordInputProps> = ({ password, handlePasswordChange }:passwordInputProps) => {
 
     const [showPassword, setShowPassword] = useState(false);
     const handleClickShowPassword = () => {
@@ -44,4 +44,4 @@ const PasswordInput = ({ password, handlePasswordChange }:passwordInputProps) =>
     )
 }
 
-export default PasswordInput
+export default PasswordInputComponent

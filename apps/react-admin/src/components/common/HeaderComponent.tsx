@@ -9,7 +9,7 @@ import { log } from 'console'
 import { useAppDispatch, useAppSelector } from '~/store'
 import { THEME_ACTION } from '~/resources/action-constants'
 
-const Header: React.FC = () => {
+const HeaderComponent: React.FC = () => {
     const pages = ['Products', 'Pricing', 'Blog']
     const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
     const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
@@ -57,4 +57,4 @@ const Header: React.FC = () => {
     )
 }
 
-export default Header
+export default HeaderComponent
