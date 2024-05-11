@@ -6,7 +6,7 @@ import {
     DeliveryRenderActionCell,
     DeliveryRenderFileUrlCell,
     DeliveryRenderTagsCell
-} from './cell'
+} from '../project/cell'
 
 import { dummyDelivery } from './dummy'
 import { Delivery } from '@agency-os/class'
