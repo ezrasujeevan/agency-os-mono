@@ -2,6 +2,23 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "strart-all-dev",
+      "type": "shell",
+      "command": "echo starting all",
+      "problemMatcher": [],
+      "dependsOn": [
+        "nx:http-gateway:start:dev",
+        "nx:tcp-user:start:dev",
+        "nx:tcp-client:start:dev",
+        "nx:tcp-company:start:dev",
+        "nx:tcp-project:start:dev",
+        "nx:tcp-deliverystart:dev",
+        "nx:tcp-asset:start:dev",
+        "nx:react-admin:start"
+      ],
+      "dependsOrder": "parallel"
+    },
+    {
       "label": "strart-all",
       "type": "shell",
       "command": "echo starting all",
@@ -17,6 +34,78 @@
         "nx:react-admin:start"
       ],
       "dependsOrder": "parallel"
+    },
+    {
+      "type": "nx",
+      "project": "",
+      "command": "run",
+      "positional": "@agency-os/http-gateway:start:dev",
+      "flags": [],
+      "problemMatcher": [],
+      "label": "nx:http-gateway:start:dev"
+    },
+    {
+      "type": "nx",
+      "project": "",
+      "command": "run",
+      "positional": "@agency-os/tcp-user:start:dev",
+      "flags": [],
+      "problemMatcher": [],
+      "label": "nx:tcp-user:start:dev"
+    },
+    {
+      "type": "nx",
+      "project": "",
+      "command": "run",
+      "positional": "@agency-os/tcp-client:start:dev",
+      "flags": [],
+      "problemMatcher": [],
+      "label": "nx:tcp-client:start:dev"
+    },
+    {
+      "type": "nx",
+      "project": "",
+      "command": "run",
+      "positional": "@agency-os/tcp-company:start:dev",
+      "flags": [],
+      "problemMatcher": [],
+      "label": "nx:tcp-company:start:dev"
+    },
+    {
+      "type": "nx",
+      "project": "",
+      "command": "run",
+      "positional": "@agency-os/tcp-project:start:dev",
+      "flags": [],
+      "problemMatcher": [],
+      "label": "nx:tcp-project:start:dev"
+    },
+    {
+      "type": "nx",
+      "project": "",
+      "command": "run",
+      "positional": "@agency-os/tcp-delivery:start:dev",
+      "flags": [],
+      "problemMatcher": [],
+      "label": "nx:tcp-deliverystart:dev"
+    },
+    {
+      "type": "nx",
+      "project": "",
+      "command": "run",
+      "positional": "@agency-os/tcp-asset:start:dev",
+      "flags": [],
+      "problemMatcher": [],
+      "label": "nx:tcp-asset:start:dev"
+    },
+    {
+      "type": "nx",
+      "project": "",
+      "command": "run",
+      "positional": "@agency-os/react-admin:start:dev",
+      "flags": [],
+      "problemMatcher": [],
+      "label": "nx:react-admin:start"
     },
     {
       "type": "nx",
@@ -80,15 +169,6 @@
       "flags": [],
       "problemMatcher": [],
       "label": "nx:tcp-asset:start"
-    },
-    {
-      "type": "nx",
-      "project": "",
-      "command": "run",
-      "positional": "@agency-os/react-admin:start:dev",
-      "flags": [],
-      "problemMatcher": [],
-      "label": "nx:react-admin:start"
     }
   ]
 }

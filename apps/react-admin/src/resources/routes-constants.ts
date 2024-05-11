@@ -13,7 +13,7 @@ export const ROUTES = {
     DELIVERY_NEW_PAGE: '/project/:projectId/delivery',
     DELIVERY_EDIT_PAGE: '/project/:projectId/delivery/:deliveryId/edit',
     DELIVERY_FILE_PAGE: '/project/:projectId/delivery/:deliveryId/file',
-    DELIVERY_FILE_UPDATE_PAGE: '/project/:projectId/delivery/:deliveryId/file/:fileId',
+    DELIVERY_FILE_UPDATE_PAGE: '/project/:projectId/delivery/:deliveryId/file/new',
 
     ASSET_BASE_PATH: '/asset',
     ASSET_PAGE: '/project/:projectId/delivery/:deliveryId/asset/:assetId',
