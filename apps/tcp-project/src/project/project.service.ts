@@ -68,7 +68,7 @@ export class ProjectService {
     const project = await this.projectRepo.findOneById(
       FindOneProjectRequestByIdDto,
     );
-    if (project) {
+    if (project && project instanceof ProjectEntity) {
       return { project, status: HttpStatus.OK };
     } else {
       return {

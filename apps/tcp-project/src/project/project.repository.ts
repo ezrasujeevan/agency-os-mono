@@ -27,10 +27,17 @@ export class ProjectRepository {
 
   async findOneById({
     id,
-  }: Project.FindOneProjectRequestByIdDto): Promise<ProjectEntity | null> {
-    const project = await this.projectRepo.findOne({ where: { id } });
-    this.logger.verbose('Project found by ID', project);
-    return project;
+  }: Project.FindOneProjectRequestByIdDto): Promise<
+    ProjectEntity | null | Error
+  > {
+    try {
+      const project = await this.projectRepo.findOne({ where: { id } });
+      this.logger.verbose('Project found by ID', project);
+      return project;
+    } catch (error) {
+      this.logger.error(`${error}`);
+      return error;
+    }
   }
 
   async findOneByTrialName({
