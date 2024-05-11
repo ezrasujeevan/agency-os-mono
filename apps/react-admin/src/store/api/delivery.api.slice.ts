@@ -4,7 +4,7 @@ import { rootApiSlice } from './root.api.slice'
 export const deliveryApiSlice = rootApiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getAllDeliveryByProjectId: builder.query<
-            Delivery.DeliveryResponse,
+            Delivery.DeliveryResponseDto,
             Delivery.FindAllDeliveryByProjectRequestDto | void
         >({
             query: ({ projectId }: Delivery.FindAllDeliveryByProjectRequestDto) => {
@@ -22,7 +22,7 @@ export const deliveryApiSlice = rootApiSlice.injectEndpoints({
             }
         }),
         getDeliveryById: builder.query<
-            Delivery.DeliveryResponse,
+            Delivery.DeliveryResponseDto,
             Delivery.FindOneDeliveryRequestDto
         >({
             query: ({ id }: Delivery.FindOneDeliveryRequestDto) => ({
@@ -31,7 +31,7 @@ export const deliveryApiSlice = rootApiSlice.injectEndpoints({
             })
         }),
         createDelivery: builder.mutation<
-            Delivery.DeliveryResponse,
+            Delivery.DeliveryResponseDto,
             Delivery.CreateDeliveryRequestDto
         >({
             query: (data: Delivery.CreateDeliveryRequestDto) => ({
@@ -41,7 +41,7 @@ export const deliveryApiSlice = rootApiSlice.injectEndpoints({
             })
         }),
         updateDelivery: builder.mutation<
-            Delivery.DeliveryResponse,
+            Delivery.DeliveryResponseDto,
             Delivery.UpdateDeliveryRequestDto
         >({
             query: (data: Delivery.UpdateDeliveryRequestDto) => ({
@@ -51,12 +51,31 @@ export const deliveryApiSlice = rootApiSlice.injectEndpoints({
             })
         }),
         deleteDelivery: builder.mutation<
-            Delivery.DeliveryResponse,
+            Delivery.DeliveryResponseDto,
             Delivery.FindOneDeliveryRequestDto
         >({
             query: ({ id }: Delivery.FindOneDeliveryRequestDto) => ({
                 url: `delivery/${id}`,
                 method: 'DELETE'
+            })
+        }),
+        getAllFilesOfDelivery: builder.query<
+            Delivery.DeliveryResponseDto,
+            Delivery.FindOneDeliveryRequestDto
+        >({
+            query: ({ id }: Delivery.FindOneDeliveryRequestDto) => ({
+                url: `delivery/${id}/file`,
+                method: 'GET'
+            })
+        }),
+        createFileOfDelivery: builder.mutation<
+            Delivery.DeliveryResponseDto,
+            Delivery.createDeliveryFileRequestDto
+        >({
+            query: (data: Delivery.createDeliveryFileRequestDto) => ({
+                url: `delivery/${data.deliveryId}/file`,
+                method: 'POST',
+                body: data
             })
         })
     })
