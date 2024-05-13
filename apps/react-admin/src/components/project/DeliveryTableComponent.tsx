@@ -15,8 +15,8 @@ import { useAppDispatch } from '~/store'
 import { snackAlertActions } from '~/store/reducers/snack.alert'
 
 const deliveryColumns: GridColDef<Delivery.Delivery>[] = [
-    { field: 'deliverableName', headerName: 'Name' },
-    { field: 'deliverableType', headerName: 'Type' },
+    { field: 'name', headerName: 'Name' },
+    { field: 'type', headerName: 'Type' },
     { field: 'description', headerName: 'Description' },
     {
         field: 'deliveryFilesVersion',

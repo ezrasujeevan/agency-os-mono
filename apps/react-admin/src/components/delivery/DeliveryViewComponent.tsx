@@ -32,7 +32,7 @@ const DeliveryViewComponent: React.FC<DeliveryViewComponentProps> = ({ projectId
         <Button
           variant={'contained'}
           onClick={() => {
-            navigate(ROUTES.ASSET_NEW_PAGE.replace(':projectId', projectId).replace('deliveryId', deliveryId))
+            navigate(ROUTES.ASSET_NEW_PAGE.replace(':projectId', projectId).replace(':deliveryId', deliveryId))
           }}
         >
           Add

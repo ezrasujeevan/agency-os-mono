@@ -38,6 +38,8 @@ interface NewProjectComponentProps {
 }
 
 const NewProjectComponent: React.FC = ({ projectId }: NewProjectComponentProps) => {
+    const dispatch = useAppDispatch()
+    const navigate = useNavigate()
     const [project, setProject] = useState<Project.Project>()
     // const [id, setId] = useState<string>('')
     // const [trialName, setTrialName] = useState<string>('')
@@ -98,8 +100,7 @@ const NewProjectComponent: React.FC = ({ projectId }: NewProjectComponentProps) 
             isLoading: isLoadingCreate
         }
     ] = useCreateProjectMutation()
-    const dispatch = useAppDispatch()
-    const navigate = useNavigate()
+    
     const { data: dataUser, isSuccess: isSuccessUser } = useGetUserByIdQuery(
         project?.userId ? { id: project.userId } : skipToken
     )

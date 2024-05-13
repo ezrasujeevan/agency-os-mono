@@ -33,10 +33,10 @@ export class DeliveryEntity extends BaseEntity implements Delivery.Delivery {
   @Column('uuid', { name: 'project_id' })
   projectId: string;
 
-  @Column({ name: 'deliverable_name' })
+  @Column({ name: 'name' })
   name: string;
 
-  @Column({ name: 'deliverable_type' })
+  @Column({ name: 'type' })
   type: string;
 
   @Column('text', { name: 'description' })

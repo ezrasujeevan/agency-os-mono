@@ -26,7 +26,7 @@ const AssetRenderActionCell: React.FC<GridRenderCellParams<Asset.Asset, any>> = 
             navigate(`/project/${projectId}/delivery/${deliveryId}/asset/${row.id}/file/`)
         }
     }
-    const disabled = row.deliveryFiles.length === 0
+    const disabled = row.assetFile.length === 0
     return (
         <ButtonGroup variant="contained" aria-label="Basic button group">
             <Button onClick={handleViewAccess} color={'secondary'}>

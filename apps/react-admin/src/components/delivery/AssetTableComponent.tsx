@@ -72,7 +72,7 @@ const AssetTableComponent: React.FC<AssetTableComponentProps> = ({
             } else {
                 //TODO: toastify
                 dispatch(
-                    snackAlertActions.setSnackAlertError({
+                    snackAlertActions.setSnackAlertWarning({
                         title: `Assets -  ${status}`,
                         message: `${error}`
                     })

@@ -26,6 +26,7 @@ import { RootState, useAppDispatch, useAppSelector } from '~/store'
 import { setSnackAlertError, setSnackAlertWarning } from '~/store/reducers'
 import { Cancel, Save, Upgrade } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
+import { idID } from '@mui/material/locale'
 
 interface NewAssetComponentProps {
     deliveryId: string
@@ -53,12 +54,12 @@ const NewAssetComponent: React.FC<NewAssetComponentProps> = ({
     const { data: dataUser, isSuccess: isSuccessUser } = useGetUserByIdQuery(
         user ? { id: user } : skipToken
     )
-    const { data: dataProject, isSuccess: isSuccessProject } = useGetProjectByIdQuery(
-        projectId ? { id: projectId } : skipToken
-    )
-    const { data: dataDelivery, isSuccess: isSuccessDelivery } = useGetDeliveryByIdQuery(
-        deliveryId ? { id: deliveryId } : skipToken
-    )
+    const { data: dataProject, isSuccess: isSuccessProject } = useGetProjectByIdQuery({
+        id: projectId
+    })
+    const { data: dataDelivery, isSuccess: isSuccessDelivery } = useGetDeliveryByIdQuery({
+        id: deliveryId
+    })
     const { data: dataAsset, isSuccess: isSuccessAsset } = useGetAssetByIdQuery(
         assetId ? { id: assetId } : skipToken
     )
@@ -94,11 +95,11 @@ const NewAssetComponent: React.FC<NewAssetComponentProps> = ({
             if (status === 200 && project && !Array.isArray(project)) {
                 setProject(project)
             } else {
-                if (error) {
-                    //TODO Toastify
-                    dispatch(setSnackAlertError({ title: status.toString(), message: error }))
-                }
-                navigate(-1)
+                // if (error) {
+                //     //TODO Toastify
+                //     dispatch(setSnackAlertError({ title: status.toString(), message: error }))
+                // }
+                // navigate(-1)
             }
         }
 
@@ -106,7 +107,7 @@ const NewAssetComponent: React.FC<NewAssetComponentProps> = ({
             const { status, delivery, error } = dataDelivery
             if (status === 200 && delivery && !Array.isArray(delivery)) {
                 setDelivery(delivery)
-            } else {
+            } else if (status === 404) {
                 if (error) {
                     //TODO Toastify
                     dispatch(setSnackAlertError({ title: status.toString(), message: error }))
@@ -118,13 +119,14 @@ const NewAssetComponent: React.FC<NewAssetComponentProps> = ({
             const { status, asset, error } = dataAsset
             if (status === 200 && asset && !Array.isArray(asset)) {
                 setAsset(asset)
-            } else {
-                if (error) {
-                    //TODO Toastify
-                    dispatch(setSnackAlertError({ title: status.toString(), message: error }))
-                }
-                navigate(-1)
             }
+            // else if (status === 400) {
+            //     if (error) {
+            //         //TODO Toastify
+            //         dispatch(setSnackAlertError({ title: status.toString(), message: error }))
+            //     }
+            //     navigate(-1)
+            // }
         }
     }, [dataUser, dataDelivery, dataProject, dataAsset])
 
@@ -185,7 +187,7 @@ const NewAssetComponent: React.FC<NewAssetComponentProps> = ({
         if (isSuccessUpdate) {
             const { status, asset, error } = dataUpdate
             //TODO: Toastify
-            if (status === 200 && asset && !Array.isArray(asset)) {
+            if (status === 200 || status === 201) {
                 dispatch(
                     setSnackAlertWarning({ title: status.toString(), message: 'Asset Updated' })
                 )
@@ -218,7 +220,7 @@ const NewAssetComponent: React.FC<NewAssetComponentProps> = ({
                     fullWidth
                     required
                     label="Delivery"
-                    value={`${delivery?.deliverableName} (${delivery?.deliverableType})`}
+                    value={`${delivery?.name} (${delivery?.type})`}
                     helperText={'Delivery Name (Type)'}
                     margin="dense"
                     disabled

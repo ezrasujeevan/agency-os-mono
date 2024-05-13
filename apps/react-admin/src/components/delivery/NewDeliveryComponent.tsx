@@ -42,6 +42,7 @@ const NewDeliveryComponent: React.FC<NewDeliveryComponentProps> = ({
     const [delivery, setDelivery] = useState<Delivery.Delivery>()
     const [project, setProject] = useState<Project.Project>()
     const [creator, setCreator] = useState<User.User>()
+    const [tags, setTags] = useState<string[]>([])
 
     const [nameError, setNameError] = useState<boolean>(false)
     const [typeError, setTypeError] = useState<boolean>(false)
@@ -75,6 +76,10 @@ const NewDeliveryComponent: React.FC<NewDeliveryComponentProps> = ({
             isLoading: isLoadingUpdate
         }
     ] = useUpdateDeliveryMutation()
+
+    // useEffect(() => {
+    //     setDelivery({ ...delivery, access: false })
+    // })
 
     useEffect(() => {
         if (isSuccessUser) {
@@ -112,7 +117,7 @@ const NewDeliveryComponent: React.FC<NewDeliveryComponentProps> = ({
 
     const handleSaveOrUpdateDelivery = () => {
         //TODO: Validate
-        const { id, name, type, description, tags, access }: Delivery.Delivery = delivery
+        const { id, name, type, description, access }: Delivery.Delivery = delivery
         name ? setNameError(false) : setNameError(true)
         type ? setTypeError(false) : setTypeError(true)
         description ? setDescriptionError(false) : setDescriptionError(true)
@@ -128,7 +133,7 @@ const NewDeliveryComponent: React.FC<NewDeliveryComponentProps> = ({
                 name,
                 type,
                 description,
-                tags,
+                tags: tags,
                 access,
                 createdBy: creator.id
             }
@@ -138,7 +143,8 @@ const NewDeliveryComponent: React.FC<NewDeliveryComponentProps> = ({
                 name,
                 type,
                 description,
-                tags,
+                tags: tags,
+                access: false,
                 createdBy: creator.id,
                 projectId: project.id
             }
@@ -149,7 +155,7 @@ const NewDeliveryComponent: React.FC<NewDeliveryComponentProps> = ({
         if (isSuccessCreate) {
             const { status, delivery, error } = dataCreate
             //TODO: Toasty
-            if (status === 200 && delivery && !Array.isArray(delivery)) {
+            if (status === 201 || status === 200) {
                 dispatch(
                     setSnackAlertSuccess({ title: status.toString(), message: 'Delivery Created' })
                 )
@@ -288,26 +294,32 @@ const NewDeliveryComponent: React.FC<NewDeliveryComponentProps> = ({
                             <TextField {...params} label="Tags" required margin="dense" />
                         )}
                         onChange={(e, value) => {
-                            setDelivery({ ...delivery, tags: value })
+                            setTags(value)
+                            // setDelivery({ ...delivery, tags: value })
                         }}
-                        value={delivery ? delivery.tags : []}
+                        value={tags}
                     />
                 </Grid>
-                <Grid>
-                    <FormControlLabel
-                        control={
-                            <Switch
-                                color="primary"
-                                checked={delivery ? delivery.access : false}
-                                onChange={(e) =>
-                                    setDelivery({ ...delivery, access: e.target.checked })
-                                }
-                            />
-                        }
-                        label="Allow Access To Client"
-                        labelPlacement="start"
-                    />
-                </Grid>
+                {delivery?.id && (
+                    <Grid>
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    color="primary"
+                                    defaultChecked={false}
+                                    checked={delivery.access}
+                                    onChange={(e) => {
+                                        console.log(e.target.checked)
+                                        setDelivery({ ...delivery, access: e.target.checked })
+                                    }}
+                                />
+                            }
+                            label="Allow Access To Client"
+                            labelPlacement="start"
+                        />
+                    </Grid>
+                )}
+
                 <Grid>
                     <ButtonGroup variant="contained" aria-label="Basic button group">
                         <Button color={'secondary'} startIcon={<Cancel />}>

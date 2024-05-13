@@ -43,7 +43,7 @@ const NewFileComponent: React.FC<NewFileComponentProps> = ({
                 // error={error}
                 // helperText={error?.data?.message} // Display error message from API response (if any)
             />
-            <Button variant="contained" type="submit" disabled={isLoading}>
+            <Button variant="contained" type="submit">
                 {'Upload'}
             </Button>
         </form>
