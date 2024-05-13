@@ -78,4 +78,7 @@ export class AssetFileEntity extends BaseEntity implements Asset.AssetFile {
 
   @Column('text', { name: 'file_url' })
   fileUrl: string;
+
+  @Column('uuid', { name: 'created_by' })
+  createdBy: string;
 }

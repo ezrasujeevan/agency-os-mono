@@ -1,6 +1,6 @@
 import { Company } from '@agency-os/class';
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { CompanyRepository } from './company.repositrory';
+import { CompanyRepository } from './company.repository';
 import { CompanyEntity } from './company.entity';
 
 @Injectable()
@@ -31,10 +31,17 @@ export class CompanyService {
   ): Promise<Company.companyResponseDto> {
     const company = await this.companyRepo.findOneCompanyById(id);
     if (company) {
-      return {
-        status: HttpStatus.OK,
-        company,
-      };
+      if (company instanceof CompanyEntity) {
+        return {
+          status: HttpStatus.OK,
+          company,
+        };
+      } else {
+        return {
+          status: HttpStatus.BAD_REQUEST,
+          error: [company.name, company.message],
+        };
+      }
     }
     return {
       status: HttpStatus.NOT_FOUND,

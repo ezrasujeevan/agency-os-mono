@@ -86,14 +86,21 @@ export class DeliveryService {
   }: Delivery.FindOneDeliveryRequestDto): Promise<Delivery.DeliveryResponseDto> {
     const delivery = await this.deliveryRepo.findOneById({ id });
     if (delivery) {
-      delivery.deliveryFiles = await this.getLatestDeliveryFile(delivery.id);
-      return {
-        status: HttpStatus.OK,
-        delivery,
-      };
+      if (delivery instanceof DeliveryEntity) {
+        delivery.deliveryFiles = await this.getLatestDeliveryFile(delivery.id);
+        return {
+          status: HttpStatus.OK,
+          delivery,
+        };
+      } else {
+        return {
+          status: HttpStatus.BAD_REQUEST,
+          error: [delivery.name, delivery.message],
+        };
+      }
     } else {
       return {
-        status: HttpStatus.BAD_REQUEST,
+        status: HttpStatus.NOT_FOUND,
         error: 'No Delivery with Id: ' + id,
       };
     }
@@ -148,15 +155,22 @@ export class DeliveryService {
   }: Delivery.FindOneDeliveryRequestDto): Promise<Delivery.DeliveryResponseDto> {
     const delivery = await this.deliveryRepo.findOneById({ id });
     if (delivery) {
-      const files = await this.fileRepo.getAllFilesForDelivery({ id });
-      delivery.deliveryFiles = files;
-      return {
-        status: HttpStatus.OK,
-        delivery,
-      };
+      if (delivery instanceof DeliveryEntity) {
+        const files = await this.fileRepo.getAllFilesForDelivery({ id });
+        delivery.deliveryFiles = files;
+        return {
+          status: HttpStatus.OK,
+          delivery,
+        };
+      } else {
+        return {
+          status: HttpStatus.BAD_REQUEST,
+          error: [delivery.name, delivery.message],
+        };
+      }
     }
     return {
-      status: HttpStatus.BAD_REQUEST,
+      status: HttpStatus.NOT_FOUND,
       error: 'No Delivery with Id: ' + id,
     };
   }

@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Query,
+  Logger,
 } from '@nestjs/common';
 import { AssetService } from './asset.service';
 import { Asset } from '@agency-os/class';
@@ -16,6 +17,7 @@ import { asset } from '@agency-os/class/dist/asset';
 @ApiTags('asset')
 @Controller('asset')
 export class AssetController {
+  private logger = new Logger(AssetController.name);
   constructor(private readonly assetService: AssetService) {}
 
   @Post()
@@ -27,11 +29,13 @@ export class AssetController {
 
   @ApiQuery({ name: 'delivery', required: false })
   @Get()
-  findAll(
+  async findAll(
     @Query('delivery') deliveryId?: string,
   ): Promise<Asset.AssetResponseDto> {
     if (deliveryId) {
-      return this.assetService.findAllAssetByDeliveryId({ deliveryId });
+      return await this.assetService.findAllAssetByDeliveryId({
+        deliveryId,
+      });
     }
     return this.assetService.findAllAsset();
   }

@@ -26,12 +26,19 @@ export class DeliveryRepository {
 
   async findOneById({
     id,
-  }: Delivery.FindOneDeliveryRequestDto): Promise<DeliveryEntity | null> {
-    const delivery = await this.deliveryRepo.findOne({
-      where: { id },
-    });
-    this.logger.verbose('Delivery found', delivery);
-    return delivery;
+  }: Delivery.FindOneDeliveryRequestDto): Promise<
+    DeliveryEntity | null | Error
+  > {
+    try {
+      const delivery = await this.deliveryRepo.findOne({
+        where: { id },
+      });
+      this.logger.verbose(`Delivery found : ${JSON.stringify(delivery)}`);
+      return delivery;
+    } catch (error) {
+      this.logger.error(error);
+      return error;
+    }
   }
 
   async findAll(): Promise<DeliveryEntity[] | null> {

@@ -169,15 +169,22 @@ export class AssetService {
   ): Promise<Asset.AssetResponseDto> {
     const asset = await this.assetRepo.findOneById(id);
     if (asset) {
-      const files = await this.fileRepo.getAllFilesForAsset(id);
-      asset.assetFile = files;
-      return {
-        status: HttpStatus.OK,
-        asset,
-      };
+      if (asset instanceof AssetEntity) {
+        const files = await this.fileRepo.getAllFilesForAsset(id);
+        asset.assetFile = files;
+        return {
+          status: HttpStatus.OK,
+          asset,
+        };
+      } else {
+        return {
+          status: HttpStatus.BAD_REQUEST,
+          error: [asset.name, asset.message],
+        };
+      }
     }
     return {
-      status: HttpStatus.BAD_REQUEST,
+      status: HttpStatus.NOT_FOUND,
       error: 'No Asset with Id: ' + id,
     };
   }

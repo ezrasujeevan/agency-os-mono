@@ -44,10 +44,15 @@ export class AssetRepository {
 
   async findOneById({
     id,
-  }: Asset.FindOneAssetRequestDto): Promise<AssetEntity | null> {
-    const asset = await this.assetRepo.findOne({ where: { id } });
-    this.logger.verbose(`Asset Found: ${JSON.stringify(asset)}`);
-    return asset;
+  }: Asset.FindOneAssetRequestDto): Promise<AssetEntity | null | Error> {
+    try {
+      const asset = await this.assetRepo.findOne({ where: { id } });
+      this.logger.verbose(`Asset Found: ${JSON.stringify(asset)}`);
+      return asset;
+    } catch (error) {
+      this.logger.error(error);
+      return error;
+    }
   }
 
   async updateAsset(
@@ -56,10 +61,14 @@ export class AssetRepository {
     try {
       const asset = await this.findOneById({ id: updateAssetDto.id });
       if (asset) {
-        this.logger.verbose(`Asset Found: ${JSON.stringify(asset)}`);
-        const updateAsset = await this.assetRepo.merge(asset, updateAssetDto);
-        this.logger.verbose(`Asset Updated: ${JSON.stringify(updateAsset)}`);
-        return await this.assetRepo.save(updateAsset);
+        if (asset instanceof AssetEntity) {
+          this.logger.verbose(`Asset Found: ${JSON.stringify(asset)}`);
+          const updateAsset = await this.assetRepo.merge(asset, updateAssetDto);
+          this.logger.verbose(`Asset Updated: ${JSON.stringify(updateAsset)}`);
+          return await this.assetRepo.save(updateAsset);
+        } else {
+          return asset;
+        }
       }
       throw new NotFoundException(
         `Asset not found by id: ${updateAssetDto.id}`,
@@ -74,10 +83,14 @@ export class AssetRepository {
     id,
   }: Asset.FindOneAssetRequestDto): Promise<AssetEntity | Error> {
     try {
-      const user = await this.findOneById({ id });
-      if (user) {
-        this.logger.verbose(`Asset Found: ${JSON.stringify(user)}`);
-        return await this.assetRepo.softRemove(user);
+      const asset = await this.findOneById({ id });
+      if (asset) {
+        if (asset instanceof AssetEntity) {
+          this.logger.verbose(`Asset Found: ${JSON.stringify(asset)}`);
+          return await this.assetRepo.softRemove(asset);
+        } else {
+          asset;
+        }
       }
       throw new NotFoundException(`Asset not found by id: ${id}`);
     } catch (error) {

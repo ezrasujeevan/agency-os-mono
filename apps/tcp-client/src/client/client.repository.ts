@@ -47,10 +47,15 @@ export class ClientRepository {
 
   async findOneClientById({
     id,
-  }: Client.FindOneClientByIdRequestDto): Promise<ClientEntity | null> {
-    const client = await this.clientRepo.findOne({ where: { id } });
-    this.logger.verbose(`findOneById: ${JSON.stringify(client)}`);
-    return client;
+  }: Client.FindOneClientByIdRequestDto): Promise<ClientEntity | null | Error> {
+    try {
+      const client = await this.clientRepo.findOne({ where: { id } });
+      this.logger.verbose(`findOneById: ${JSON.stringify(client)}`);
+      return client;
+    } catch (error) {
+      this.logger.error(error);
+      return error;
+    }
   }
 
   async findOneClientByEmail({
@@ -67,13 +72,19 @@ export class ClientRepository {
     try {
       const client = await this.findOneClientById({ id: updateClientDto.id });
       if (client) {
-        this.logger.verbose(`Client found ${JSON.stringify(client)}`);
-        const updatedClient = await this.clientRepo.merge(
-          client,
-          updateClientDto,
-        );
-        this.logger.verbose(`Client updated ${JSON.stringify(updatedClient)}`);
-        return await this.clientRepo.save(updatedClient);
+        if (client instanceof ClientEntity) {
+          this.logger.verbose(`Client found ${JSON.stringify(client)}`);
+          const updatedClient = await this.clientRepo.merge(
+            client,
+            updateClientDto,
+          );
+          this.logger.verbose(
+            `Client updated ${JSON.stringify(updatedClient)}`,
+          );
+          return await this.clientRepo.save(updatedClient);
+        } else {
+          return client;
+        }
       }
       throw new NotFoundException(
         `Client not found by id ${updateClientDto.id}`,
@@ -88,12 +99,14 @@ export class ClientRepository {
     findOneClientDto: Client.FindOneClientByIdRequestDto,
   ): Promise<ClientEntity | Error> {
     try {
-      const client = await this.clientRepo.findOne({
-        where: { id: findOneClientDto.id },
-      });
+      const client = await this.findOneClientById(findOneClientDto);
       if (client) {
-        this.logger.verbose(`Client found ${JSON.stringify(client)}`);
-        return await this.clientRepo.softRemove(client);
+        if (client instanceof ClientEntity) {
+          this.logger.verbose(`Client found ${JSON.stringify(client)}`);
+          return await this.clientRepo.softRemove(client);
+        } else {
+          return client;
+        }
       }
       throw new NotFoundException(
         `client not found by id ${findOneClientDto.id}`,

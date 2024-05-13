@@ -18,35 +18,35 @@ export class CompanyController {
   constructor(private readonly companyService: CompanyService) {}
 
   @Post()
-  create(@Body() create: Company.CreateCompanyRequestDto) {
-    return this.companyService.createCompany(create);
+  async create(@Body() create: Company.CreateCompanyRequestDto) {
+    return await this.companyService.createCompany(create);
   }
 
   @ApiQuery({ name: 'code', required: false })
   @Get()
-  findAll(@Query('code') code?: string) {
+  async findAll(@Query('code') code?: string) {
     if (code) {
-      return this.companyService.findOneCompanyByCode({ code });
+      return await this.companyService.findOneCompanyByCode({ code });
     }
-    return this.companyService.findAllCompany();
+    return await this.companyService.findAllCompany();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.companyService.findOneCompanyById({ id });
+  async findOne(@Param('id') id: string) {
+    return await this.companyService.findOneCompanyById({ id });
   }
 
   @Patch(':id')
-  update(
+  async update(
     @Param('id') id: string,
     @Body() update: Company.UpdateCompanyRequestDto,
   ) {
     update.id = id;
-    return this.companyService.updateCompany(update);
+    return await this.companyService.updateCompany(update);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.companyService.removeCompany({ id });
+  async remove(@Param('id') id: string) {
+    return await this.companyService.removeCompany({ id });
   }
 }

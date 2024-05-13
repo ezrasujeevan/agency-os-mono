@@ -195,7 +195,7 @@ export class ProjectService {
         }
       }
       if (companyId) {
-        if (await this.isValidCompany(companyId)) {
+        if (!(await this.isValidCompany(companyId))) {
           return {
             status: HttpStatus.BAD_REQUEST,
             error: 'incorrect Company ID',

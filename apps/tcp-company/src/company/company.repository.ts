@@ -33,10 +33,17 @@ export class CompanyRepository {
 
   async findOneCompanyById({
     id,
-  }: Company.FindOneCompanyByIdRequestDto): Promise<CompanyEntity | null> {
-    const company = await this.companyRepo.findOne({ where: { id } });
-    this.logger.verbose(`company Find One By ID: ${JSON.stringify(company)}`);
-    return company;
+  }: Company.FindOneCompanyByIdRequestDto): Promise<
+    CompanyEntity | null | Error
+  > {
+    try {
+      const company = await this.companyRepo.findOne({ where: { id } });
+      this.logger.verbose(`company Find One By ID: ${JSON.stringify(company)}`);
+      return company;
+    } catch (error) {
+      this.logger.error(error);
+      return error;
+    }
   }
 
   async findOneCompanyByCode({
@@ -53,14 +60,18 @@ export class CompanyRepository {
     try {
       const company = await this.findOneCompanyById({ id: update.id });
       if (company) {
-        this.logger.verbose(
-          `Company Found to Update: ${JSON.stringify(company)}`,
-        );
-        const updateCompany = await this.companyRepo.merge(company, update);
-        this.logger.verbose(
-          `Updated Company: ${JSON.stringify(updateCompany)}`,
-        );
-        return await this.companyRepo.save(updateCompany);
+        if (company instanceof CompanyEntity) {
+          this.logger.verbose(
+            `Company Found to Update: ${JSON.stringify(company)}`,
+          );
+          const updateCompany = await this.companyRepo.merge(company, update);
+          this.logger.verbose(
+            `Updated Company: ${JSON.stringify(updateCompany)}`,
+          );
+          return await this.companyRepo.save(updateCompany);
+        } else {
+          return company;
+        }
       }
       throw new NotFoundException(`Company not found by id : ${update.id}`);
     } catch (error) {
@@ -73,9 +84,18 @@ export class CompanyRepository {
     id: Company.FindOneCompanyByIdRequestDto,
   ): Promise<CompanyEntity | Error> {
     const company = await this.findOneCompanyById(id);
-    if (company) {
-      return await this.companyRepo.remove(company);
+    try {
+      if (company) {
+        if (company instanceof CompanyEntity) {
+          return await this.companyRepo.remove(company);
+        } else {
+          return company;
+        }
+      }
+      return new NotFoundException(`company not found for id ${id}`);
+    } catch (error) {
+      this.logger.error(error);
+      return error;
     }
-    return new NotFoundException(`company not found for id ${id}`);
   }
 }

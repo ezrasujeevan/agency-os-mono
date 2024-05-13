@@ -7,6 +7,7 @@ export abstract class AssetFile extends CommonEntity {
   asset: Asset;
   fileVersion: string;
   fileUrl: string;
+  createdBy: string;
 }
 export abstract class Asset extends CommonEntity {
   @ApiProperty({
@@ -77,6 +78,7 @@ export class createAssetFileRequestDto {
   assetId: string;
   fileVersion: string;
   fileUrl: string;
+  createdBy: string;
 }
 export class CreateAssetRequestDto {
   @ApiProperty({

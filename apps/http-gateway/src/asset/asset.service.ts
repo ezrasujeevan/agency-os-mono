@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Asset } from '@agency-os/class';
 import { ClientTCP } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -6,6 +6,7 @@ import { getAsset } from 'node:sea';
 
 @Injectable()
 export class AssetService {
+  private logger = new Logger(AssetService.name);
   constructor(
     @Inject(Asset.SERVICE_NAME) private readonly assetService: ClientTCP,
   ) {}
@@ -33,12 +34,14 @@ export class AssetService {
   async findAllAssetByDeliveryId(
     deliveryId: Asset.FindAllAssetsOfDeliveryRequestDto,
   ): Promise<Asset.AssetResponseDto> {
-    return await firstValueFrom(
+    const assets = await firstValueFrom(
       this.assetService.send<
         Asset.AssetResponseDto,
         Asset.FindAllAssetsOfDeliveryRequestDto
       >(Asset.Message.findAllByDelivery, deliveryId),
     );
+    this.logger.verbose(`findAll Query DeliveryId:  ${JSON.stringify(assets)}`);
+    return assets;
   }
 
   async findOneAsset(

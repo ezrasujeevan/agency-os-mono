@@ -34,10 +34,10 @@ export class DeliveryEntity extends BaseEntity implements Delivery.Delivery {
   projectId: string;
 
   @Column({ name: 'deliverable_name' })
-  deliverableName: string;
+  name: string;
 
   @Column({ name: 'deliverable_type' })
-  deliverableType: string;
+  type: string;
 
   @Column('text', { name: 'description' })
   description: string;
@@ -84,4 +84,7 @@ export class DeliveryFileEntity
 
   @Column('text', { name: 'file_url' })
   fileUrl: string;
+
+  @Column('uuid', { name: 'created_by' })
+  createdBy: string;
 }

@@ -42,10 +42,15 @@ export class UserRepository {
 
   async findOneById({
     id,
-  }: User.FindOneUserByIdRequestDto): Promise<UserEntity | null> {
-    const user = await this.userRepo.findOne({ where: { id } });
-    this.logger.verbose(`findOneById: ${JSON.stringify(user)}`);
-    return user;
+  }: User.FindOneUserByIdRequestDto): Promise<UserEntity | null | Error> {
+    try {
+      const user = await this.userRepo.findOne({ where: { id } });
+      this.logger.verbose(`findOneById: ${JSON.stringify(user)}`);
+      return user;
+    } catch (error) {
+      this.logger.error(error);
+      return error;
+    }
   }
 
   async findOneByEmail({

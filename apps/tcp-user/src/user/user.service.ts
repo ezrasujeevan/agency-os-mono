@@ -47,8 +47,15 @@ export class UserService {
     findOneUserByIdRequestDto: User.FindOneUserByIdRequestDto,
   ): Promise<User.UserResponseDto> {
     const user = await this.userRepo.findOneById(findOneUserByIdRequestDto);
-    if (user instanceof UserEntity) {
-      return { user, status: HttpStatus.OK };
+    if (user) {
+      if (user instanceof UserEntity) {
+        return { user, status: HttpStatus.OK };
+      } else {
+        return {
+          error: [user.name, user.message],
+          status: HttpStatus.BAD_REQUEST,
+        };
+      }
     } else {
       return { error: 'User not found', status: HttpStatus.NOT_FOUND };
     }
@@ -159,7 +166,7 @@ export class UserService {
     try {
       const payload = await this.jwtService.verifyAsync(token);
       const user = await this.userRepo.findOneById({ id: payload['id'] });
-      if (payload && user) {
+      if (payload && user && user instanceof UserEntity) {
         return {
           status: HttpStatus.OK,
           userId: user.id,
@@ -182,7 +189,7 @@ export class UserService {
 
       const payload = await this.jwtService.verifyAsync(refreshToken);
       const user = await this.userRepo.findOneById({ id: payload['id'] });
-      if (payload && user) {
+      if (payload && user && user instanceof UserEntity) {
         const { id, email } = user;
         const token = await this.jwtService.signAsync({ id, email });
         const refreshToken = await this.jwtService.signAsync(

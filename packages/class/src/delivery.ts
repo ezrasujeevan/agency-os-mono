@@ -26,6 +26,7 @@ export abstract class DeliveryFile extends CommonEntity {
   delivery: Delivery;
   fileVersion: string;
   fileUrl: string;
+  createdBy: string;
 }
 
 export abstract class Delivery extends CommonEntity {
@@ -41,14 +42,14 @@ export abstract class Delivery extends CommonEntity {
     example: 'My Deliverable',
     title: 'Deliverable Name',
   })
-  deliverableName: string;
+  name: string;
 
   @ApiProperty({
     description: 'The type of the deliverable',
     example: 'Document',
     title: 'Deliverable Type',
   })
-  deliverableType: string;
+  type: string;
 
   @ApiProperty({
     description: 'The description of the deliverable',
@@ -95,6 +96,7 @@ export class createDeliveryFileRequestDto {
   deliveryId: string;
   fileVersion: string;
   fileUrl: string;
+  createdBy: string;
 }
 
 export class UpdateDeliveryRequestDto extends PartialType(CreateDeliveryRequestDto) {

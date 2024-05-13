@@ -209,7 +209,7 @@ export class ClientService {
       const client = await this.clientRepo.findOneClientById({
         id: payload['id'],
       });
-      if (payload && client) {
+      if (payload && client && client instanceof ClientEntity) {
         return {
           status: HttpStatus.OK,
           clientId: client.id,
@@ -234,7 +234,7 @@ export class ClientService {
       const client = await this.clientRepo.findOneClientById({
         id: payload['id'],
       });
-      if (payload && client) {
+      if (payload && client && client instanceof ClientEntity) {
         const { id, email } = client;
         const token = await this.jwtService.signAsync({ id, email });
         const refreshToken = await this.jwtService.signAsync(
@@ -260,7 +260,9 @@ export class ClientService {
     };
   }
 
-  private async isValidCompany(id: string): Promise<boolean> {
+  private async isValidCompany(
+    id: string,
+  ): Promise<boolean | Client.ClientResponseDto> {
     const companyResponse = await firstValueFrom(
       this.companyService.send<
         Company.companyResponseDto,
