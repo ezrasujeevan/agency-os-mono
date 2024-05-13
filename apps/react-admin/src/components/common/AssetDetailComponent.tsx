@@ -54,7 +54,7 @@ const AssetDetailComponent: React.FC<AssetDetailComponentProps> = ({
                 )
                 navigate(-1)
             }
-            if (!loading) {
+            if (!isLoadingAsset) {
                 refetchAsset()
             }
         }
