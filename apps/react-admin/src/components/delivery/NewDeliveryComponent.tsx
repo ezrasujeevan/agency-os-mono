@@ -117,8 +117,8 @@ const NewDeliveryComponent: React.FC<NewDeliveryComponentProps> = ({
                     fullWidth
                     required
                     label="Name"
-                    value={delivery ? delivery.deliverableName : ''}
-                    onChange={(e) => setDelivery({ ...delivery, deliverableName: e.target.value })}
+                    value={delivery ? delivery.name : ''}
+                    onChange={(e) => setDelivery({ ...delivery, name: e.target.value })}
                     helperText=""
                     margin="dense"
                 />
@@ -129,8 +129,8 @@ const NewDeliveryComponent: React.FC<NewDeliveryComponentProps> = ({
                     fullWidth
                     required
                     label="Type"
-                    value={delivery ? delivery.deliverableType : ''}
-                    onChange={(e) => setDelivery({ ...delivery, deliverableType: e.target.value })}
+                    value={delivery ? delivery.type : ''}
+                    onChange={(e) => setDelivery({ ...delivery, type: e.target.value })}
                     helperText=""
                     margin="dense"
                 />
