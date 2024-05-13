@@ -14,11 +14,13 @@ import {
     FormControlLabel
 } from '@mui/material'
 import {
+    useCreateAssetMutation,
     useCreateDeliveryMutation,
     useGetAssetByIdQuery,
     useGetDeliveryByIdQuery,
     useGetProjectByIdQuery,
-    useGetUserByIdQuery
+    useGetUserByIdQuery,
+    useUpdateAssetMutation
 } from '~/store/api'
 import { RootState, useAppDispatch, useAppSelector } from '~/store'
 import { setSnackAlertError, setSnackAlertWarning } from '~/store/reducers'
@@ -47,9 +49,6 @@ const NewAssetComponent: React.FC<NewAssetComponentProps> = ({
     const [nameError, setNameError] = useState<boolean>(false)
     const [typeError, setTypeError] = useState<boolean>(false)
     const [descriptionError, setDescriptionError] = useState<boolean>(false)
-    const [tags, setTags] = useState<string[]>([])
-    const [tagsError, setTagsError] = useState<boolean>(false)
-    const [access, setAccess] = useState<boolean>(true)
 
     const { data: dataUser, isSuccess: isSuccessUser } = useGetUserByIdQuery(
         user ? { id: user } : skipToken
@@ -63,6 +62,25 @@ const NewAssetComponent: React.FC<NewAssetComponentProps> = ({
     const { data: dataAsset, isSuccess: isSuccessAsset } = useGetAssetByIdQuery(
         assetId ? { id: assetId } : skipToken
     )
+
+    const [
+        createAsset,
+        {
+            data: dataCreate,
+            isSuccess: isSuccessCreate,
+            error: errorCreate,
+            isLoading: isLoadingCreate
+        }
+    ] = useCreateAssetMutation()
+    const [
+        updateAsset,
+        {
+            data: dataUpdate,
+            isSuccess: isSuccessUpdate,
+            error: errorUpdate,
+            isLoading: isLoadingUpdate
+        }
+    ] = useUpdateAssetMutation()
 
     useEffect(() => {
         if (isSuccessUser) {
@@ -112,8 +130,75 @@ const NewAssetComponent: React.FC<NewAssetComponentProps> = ({
 
     const handleSaveOrUpdateAsset = () => {
         //TODO: Validate
+        const { id, name, type, description, access } = asset
+        name ? setNameError(false) : setNameError(true)
+        type ? setTypeError(false) : setTypeError(true)
+        description ? setDescriptionError(false) : setDescriptionError(true)
+
+        if (!name || !type || !description) return
+
+        if (!asset) return
+
         //TODO: Save or Update
+
+        if (id) {
+            const update: Asset.UpdateAsset = {
+                id,
+                name,
+                type,
+                description,
+                access,
+                createdBy: creator.id
+            }
+            updateAsset(update)
+        } else {
+            const create: Asset.CreateAssetRequestDto = {
+                name,
+                type,
+                description,
+                access,
+                createdBy: creator.id,
+                deliveryId: deliveryId
+            }
+            createAsset(create)
+        }
     }
+
+    useEffect(() => {
+        if (isSuccessCreate) {
+            const { status, asset, error } = dataCreate
+            //TODO: Toastify
+            if (status === 200 && asset && !Array.isArray(asset)) {
+                dispatch(
+                    setSnackAlertWarning({ title: status.toString(), message: 'Asset Created' })
+                )
+                navigate(-1)
+            } else {
+                if (error) {
+                    dispatch(setSnackAlertError({ title: status.toString(), message: error }))
+                }
+            }
+        } else if (errorCreate) {
+            dispatch(setSnackAlertError({ title: 'Error', message: errorCreate.message }))
+        }
+
+        if (isSuccessUpdate) {
+            const { status, asset, error } = dataUpdate
+            //TODO: Toastify
+            if (status === 200 && asset && !Array.isArray(asset)) {
+                dispatch(
+                    setSnackAlertWarning({ title: status.toString(), message: 'Asset Updated' })
+                )
+                navigate(-1)
+            } else {
+                if (error) {
+                    dispatch(setSnackAlertError({ title: status.toString(), message: error }))
+                }
+            }
+        } else if (errorUpdate) {
+            dispatch(setSnackAlertError({ title: 'Error', message: errorUpdate.message }))
+        }
+    }, [dataCreate, dataUpdate])
 
     return (
         <Grid>
