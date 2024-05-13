@@ -117,7 +117,7 @@ const NewProjectComponent: React.FC = ({ projectId }: NewProjectComponentProps) 
     const handleSaveOrUpdateProject = () => {
         //TODO: Validate
         const { id, name, trialName, opportunityDate, projectValue, startDate, status, endDate } =
-            project || {}
+            project
         name ? setErrorName(false) : setErrorName(true)
         trialName ? setErrorTrialName(false) : setErrorTrialName(true)
         opportunityDate ? setErrorOpportunityDate(false) : setErrorOpportunityDate(true)
@@ -128,7 +128,7 @@ const NewProjectComponent: React.FC = ({ projectId }: NewProjectComponentProps) 
         company ? setErrorCompany(false) : setErrorCompany(true)
         if (
             !name ||
-            !trialName || 
+            !trialName ||
             !opportunityDate ||
             !startDate ||
             !projectValue ||
@@ -143,7 +143,7 @@ const NewProjectComponent: React.FC = ({ projectId }: NewProjectComponentProps) 
         }
 
         //TODO: Save or Update
-        if (project.id) {
+        if (id) {
             const update: Project.UpdateProjectRequestDto = {
                 id,
                 name,
@@ -186,11 +186,7 @@ const NewProjectComponent: React.FC = ({ projectId }: NewProjectComponentProps) 
             }
         } else {
             if (errorCreate) {
-                dispatch(
-                    setSnackAlertError({
-                        title: 'Error',
-                        message: errorCreate ? errorCreate : 'unknown'
-                    })
+                dispatch(setSnackAlertError({ title: 'Error', message: errorCreate ? errorCreate : 'unknown' })
                 )
             }
         }
@@ -215,8 +211,6 @@ const NewProjectComponent: React.FC = ({ projectId }: NewProjectComponentProps) 
             }
         }
     }, [dataCreate, dataUpdate])
-
-    const handleStatusChanged = (e: React.ChangeEvent<{ value: unknown }>) => {}
 
     useEffect(() => {
         if (isSuccessClientList) {
