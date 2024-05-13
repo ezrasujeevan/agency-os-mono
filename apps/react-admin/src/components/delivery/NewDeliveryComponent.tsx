@@ -48,7 +48,6 @@ const NewDeliveryComponent: React.FC<NewDeliveryComponentProps> = ({
     const [descriptionError, setDescriptionError] = useState<boolean>(false)
     const [tagsError, setTagsError] = useState<boolean>(false)
 
-
     const { data: dataUser, isSuccess: isSuccessUser } = useGetUserByIdQuery(
         user ? { id: user } : skipToken
     )
@@ -58,16 +57,24 @@ const NewDeliveryComponent: React.FC<NewDeliveryComponentProps> = ({
     const { data: dataDelivery, isSuccess: isSuccessDelivery } = useGetDeliveryByIdQuery(
         deliveryId ? { id: deliveryId } : skipToken
     )
-    const [createDelivery, { data: dataCreate,
-        isSuccess: isSuccessCreate,
-        error: errorCreate,
-        isLoading: isLoadingCreate }] =
-        useCreateDeliveryMutation()
-    const [updateDelivery, { data: dataUpdate,
-        isSuccess: isSuccessUpdate,
-        error: errorUpdate,
-        isLoading: isLoadingUpdate }] =
-        useUpdateDeliveryMutation()
+    const [
+        createDelivery,
+        {
+            data: dataCreate,
+            isSuccess: isSuccessCreate,
+            error: errorCreate,
+            isLoading: isLoadingCreate
+        }
+    ] = useCreateDeliveryMutation()
+    const [
+        updateDelivery,
+        {
+            data: dataUpdate,
+            isSuccess: isSuccessUpdate,
+            error: errorUpdate,
+            isLoading: isLoadingUpdate
+        }
+    ] = useUpdateDeliveryMutation()
 
     useEffect(() => {
         if (isSuccessUser) {
@@ -113,17 +120,29 @@ const NewDeliveryComponent: React.FC<NewDeliveryComponentProps> = ({
 
         if (!name || !type || !description || tags.length <= 0) return
 
-        if (!delivery)
-            return
+        if (!delivery) return
         //TODO: Save or Update
         if (id) {
-            const update: Delivery.UpdateDeliveryRequestDto = { id, name, type, description, tags, access, createdBy: creator.id }
+            const update: Delivery.UpdateDeliveryRequestDto = {
+                id,
+                name,
+                type,
+                description,
+                tags,
+                access,
+                createdBy: creator.id
+            }
             updateDelivery(update)
-        }
-        else {
-            const create: Delivery.CreateDeliveryRequestDto = { name, type, description, tags, createdBy: creator.id, projectId: project.id }
+        } else {
+            const create: Delivery.CreateDeliveryRequestDto = {
+                name,
+                type,
+                description,
+                tags,
+                createdBy: creator.id,
+                projectId: project.id
+            }
             createDelivery(create)
-
         }
     }
     useEffect(() => {
@@ -131,16 +150,24 @@ const NewDeliveryComponent: React.FC<NewDeliveryComponentProps> = ({
             const { status, delivery, error } = dataCreate
             //TODO: Toasty
             if (status === 200 && delivery && !Array.isArray(delivery)) {
-                dispatch(setSnackAlertSuccess({ title: status.toString(), message: 'Delivery Created' }))
+                dispatch(
+                    setSnackAlertSuccess({ title: status.toString(), message: 'Delivery Created' })
+                )
                 navigate(ROUTES.PROJECT_PAGE.replace(':projectId', project.id))
+            } else {
+                dispatch(
+                    setSnackAlertError({
+                        title: status.toString(),
+                        message: error ? error : 'unknown'
+                    })
+                )
             }
-            else {
-                dispatch(setSnackAlertError({ title: status.toString(), message: error ? error : 'unknown' }))
-            }
-        }
-        else if (errorCreate) {
+        } else if (errorCreate) {
             dispatch(
-                setSnackAlertError({ title: 'Error', message: errorCreate ? errorCreate : 'unknown' })
+                setSnackAlertError({
+                    title: 'Error',
+                    message: errorCreate ? errorCreate : 'unknown'
+                })
             )
         }
 
@@ -148,20 +175,32 @@ const NewDeliveryComponent: React.FC<NewDeliveryComponentProps> = ({
             const { status, delivery, error } = dataUpdate
             //TODO: Toasty
             if (status === 200 && delivery && !Array.isArray(delivery)) {
-                dispatch(setSnackAlertSuccess({ title: status.toString(), message: 'Delivery Updated' }))
-                navigate(ROUTES.DELIVERY_PAGE.replace(':projectId', project.id).replace(':deliveryId', delivery.id))
+                dispatch(
+                    setSnackAlertSuccess({ title: status.toString(), message: 'Delivery Updated' })
+                )
+                navigate(
+                    ROUTES.DELIVERY_PAGE.replace(':projectId', project.id).replace(
+                        ':deliveryId',
+                        delivery.id
+                    )
+                )
+            } else {
+                dispatch(
+                    setSnackAlertError({
+                        title: status.toString(),
+                        message: error ? error : 'unknown'
+                    })
+                )
             }
-            else {
-                dispatch(setSnackAlertError({ title: status.toString(), message: error ? error : 'unknown' }))
-            }
-
         } else if (errorUpdate) {
             dispatch(
-                setSnackAlertError({ title: 'Error', message: errorUpdate ? errorUpdate : 'unknown' })
+                setSnackAlertError({
+                    title: 'Error',
+                    message: errorUpdate ? errorUpdate : 'unknown'
+                })
             )
         }
     }, [dataCreate, dataUpdate])
-
 
     return (
         <Grid>
