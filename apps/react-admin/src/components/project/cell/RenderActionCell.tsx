@@ -10,14 +10,22 @@ const DeliveryRenderActionCell: React.FC<GridRenderCellParams<Delivery.Delivery,
     const navigate = useNavigate()
     const { projectId } = useParams()
     const handleSwitchAccess = () => {}
-    const handleViewAccess = () => {}
+    const handleViewAccess = () => {
+        if (projectId && row.id) {
+            navigate(`/project/${projectId}/delivery/${row.id}`)
+        }
+    }
 
     const handleFileAccess = () => {
         if (projectId && row.id) {
             navigate(`/project/${projectId}/delivery/${row.id}/file/new`)
         }
     }
-    const handleHistory = () => {}
+    const handleHistory = () => {
+        if (projectId && row.id) {
+            navigate(`/project/${projectId}/delivery/${row.id}/file/`)
+        }
+    }
     const disabled = row.deliveryFiles.length === 0
     return (
         <ButtonGroup variant="contained" aria-label="Basic button group">

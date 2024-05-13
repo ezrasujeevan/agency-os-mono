@@ -13,7 +13,8 @@ export const projectApiSlice = rootApiSlice.injectEndpoints({
             query: ({id}: Project.FindOneProjectRequestByIdDto) => ({
                 url: `project/${id}`,
                 method: 'GET'
-            })
+            }),
+            providesTags:['Project']
         }),
         getProjectByTrialName: builder.query<Project.ProjectResponse, Project.FindOneProjectRequestByTrialNameDto>({
             query: ({trialName}: Project.FindOneProjectRequestByTrialNameDto) => ({

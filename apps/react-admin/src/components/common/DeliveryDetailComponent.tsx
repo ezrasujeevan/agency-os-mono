@@ -66,10 +66,10 @@ const DeliveryDetailComponent: React.FC<DeliveryDetailComponentProps> = ({
             <Grid xs={12}>
                 <Typography variant="h3">Delivery Detail</Typography>
                 <Typography variant="h4">
-                    Name: {isFetchingDelivery ? <Skeleton /> : delivery?.deliverableName}
+                    Name: {isFetchingDelivery ? <Skeleton /> : delivery?.name}
                 </Typography>
                 <Typography variant="h5">
-                    Type: {isFetchingDelivery ? <Skeleton /> : delivery?.deliverableType}
+                    Type: {isFetchingDelivery ? <Skeleton /> : delivery?.type}
                 </Typography>
                 <Typography variant="h5">
                     Description: {isFetchingDelivery ? <Skeleton /> : delivery?.description}
@@ -93,15 +93,13 @@ const DeliveryDetailComponent: React.FC<DeliveryDetailComponentProps> = ({
                     )}
                 </Typography>
                 <Typography variant="h5">
-                    Description:{' '}
+                    Created By:{' '}
                     {isFetchingDelivery ? (
-                        isFetchingUser ? (
-                            <Skeleton />
-                        ) : (
-                            `${user?.firstName} ${user?.lastName} (${user?.email})`
-                        )
-                    ) : (
                         <Skeleton />
+                    ) : isFetchingUser ? (
+                        <Skeleton />
+                    ) : (
+                        `${user?.firstName} ${user?.lastName} (${user?.email})`
                     )}
                 </Typography>
             </Grid>

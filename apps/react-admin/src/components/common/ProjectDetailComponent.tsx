@@ -5,7 +5,12 @@ import { skipToken } from '@reduxjs/toolkit/query'
 import moment from 'moment'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '~/store'
-import { useGetProjectByIdQuery, useGetUserByIdQuery, useGetClientByIdQuery, useGetCompanyByIdQuery } from '~/store/api'
+import {
+    useGetProjectByIdQuery,
+    useGetUserByIdQuery,
+    useGetClientByIdQuery,
+    useGetCompanyByIdQuery
+} from '~/store/api'
 import { setSnackAlertError } from '~/store/reducers'
 import { projectType, userType, clientType, companyType } from '~/types/class'
 
@@ -22,11 +27,13 @@ const ProjectDetailComponent: React.FC<ProjectDetailComponentProps> = ({
     const [User, setUser] = useState<userType>()
     const [Client, setClient] = useState<clientType>()
     const [Company, setCompany] = useState<companyType>()
-    
+
     const {
         data: projectRes,
         isSuccess: isSuccessProject,
-        isFetching: isFetchingProject
+        isFetching: isFetchingProject,
+        isLoading: isLoadingProject,
+        refetch: refetchProject
     } = useGetProjectByIdQuery(projectId ? { id: projectId } : skipToken)
 
     const {
@@ -58,6 +65,9 @@ const ProjectDetailComponent: React.FC<ProjectDetailComponentProps> = ({
                     })
                 )
                 navigate(-1)
+            }
+            if (!isLoadingProject) {
+                refetchProject()
             }
         }
 

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { Unstable_Grid2 as Grid } from '@mui/material'
-import { CardComponent, SkeletonCardComponent } from '.'
-
 import { Project } from '@agency-os/class'
 import { useGetAllProjectsQuery } from '~/store/api'
 import { useNavigate } from 'react-router-dom'
+import SkeletonCardComponent from './SkeletonCardComponent'
+import ProjectCardComponent from './ProjectCardComponent'
 
 interface ProjectRootComponentProps {}
 
@@ -47,7 +47,7 @@ const ProjectRootComponent: React.FC<
                           }}
                           sx={{ cursor: 'pointer' }}
                       >
-                          <CardComponent project={project} />
+                          <ProjectCardComponent project={project} />
                       </Grid>
                   ))}
         </Grid>

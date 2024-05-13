@@ -3,12 +3,17 @@ import {
     Autocomplete,
     Button,
     ButtonGroup,
+    FormControl,
     Unstable_Grid2 as Grid,
     InputAdornment,
+    InputLabel,
+    MenuItem,
+    Select,
     TextField
 } from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import {
+    useCreateProjectMutation,
     useGetAllClientsQuery,
     useGetAllCompaniesQuery,
     useGetAllUsersQuery,
@@ -22,10 +27,11 @@ import { Cancel, Save, Upgrade } from '@mui/icons-material'
 import moment, { Moment } from 'moment'
 import { User, Company, Client, Project } from '@agency-os/class'
 import { useAppDispatch } from '~/store'
-import { setSnackAlertError } from '~/store/reducers'
-import { i } from 'vitest/dist/reporters-LqC_WI4d'
+import { setSnackAlertError, setSnackAlertSuccess } from '~/store/reducers'
 import { useNavigate } from 'react-router-dom'
 import { skipToken } from '@reduxjs/toolkit/query'
+import { ProjectStatus } from '~/resources/project-constans'
+import { ROUTES } from '~/resources/routes-constants'
 
 interface NewProjectComponentProps {
     projectId?: string
@@ -74,7 +80,24 @@ const NewProjectComponent: React.FC = ({ projectId }: NewProjectComponentProps) 
         isSuccess: isSuccessUserList,
         isLoading: isLoadingUserList
     } = useGetAllUsersQuery()
-    const [updateProject, { data: projectRes }] = useUpdateProjectMutation()
+    const [
+        updateProject,
+        {
+            data: dataUpdate,
+            isSuccess: isSuccessUpdate,
+            error: errorUpdate,
+            isLoading: isLoadingUpdate
+        }
+    ] = useUpdateProjectMutation()
+    const [
+        createProject,
+        {
+            data: dataCreate,
+            isSuccess: isSuccessCreate,
+            error: errorCreate,
+            isLoading: isLoadingCreate
+        }
+    ] = useCreateProjectMutation()
     const dispatch = useAppDispatch()
     const navigate = useNavigate()
     const { data: dataUser, isSuccess: isSuccessUser } = useGetUserByIdQuery(
@@ -93,8 +116,107 @@ const NewProjectComponent: React.FC = ({ projectId }: NewProjectComponentProps) 
 
     const handleSaveOrUpdateProject = () => {
         //TODO: Validate
+        const { id, name, trialName, opportunityDate, projectValue, startDate, status, endDate } =
+            project || {}
+        name ? setErrorName(false) : setErrorName(true)
+        trialName ? setErrorTrialName(false) : setErrorTrialName(true)
+        opportunityDate ? setErrorOpportunityDate(false) : setErrorOpportunityDate(true)
+        startDate ? setErrorStartDate(false) : setErrorStartDate(true)
+        projectValue ? setErrorProjectValue(false) : setErrorProjectValue(true)
+        user ? setErrorUser(false) : setErrorUser(true)
+        client ? setErrorClient(false) : setErrorClient(true)
+        company ? setErrorCompany(false) : setErrorCompany(true)
+        if (
+            !name ||
+            !trialName || 
+            !opportunityDate ||
+            !startDate ||
+            !projectValue ||
+            !user ||
+            !client ||
+            !company
+        ) {
+            return
+        }
+        if (!project) {
+            return;
+        }
+
         //TODO: Save or Update
+        if (project.id) {
+            const update: Project.UpdateProjectRequestDto = {
+                id,
+                name,
+                status,
+                trialName,
+                opportunityDate,
+                projectValue,
+                startDate,
+                endDate: endDate ? endDate : undefined,
+                userId: user.id,
+                clientId: client.id,
+                companyId: company.id
+            }
+            updateProject(update)
+        } else {
+            const create: Project.CreateProjectRequestDto = {
+                name,
+                trialName,
+                opportunityDate,
+                projectValue,
+                startDate,
+                endDate: endDate ? endDate : undefined,
+                userId: user.id,
+                clientId: client.id,
+                companyId: company.id
+            }
+            createProject(create)
+        }
     }
+
+    useEffect(() => {
+        if (isSuccessCreate) {
+            const { status, project, error } = dataCreate
+            //TODO toastify
+            if (status === 201 || status == 200) {
+                dispatch(setSnackAlertSuccess({ title: 'Success', message: 'Project Created' }))
+                navigate(ROUTES.DASHBOARD_PAGE)
+            } else {
+                dispatch(setSnackAlertError({ title: 'Error', message: error ? error : 'unknown' }))
+            }
+        } else {
+            if (errorCreate) {
+                dispatch(
+                    setSnackAlertError({
+                        title: 'Error',
+                        message: errorCreate ? errorCreate : 'unknown'
+                    })
+                )
+            }
+        }
+
+        if (isSuccessUpdate) {
+            const { status, project, error } = dataUpdate
+            //TODO toastify
+            if (status === 200) {
+                dispatch(setSnackAlertSuccess({ title: 'Success', message: 'Project Updated' }))
+                navigate(ROUTES.PROJECT_PAGE.replace(':projectId', project.id))
+            } else {
+                dispatch(setSnackAlertError({ title: 'Error', message: error ? error : 'unknown' }))
+            }
+        } else {
+            if (errorUpdate) {
+                dispatch(
+                    setSnackAlertError({
+                        title: 'Error',
+                        message: errorUpdate?.message ? errorUpdate.message : 'unknown'
+                    })
+                )
+            }
+        }
+    }, [dataCreate, dataUpdate])
+
+    const handleStatusChanged = (e: React.ChangeEvent<{ value: unknown }>) => {}
 
     useEffect(() => {
         if (isSuccessClientList) {
@@ -181,14 +303,36 @@ const NewProjectComponent: React.FC = ({ projectId }: NewProjectComponentProps) 
                     required
                     label="ID"
                     value={project ? project.id : ''}
-                    // helperText={
-                    //     project?
-                    //         ? 'Generated Project ID'
-                    //         : 'Project ID will be generated automatically'
-                    // }
+                    helperText={
+                        projectId
+                            ? 'Generated Project ID'
+                            : 'Project ID will be generated automatically'
+                    }
                     margin="dense"
                     disabled
                 />
+            </Grid>
+            <Grid>
+                {projectId && (
+                    <FormControl fullWidth margin="dense" required>
+                        <InputLabel id="project-status-label">Status</InputLabel>
+                        <Select
+                            labelId="project-status-label"
+                            label={'Status'}
+                            value={project ? project.status : ProjectStatus.INACTIVE}
+                            onChange={(e) => {
+                                setProject({ ...project, status: e.target.value as ProjectStatus })
+                            }}
+                        >
+                            <MenuItem value={ProjectStatus.INACTIVE}>Inactive</MenuItem>
+                            <MenuItem value={ProjectStatus.ACTIVE}>Active</MenuItem>
+                            <MenuItem value={ProjectStatus.PENDING}>Pending</MenuItem>
+                            <MenuItem value={ProjectStatus.BlOCKED}>Blocked</MenuItem>
+                            <MenuItem value={ProjectStatus.COMPLETED}>Completed</MenuItem>
+                            <MenuItem value={ProjectStatus.DROPPED}>Dropped</MenuItem>
+                        </Select>
+                    </FormControl>
+                )}
             </Grid>
             <Grid>
                 <TextField
@@ -208,7 +352,7 @@ const NewProjectComponent: React.FC = ({ projectId }: NewProjectComponentProps) 
                     fullWidth
                     required
                     label="Name"
-                    value={project? project.name :''}
+                    value={project ? project.name : ''}
                     onChange={(e) => setProject({ ...project, name: e.target.value })}
                     margin="dense"
                 />
@@ -375,7 +519,13 @@ const NewProjectComponent: React.FC = ({ projectId }: NewProjectComponentProps) 
             </Grid>
             <Grid>
                 <ButtonGroup variant="contained" aria-label="Basic button group">
-                    <Button color={'secondary'} startIcon={<Cancel />}>
+                    <Button
+                        color={'secondary'}
+                        startIcon={<Cancel />}
+                        onClick={() => {
+                            navigate(-1)
+                        }}
+                    >
                         Cancel
                     </Button>
                     <Button

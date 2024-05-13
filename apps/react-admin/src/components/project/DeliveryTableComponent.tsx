@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { Unstable_Grid2 as Grid, Skeleton } from '@mui/material'
+import React, { useEffect, useState } from 'react'
+import { Unstable_Grid2 as Grid } from '@mui/material'
 import { DataGrid, GridColDef, useGridApiRef } from '@mui/x-data-grid'
 import {
     DeliveryRenderAccessCell,
@@ -10,7 +10,9 @@ import {
 
 import { Delivery } from '@agency-os/class'
 import { useGetAllDeliveryByProjectIdQuery } from '~/store/api'
-
+import { NoDataOverlayTable } from '../common'
+import { useAppDispatch } from '~/store'
+import { snackAlertActions } from '~/store/reducers/snack.alert'
 
 const deliveryColumns: GridColDef<Delivery.Delivery>[] = [
     { field: 'deliverableName', headerName: 'Name' },
@@ -52,15 +54,30 @@ const DeliveryTableComponent: React.FC<DeliveryTableComponentProps> = ({
     projectId
 }: DeliveryTableComponentProps) => {
     const apiRef = useGridApiRef()
+    const dispatch = useAppDispatch()
 
     const [rows, setRows] = useState<Delivery.Delivery[]>([])
     const { data, isSuccess, isFetching } = useGetAllDeliveryByProjectIdQuery({ projectId })
     useEffect(() => {
         if (isSuccess) {
-            const { status, delivery }: Delivery.DeliveryResponseDto = data
+            const { status, delivery, error }: Delivery.DeliveryResponseDto = data
             if (status === 200 && delivery && Array.isArray(delivery)) {
                 setRows(delivery)
-                apiRef.current.autosizeColumns({ includeOutliers: true })
+
+                dispatch(
+                    snackAlertActions.setSnackAlertSuccess({
+                        title: `Delivery -  ${status}`,
+                        message: `Found Deliveries : ${delivery.length}`
+                    })
+                )
+            } else {
+                //TODO: toastify
+                dispatch(
+                    snackAlertActions.setSnackAlertError({
+                        title: `Assets -  ${status}`,
+                        message: `${error}`
+                    })
+                )
             }
         }
     }, [data])
@@ -69,7 +86,9 @@ const DeliveryTableComponent: React.FC<DeliveryTableComponentProps> = ({
         <Grid container>
             <Grid xs={12}>
                 <DataGrid
+                    slots={{ noRowsOverlay: NoDataOverlayTable }}
                     apiRef={apiRef}
+                    autoHeight={true}
                     columns={deliveryColumns}
                     rows={rows}
                     initialState={{ pagination: { paginationModel: { page: 0, pageSize: 5 } } }}

@@ -4,18 +4,22 @@ import {
     LoadingComponent,
     PasswordInputComponent,
     SnackBarComponent,
-    ToastAlertBoxComponent
+    ToastAlertBoxComponent,
+    NewFileComponent
 } from './common'
 import * as ProjectCollection from './project'
 import * as DeliveryCollection from './delivery'
+import * as AssetCollection from './asset'
 
 export {
     MaterialUISwitch,
-    ProjectCollection,
-    DeliveryCollection,
     HeaderComponent,
     LoadingComponent,
     PasswordInputComponent,
     SnackBarComponent,
-    ToastAlertBoxComponent
+    ToastAlertBoxComponent,
+    NewFileComponent,
+    ProjectCollection,
+    DeliveryCollection,
+    AssetCollection
 }

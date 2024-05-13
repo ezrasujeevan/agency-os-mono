@@ -12,7 +12,7 @@ const ProjectPage: React.FC<ProjectPageProps> = ({}: ProjectPageProps) => {
         return (
             <Grid container>
                 <Grid xs={12}>
-                    <ProjectCollection.ViewComponent projectId={projectId} />
+                    <ProjectCollection.ProjectViewComponent projectId={projectId} />
                 </Grid>
             </Grid>
         )

@@ -1,12 +1,24 @@
 import React from 'react'
-import {Unstable_Grid2 as Grid} from '@mui/material'
+import { Unstable_Grid2 as Grid } from '@mui/material'
+import { DeliveryCollection } from '~/components'
+import { useParams } from 'react-router-dom'
 
-interface DeliveryPageProps {
+interface DeliveryPageProps {}
 
-}
-
-const DeliveryPage: React.FC<DeliveryPageProps> = ({}:DeliveryPageProps) => {
-  return (<Grid container><Grid xs={12}>DeliveryPage</Grid></Grid>)
+const DeliveryPage: React.FC<DeliveryPageProps> = ({}: DeliveryPageProps) => {
+    const { projectId, deliveryId } = useParams()
+    if (projectId && deliveryId) {
+        return (
+            <Grid container>
+                <Grid xs={12}>
+                    <DeliveryCollection.DeliveryViewComponent
+                        deliveryId={deliveryId}
+                        projectId={projectId}
+                    />
+                </Grid>
+            </Grid>
+        )
+    }
 }
 
 export default DeliveryPage

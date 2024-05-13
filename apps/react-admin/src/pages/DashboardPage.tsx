@@ -40,7 +40,7 @@ const DashboardPage: React.FC = () => {
                 </FormControl>
             </Grid>
             <Grid xs={12}>
-                <ProjectCollection.RootComponent />
+                <ProjectCollection.ProjectRootComponent />
             </Grid>
         </Grid>
     )

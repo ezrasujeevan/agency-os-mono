@@ -10,7 +10,9 @@ const ProjectEditPage: React.FC<ProjectEditPageProps> = ({}: ProjectEditPageProp
     if (projectId) {
         return (
             <Grid container>
-                <Grid xs={12}><ProjectCollection.NewComponent projectId={projectId}/></Grid>
+                <Grid xs={12}>
+                    <ProjectCollection.NewProjectComponent projectId={projectId} />
+                </Grid>
             </Grid>
         )
     }

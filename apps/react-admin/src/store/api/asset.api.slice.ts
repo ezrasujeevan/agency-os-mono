@@ -44,6 +44,25 @@ export const assetApiSlice = rootApiSlice.injectEndpoints({
                 url: `asset/${id}`,
                 method: 'DELETE'
             })
+        }),
+        getAllFilesOfAsset: builder.query<
+            Asset.AssetResponseDto,
+            Asset.FindOneAssetRequestDto
+        >({
+            query: ({ id }: Asset.FindOneAssetRequestDto) => ({
+                url: `asset/${id}/file`,
+                method: 'GET'
+            })
+        }),
+        createFileOfAsset: builder.mutation<
+            Asset.AssetResponseDto,
+            Asset.createAssetFileRequestDto
+        >({
+            query: (data: Asset.createAssetFileRequestDto) => ({
+                url: `asset/${data.assetId}/file`,
+                method: 'POST',
+                body: data
+            })
         })
     })
 })

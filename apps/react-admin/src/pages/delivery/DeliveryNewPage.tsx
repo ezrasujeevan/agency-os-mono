@@ -1,17 +1,21 @@
 import React from 'react'
 import { Unstable_Grid2 as Grid } from '@mui/material'
-import NewDeliveryComponent from '~/components/delivery/NewComponent'
+import { DeliveryCollection } from '~/components'
+import { useParams } from 'react-router-dom'
 
 interface DeliveryNewPageProps {}
 
 const DeliveryNewPage: React.FC<DeliveryNewPageProps> = ({}: DeliveryNewPageProps) => {
-    return (
-        <Grid container>
-            <Grid xs={12}>
-                <NewDeliveryComponent />
+    const { projectId } = useParams()
+    if (projectId) {
+        return (
+            <Grid container>
+                <Grid xs={12}>
+                    <DeliveryCollection.NewDeliveryComponent projectId={projectId} />
+                </Grid>
             </Grid>
-        </Grid>
-    )
+        )
+    }
 }
 
 export default DeliveryNewPage

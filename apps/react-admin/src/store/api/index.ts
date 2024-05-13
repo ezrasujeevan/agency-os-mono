@@ -76,7 +76,9 @@ export const {
     useUpdateAssetMutation,
     useGetAllAssetsOfDeliveryQuery,
     useGetAllAssetsQuery,
-    useGetAssetByIdQuery
+    useGetAssetByIdQuery,
+    useGetAllFilesOfAssetQuery,
+    useCreateFileOfAssetMutation
 } = assetApiSlice
 
 export const {} = rootApiSlice
