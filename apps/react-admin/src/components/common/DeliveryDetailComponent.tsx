@@ -27,7 +27,9 @@ const DeliveryDetailComponent: React.FC<DeliveryDetailComponentProps> = ({
     const {
         data: dataDelivery,
         isSuccess: isSuccessDelivery,
-        isFetching: isFetchingDelivery
+        isFetching: isFetchingDelivery,
+        isLoading: isLoadingDelivery,
+        refetch: refetchDelivery
     } = useGetDeliveryByIdQuery(deliveryId ? { id: deliveryId } : skipToken)
     const {
         data: dataUser,
@@ -51,6 +53,9 @@ const DeliveryDetailComponent: React.FC<DeliveryDetailComponentProps> = ({
                     })
                 )
                 navigate(-1)
+            }
+            if (!isLoadingDelivery) {
+                refetchDelivery()
             }
         }
         if (isSuccessUser) {

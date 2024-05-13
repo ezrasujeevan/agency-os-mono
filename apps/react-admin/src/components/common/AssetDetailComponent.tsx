@@ -27,7 +27,9 @@ const AssetDetailComponent: React.FC<AssetDetailComponentProps> = ({
     const {
         data: dataAsset,
         isSuccess: isSuccessAsset,
-        isFetching: isFetchingAsset
+        isFetching: isFetchingAsset,
+        isLoading: isLoadingAsset,
+        refetch: refetchAsset
     } = useGetAssetByIdQuery(assetId ? { id: assetId } : skipToken)
     const {
         data: dataUser,
@@ -51,6 +53,9 @@ const AssetDetailComponent: React.FC<AssetDetailComponentProps> = ({
                     })
                 )
                 navigate(-1)
+            }
+            if (!loading) {
+                refetchAsset()
             }
         }
         if (isSuccessUser) {

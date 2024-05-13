@@ -23,7 +23,6 @@ const ProjectViewComponent: React.FC<ProjectViewComponentProps> = ({
                     color={'secondary'}
                     variant={'contained'}
                     onClick={() => {
-                        console.log(ROUTES.PROJECT_EDIT_PAGE.replace(':projectId', projectId))
                         navigate(ROUTES.PROJECT_EDIT_PAGE.replace(':projectId', projectId))
                     }}
                 >
@@ -37,7 +36,6 @@ const ProjectViewComponent: React.FC<ProjectViewComponentProps> = ({
                 <Button
                     variant={'contained'}
                     onClick={() => {
-                        console.log(ROUTES.DELIVERY_NEW_PAGE.replace(':projectId', projectId))
                         navigate(ROUTES.DELIVERY_NEW_PAGE.replace(':projectId', projectId))
                     }}
                 >
